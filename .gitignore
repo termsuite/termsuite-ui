@@ -1,0 +1,48 @@
+# Maven artifacts
+*/target/**
+
+# Generated OSGI Bundle manifest
+
+# Diff artifacts
+*.orig
+
+# Java binaries
+*.class
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# Eclipse project files
+.classpath
+.settings/
+.metadata/
+
+# Generated eclipse files
+
+# Netbeans project files
+nbactions.xml
+nb-configuration.xml
+
+# IDEA project files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# ecore generated model
+fr.univnantes.termsuite.ui/src/fr/univnantes/termsuite/ui/model/
+
+
+# Remove bin dirs
+fr.univnantes.termsuite.core/bin/
+fr.univnantes.termsuite.feature/bin/
+fr.univnantes.termsuite.resources/bin/
+fr.univnantes.termsuite.ui/bin/
+fr.univnantes.termsuite.ui.product/bin
+org.eclipse.e4.ui.progress/bin
+
+# Remove jar
+fr.termsuite.univnantes.core/lib/*.jar
+

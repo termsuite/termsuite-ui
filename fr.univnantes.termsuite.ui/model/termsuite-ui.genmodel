@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/fr.univnantes.termsuite.ui/src" modelPluginID="fr.univnantes.termsuite.ui"
+    modelName="Termsuite-ui" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>termsuite-ui.ecore</foreignModel>
+  <genPackages prefix="Termsuiteui" basePackage="fr.univnantes.termsuite.ui.model"
+      disposableProviderFactory="true" ecorePackage="termsuite-ui.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="termsuite-ui.ecore#//ELang">
+      <genEnumLiterals ecoreEnumLiteral="termsuite-ui.ecore#//ELang/FR"/>
+      <genEnumLiterals ecoreEnumLiteral="termsuite-ui.ecore#//ELang/EN"/>
+      <genEnumLiterals ecoreEnumLiteral="termsuite-ui.ecore#//ELang/ES"/>
+      <genEnumLiterals ecoreEnumLiteral="termsuite-ui.ecore#//ELang/DE"/>
+      <genEnumLiterals ecoreEnumLiteral="termsuite-ui.ecore#//ELang/RU"/>
+      <genEnumLiterals ecoreEnumLiteral="termsuite-ui.ecore#//ELang/DA"/>
+      <genEnumLiterals ecoreEnumLiteral="termsuite-ui.ecore#//ELang/ZH"/>
+      <genEnumLiterals ecoreEnumLiteral="termsuite-ui.ecore#//ELang/LV"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="termsuite-ui.ecore#//ECollectionType">
+      <genEnumLiterals ecoreEnumLiteral="termsuite-ui.ecore#//ECollectionType/TXT"/>
+      <genEnumLiterals ecoreEnumLiteral="termsuite-ui.ecore#//ECollectionType/TEI"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="termsuite-ui.ecore#//ETagger">
+      <genEnumLiterals ecoreEnumLiteral="termsuite-ui.ecore#//ETagger/TREE_TAGGER"/>
+      <genEnumLiterals ecoreEnumLiteral="termsuite-ui.ecore#//ETagger/MATE"/>
+    </genEnums>
+    <genClasses ecoreClass="termsuite-ui.ecore#//ECorpus">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute termsuite-ui.ecore#//ECorpus/path"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference termsuite-ui.ecore#//ECorpus/singleLanguageCorpora"/>
+    </genClasses>
+    <genClasses ecoreClass="termsuite-ui.ecore#//ESingleLanguageCorpus">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute termsuite-ui.ecore#//ESingleLanguageCorpus/language"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference termsuite-ui.ecore#//ESingleLanguageCorpus/corpus"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference termsuite-ui.ecore#//ESingleLanguageCorpus/documents"/>
+    </genClasses>
+    <genClasses ecoreClass="termsuite-ui.ecore#//EDocument">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute termsuite-ui.ecore#//EDocument/filename"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference termsuite-ui.ecore#//EDocument/singleLanguageCorpus"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

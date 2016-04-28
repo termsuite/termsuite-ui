@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="termsuiteui" nsURI="http://termsuite.univ-nantes.fr/ui/" nsPrefix="tsui">
+  <eClassifiers xsi:type="ecore:EClass" name="ECorporaList">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="corpora" upperBound="-1"
+        eType="#//ECorpus"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ECorpus">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="singleLanguageCorpora"
+        upperBound="-1" eType="#//ESingleLanguageCorpus" containment="true" eOpposite="#//ESingleLanguageCorpus/corpus"
+        eKeys="#//ESingleLanguageCorpus/language"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ESingleLanguageCorpus">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="language" lowerBound="1"
+        eType="#//ELang"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="corpus" lowerBound="1"
+        eType="#//ECorpus" eOpposite="#//ECorpus/singleLanguageCorpora"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="documents" upperBound="-1"
+        eType="#//EDocument" containment="true" eOpposite="#//EDocument/singleLanguageCorpus"
+        eKeys="#//EDocument/filename"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="collectionType" eType="#//ECollectionType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="terminologies" upperBound="-1"
+        eType="#//ETerminology" containment="true" eOpposite="#//ETerminology/corpus"
+        eKeys="#//ETerminology/name"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ELang">
+    <eLiterals name="FR" literal=""/>
+    <eLiterals name="EN" value="1"/>
+    <eLiterals name="ES" value="2"/>
+    <eLiterals name="DE" value="3"/>
+    <eLiterals name="RU" value="4"/>
+    <eLiterals name="DA" value="5"/>
+    <eLiterals name="ZH" value="6"/>
+    <eLiterals name="LV" value="7"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ECollectionType">
+    <eLiterals name="TXT"/>
+    <eLiterals name="TEI" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EDocument" eSuperTypes="#//EResource">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="singleLanguageCorpus" lowerBound="1"
+        eType="#//ESingleLanguageCorpus" eOpposite="#//ESingleLanguageCorpus/documents"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ETagger">
+    <eLiterals name="TREE_TAGGER"/>
+    <eLiterals name="MATE" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EPipeline" eSuperTypes="#//EResource">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="morphosyntacticAnalysisEnabled"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="syntacticVariationEnabled"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="graphicalVariationAnalysisEnabled"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contextualizerEnabled"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="graphicalSimilarityThreshhold"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble" defaultValueLiteral="0.9"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="compostMaxComponentSize"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="3"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="compostMinComponentNum"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="3"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="compostScoreThreshhold"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble" defaultValueLiteral="0.7"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="compostSegmentSimilarityThreshhold"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble" defaultValueLiteral="0.7"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="compostUseLanguageDefaultCoeffs"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="compostAlpha" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
+        defaultValueLiteral="0.5"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="compostBeta" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
+        defaultValueLiteral="0.1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="compostGamma" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
+        defaultValueLiteral="0.1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="compostDelta" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
+        defaultValueLiteral="0.3"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="spotWithOccurrences" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filteringEnabled" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exportCasToXmiEnabled"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exportCasToTsvEnabled"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exportCasToJsonEnabled"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exportTerminoToJsonEnabled"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exportTerminoToTbxEnabled"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exportTerminoToTsvEnabled"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigCorporaHandlingEnabled"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigCorporaCleaningMode"
+        lowerBound="1" eType="#//EPeriodicCleaningMode"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contextScope" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="3"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contextualizeOnSWTOnly"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contextAllowMWTAsCooc"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filteringMode" eType="#//EFilteringMode"
+        defaultValueLiteral="Threshold"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filteringThreshold" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"
+        defaultValueLiteral="1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filteringTopN" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="100"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filteringProperty" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigCorporaFilteringProperty"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral="1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigCorporaDocumentPeriod"
+        lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="100"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigCorporaFilteringPropertyThreshold"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble" defaultValueLiteral="1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigCorporaMaxNumberOfTerms"
+        lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="100000"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetTerminologyName"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputDir" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="taggerConfigName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EPipelineList">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pipelines" upperBound="-1"
+        eType="#//EPipeline"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="EPeriodicCleaningMode">
+    <eLiterals name="MAX_NUMBER_OF_TERMS" literal="Max number of term"/>
+    <eLiterals name="DOCUMENT_PERIOD" value="1" literal="Document period"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="EFilteringMode">
+    <eLiterals name="TOP_N" literal="Top n"/>
+    <eLiterals name="Threshold" value="1" literal="Threshold"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ETerminology" eSuperTypes="#//EResource">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filepath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasOccurrences" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasContexts" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="corpus" lowerBound="1"
+        eType="#//ESingleLanguageCorpus" eOpposite="#//ESingleLanguageCorpus/terminologies"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ETerminoViewerConfig">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nbDisplayedTerms" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="500"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="searchString" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral=""/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EResource">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ETaggerConfig">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="taggerType" lowerBound="1"
+        eType="#//ETagger" defaultValueLiteral="TREE_TAGGER"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EBilingualDictionary">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sourceLang" eType="#//ELang"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetLang" eType="#//ELang"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+</ecore:EPackage>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<plugin>
+
+   <extension point="org.eclipse.core.expressions.definitions">
+      <definition id="fr.univnantes.termsuite.ui.fileselected">
+         <with variable="org.eclipse.ui.selection">
+            <iterate ifEmpty="false" operator="and">
+               <instanceof value="java.io.File">
+               </instanceof>
+            </iterate>
+         </with>
+      </definition>
+      <definition
+            id="fr.univnantes.termsuite.ui.pipelinePartActive">
+         <with
+               variable="activePartId">
+            <equals
+                  value="fr.univnantes.termsuite.ui.partdescriptor.PipelineEditor">
+            </equals>
+         </with>
+      </definition>
+   </extension>
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated termsuite-ui -->
+      <package
+            uri="http://termsuite.univ-nantes.fr/ui/"
+            class="fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage"
+            genModel="model/termsuite-ui.genmodel"/>
+   </extension>
+   <extension id="product" point="org.eclipse.core.runtime.products">
+      <product application="org.eclipse.e4.ui.workbench.swt.E4Application" name="TermSuite">
+         <property name="appName" value="TermSuite">
+         </property>
+          <property name="lifeCycleURI" value="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.LifeCycleManager">
+         </property>
+          <property
+                name="aboutImage"
+                value="/fr.univnantes.termsuite.ui.product/img/logo-termsuite.png">
+          </property>
+          <property
+                name="aboutText"
+                value="TermSuite is a Java UIMA-based toolbox for terminology extraction and multilingual term alignment.&#x0A;&#x0A;&#x0A;MultiwTermSuite is a software developed at the University of Nantes, by the research lab LINA, UMR 6241 CNRS. TermSuite is currently supported by the French National Research Agency (CNRS) under grant ANR-10-IDEX-0004-02 and contributes to the project ISTEX, led by INIST.&#x0A;&#x0A;http://termsuite.github.io/">
+          </property>
+          <property
+                name="windowImages"
+                value="/fr.univnantes.termsuite.ui.product/img/logo-16x16.png,/fr.univnantes.termsuite.ui.product/img/logo-32x32.png,/fr.univnantes.termsuite.ui.product/img/logo-48x48.png,/fr.univnantes.termsuite.ui.product/img/logo-64x64.png,/fr.univnantes.termsuite.ui.product/img/logo-128x128.png,/fr.univnantes.termsuite.ui.product/img/logo-256x256.png">
+          </property>
+          <property
+                name="startupForegroundColor"
+                value="000000">
+          </property>
+          <property
+                name="startupMessageRect"
+                value="7,252,445,20">
+          </property>
+          <property
+                name="startupProgressRect"
+                value="5,275,445,15">
+          </property>
+          <property
+                name="preferenceCustomization"
+                value="plugin_customization.ini">
+          </property>
+      </product>
+   </extension>
+   <extension
+         point="com.opcoach.e4.preferences.e4PreferencePages">
+      <page
+            class="fr.univnantes.termsuite.ui.prefs.GeneralPreferencePage"
+            id="fr.univnantes.termsuite.ui.preferences.General"
+            name="General">
+      </page>
+      <page
+            class="fr.univnantes.termsuite.ui.prefs.TaggerPreferencePage"
+            id="fr.univnantes.termsuite.ui.preferences.Tagger"
+            name="Taggers/Lemmatizers">
+      </page>
+      <page
+            class="fr.univnantes.termsuite.ui.prefs.ResourcePreferencePage"
+            id="fr.univnantes.termsuite.ui.preferences.resources"
+            name="Linguistic resources">
+      </page>
+   </extension>
+
+
+</plugin>
