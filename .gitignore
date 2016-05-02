@@ -32,17 +32,17 @@ nb-configuration.xml
 *.iws
 
 # ecore generated model
-fr.univnantes.termsuite.ui/src/fr/univnantes/termsuite/ui/model/
+bundles/fr.univnantes.termsuite.ui/src/fr/univnantes/termsuite/ui/model/
 
 
 # Remove bin dirs
-fr.univnantes.termsuite.core/bin/
-fr.univnantes.termsuite.feature/bin/
-fr.univnantes.termsuite.resources/bin/
-fr.univnantes.termsuite.ui/bin/
-fr.univnantes.termsuite.ui.product/bin
-org.eclipse.e4.ui.progress/bin
+bundles/fr.univnantes.termsuite.core/bin/
+features/fr.univnantes.termsuite.feature/bin/
+bundles/fr.univnantes.termsuite.resources/bin/
+bundles/fr.univnantes.termsuite.ui/bin/
+releng/fr.univnantes.termsuite.ui.product/bin
+bundles/org.eclipse.e4.ui.progress/bin
 
 # Remove jar
-fr.termsuite.univnantes.core/lib/*.jar
+bundles/fr.termsuite.univnantes.core/lib/*.jar
 

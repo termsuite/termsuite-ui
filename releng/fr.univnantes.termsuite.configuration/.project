@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>fr.univnantes.termsuite.ui.product</name>
+	<name>fr.univnantes.termsuite.configuration</name>
 	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>
 	</buildSpec>
-  <natures>
-    <nature>org.eclipse.pde.PluginNature</nature>
-  </natures>
+	<natures>
+	</natures>
 </projectDescription>

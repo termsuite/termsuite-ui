@@ -46,7 +46,6 @@ http://termsuite.github.io/
       </win>
    </launcher>
 
-
    <vm>
    </vm>
 
@@ -248,6 +247,7 @@ http://termsuite.github.io/
       <feature id="org.eclipse.ecf.filetransfer.ssl.feature"/>
       <feature id="org.eclipse.ecf.core.feature"/>
       <feature id="com.opcoach.e4.preferences.feature" version="1.0.0.qualifier"/>
+      <feature id="org.eclipse.equinox.p2.extras.feature" version="1.2.101.v20160129-0947"/>
    </features>
 
    <configurations>

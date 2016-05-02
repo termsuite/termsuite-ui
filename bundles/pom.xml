@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>fr.univnantes.termsuite</groupId>
+    <artifactId>fr.univnantes.termsuite.bundles</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    
+    <parent>
+        <groupId>fr.univnantes.termsuite</groupId>
+        <artifactId>fr.univnantes.termsuite.root</artifactId>
+        <version>2.1.0-SNAPSHOT</version>
+    </parent>
+
+    <modules>
+        <module>org.eclipse.e4.ui.progress</module>
+        <module>fr.univnantes.termsuite.resources</module>
+        <module>fr.univnantes.termsuite.core</module>
+        <module>fr.univnantes.termsuite.ui</module>
+    </modules>
+</project> 
+
+
