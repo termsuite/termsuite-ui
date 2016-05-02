@@ -1,5 +1,5 @@
 # Maven artifacts
-*/target/**
+**/target/**
 
 # Generated OSGI Bundle manifest
 
