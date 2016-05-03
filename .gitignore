@@ -46,3 +46,6 @@ bundles/org.eclipse.e4.ui.progress/bin
 # Remove jar
 bundles/fr.termsuite.univnantes.core/lib/*.jar
 
+bintray.api
+bintray.properties
+*.swp
