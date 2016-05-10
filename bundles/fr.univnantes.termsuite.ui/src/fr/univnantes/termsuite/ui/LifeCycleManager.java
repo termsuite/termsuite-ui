@@ -16,6 +16,7 @@ import com.google.common.base.Joiner;
 
 import fr.univnantes.termsuite.ui.services.AlignmentService;
 import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.LinguisticResourcesService;
 import fr.univnantes.termsuite.ui.services.PipelineService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.services.TaggerService;
@@ -24,6 +25,7 @@ import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
 import fr.univnantes.termsuite.ui.services.TerminoService;
 import fr.univnantes.termsuite.ui.services.impl.AlignmentServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.CorpusServiceImpl;
+import fr.univnantes.termsuite.ui.services.impl.LinguisticResourcesServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.PipelineServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.ResourceServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.TaggerServiceImpl;
@@ -39,10 +41,12 @@ public class LifeCycleManager {
 			 @Preference(nodePath=TermSuiteUI.PLUGIN_ID) IEclipsePreferences preferences,
 			 ILoggerProvider loggerProvider
 			) {
+		
 		loggerProvider.getClassLogger(this.getClass()).info("----------------------------------------------------------------");
 		loggerProvider.getClassLogger(this.getClass()).info("Starting TermSuite product");
 		logContextualInfo(loggerProvider.getClassLogger(this.getClass()));
 
+		cont.set(LinguisticResourcesService.class, ContextInjectionFactory.make(LinguisticResourcesServiceImpl.class, cont));
 		cont.set(TermIndexService.class, ContextInjectionFactory.make(TermIndexServiceImpl.class, cont));
 		cont.set(CorpusService.class, ContextInjectionFactory.make(CorpusServiceImpl.class, cont));
 		cont.set(TerminoService.class, ContextInjectionFactory.make(TerminoServiceImpl.class, cont));

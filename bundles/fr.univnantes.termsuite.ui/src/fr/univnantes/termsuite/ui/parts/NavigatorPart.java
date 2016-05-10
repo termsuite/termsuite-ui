@@ -10,6 +10,8 @@ import javax.inject.Inject;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -39,6 +41,7 @@ import com.google.common.io.Files;
 
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
+import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.handlers.OpenResourceHandler;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
@@ -47,6 +50,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.EResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.LinguisticResourcesService;
 import fr.univnantes.termsuite.ui.services.PipelineService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.util.CommandUtil;
@@ -66,12 +70,15 @@ public class NavigatorPart implements TreePart {
 	private static final int NODE_CORPORA = 3;
 	private static final int NODE_FOLDER_TERMINO = 4;
 	private static final int NODE_FOLDER_DOCUMENT = 5;
+	private static final int NODE_RESOURCES = 6;
+
 	
 	private CustomTreeNodeManager nodeManager = new CustomTreeNodeManager();
 
 	private final CustomTreeNode THE_CORPORA_NODE = nodeManager.get(null, NODE_CORPORA);
 	private final CustomTreeNode THE_PIPELINE_NODE = nodeManager.get(null, NODE_PIPELINES);
-
+	private final CustomTreeNode THE_RESOURCE_NODE = nodeManager.get(null, NODE_RESOURCES);
+	
 
 	private TreeViewer viewer;
 	private TermsuiteImg img = TermsuiteImg.INSTANCE;
@@ -82,6 +89,15 @@ public class NavigatorPart implements TreePart {
 	@Inject
 	private PipelineService pipelineService;
 
+	
+	@Inject
+	@Preference(value = TermSuiteUIPreferences.ACTIVATE_CUSTOM_RESOURCES)
+	private boolean withCustomResources = false;
+
+	@Inject
+	@Preference(value = TermSuiteUIPreferences.LINGUISTIC_RESOURCES_DIRECTORY)
+	private String customResourcePath;
+	
 	@PostConstruct
 	public void createControls(Composite parent,
 			final ESelectionService selectionService,
@@ -105,7 +121,7 @@ public class NavigatorPart implements TreePart {
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
-		viewer.setInput(new Object[]{THE_CORPORA_NODE, THE_PIPELINE_NODE});
+		viewer.setInput(getRootNodes());
 		IDoubleClickListener doubleClickHandler = new IDoubleClickListener() {
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
@@ -154,6 +170,33 @@ public class NavigatorPart implements TreePart {
 		
 		revealTerminologies();
 	}
+
+	private Object[] getRootNodes() {
+		List<Object> nodes = Lists.newArrayList();
+		nodes.add(THE_CORPORA_NODE);
+		nodes.add(THE_PIPELINE_NODE);
+		if(withCustomResources)
+			nodes.add(THE_RESOURCE_NODE);
+		return nodes.toArray();
+	}
+	
+
+	
+	@Inject
+	@Optional
+	public void reactOnCustomResourceChange( 
+			LinguisticResourcesService lingueeService, 
+			@Preference(value = TermSuiteUIPreferences.ACTIVATE_CUSTOM_RESOURCES) boolean active,
+			@Preference(value = TermSuiteUIPreferences.LINGUISTIC_RESOURCES_DIRECTORY) String customResourcePath
+			) {
+		this.withCustomResources = active;
+		if(active)
+			this.customResourcePath = customResourcePath;
+		
+		if(this.viewer != null)
+			this.viewer.setInput(getRootNodes());
+	}
+
 
 	public void revealTerminologies() {
 		for(ECorpus corpus:corpusService.getCorporaList().getCorpora())

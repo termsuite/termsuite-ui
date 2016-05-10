@@ -73,6 +73,7 @@ public interface CorpusService {
 
 	public String getCollectionPath(ESingleLanguageCorpus corpus);
 
+	
 	public void runPipelineOnCorpus(EPipeline pipeline, ESingleLanguageCorpus corpus);
 	public void runPipelineOnSeveralCorpus(EPipeline pipeline, Iterable<ESingleLanguageCorpus> corpus);
 

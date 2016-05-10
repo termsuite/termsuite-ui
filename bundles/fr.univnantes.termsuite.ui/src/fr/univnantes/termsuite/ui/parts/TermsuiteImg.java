@@ -21,6 +21,7 @@ public class TermsuiteImg {
 	public static final String CORPORA = "icons/repo_rep.gif";
 	public static final String CORPUS = "icons/remote_history_mode.gif";
 	public static final String PIPELINES = "icons/prj_obj.png";
+	public static final String LINGUISTIC_RESOURCES = "icons/JPackage.gif";
 	public static final String PIPELINE = "icons/debugtt_obj.gif";
 	public static final String FOLDER = "icons/fldr_obj.png";
 	public static final String FOLDER_TERMINO = "icons/fldr_termino.png";

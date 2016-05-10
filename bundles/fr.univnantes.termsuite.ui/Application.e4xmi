@@ -19,6 +19,7 @@
                 <tags>ViewMenu</tags>
                 <children xsi:type="menu:HandledMenuItem" xmi:id="_rCvB0FE6EeWJlbJYl3DYnQ" elementId="fr.univnantes.termsuite.ui.handledmenuitem.newpipeline" label="New pipeline..." command="_paaRwFE9EeWJlbJYl3DYnQ"/>
                 <children xsi:type="menu:HandledMenuItem" xmi:id="_s5LYoMUCEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.handledmenuitem.importcorpus" label="Import corpus..." command="_hzlTgE19EeWpcYFej9JPeQ"/>
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_WALYEBXJEeakTIrvwFb4lQ" elementId="fr.univnantes.termsuite.ui.handledmenuitem.editlinguisticresources" label="Edit linguistic resources" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/JPackage.gif" tooltip="Allow the edition of linguistic resources" type="Check"/>
               </menus>
               <toolbar xmi:id="_wLTnEEy5EeWINr2AFtxMwQ" elementId="fr.univnantes.termsuite.ui.toolbar.1">
                 <children xsi:type="menu:HandledToolItem" xmi:id="_KtNWsOYAEeWuJP7LFnU52Q" elementId="fr.univnantes.termsuite.ui.handledtoolitem.NavigatorCollaspeAll" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/collapseall.png" command="_BXGjQOIsEeWihJy1yCPB5A"/>
