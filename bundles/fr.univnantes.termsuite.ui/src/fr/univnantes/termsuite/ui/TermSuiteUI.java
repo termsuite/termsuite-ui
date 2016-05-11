@@ -58,6 +58,7 @@ public class TermSuiteUI {
 	public static final String PROGRESS_VIEW_ID = "org.eclipse.e4.ui.progress.ProgressView";
 	public static final String SOURCE_TERMINOLOGY = "SourceTerminology";
 	public static final String TARGET_TERMINOLOGY = "TargetTerminology";
+	public static final String EDITABLE = "editable";
 
 	public static ImageDescriptor getImg(String path) {
         Bundle bundle = Platform.getBundle(PLUGIN_ID);

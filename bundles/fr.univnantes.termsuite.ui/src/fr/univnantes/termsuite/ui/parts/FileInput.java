@@ -1,9 +1,12 @@
 package fr.univnantes.termsuite.ui.parts;
 
 import java.io.File;
+import java.io.IOException;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
+import com.google.common.io.Files;
 
 /**
  * 
@@ -26,7 +29,16 @@ public abstract class FileInput<T> {
 		this.inputObject = inputObject;
 	}
 
-	public abstract File asFile();
+	protected abstract File asFile();
+
+	private File file = null;
+	
+	public File getFile() {
+		if(file == null)
+			file = asFile();
+		return file;
+	}
+	
 	
 	public T getInputObject() {
 		return inputObject;
@@ -44,5 +56,9 @@ public abstract class FileInput<T> {
 	@Override
 	public int hashCode() {
 		return inputObject.hashCode();
+	}
+
+	public void save(String text) throws IOException {
+		Files.write(text, getFile(), Charsets.UTF_8);
 	}
 }

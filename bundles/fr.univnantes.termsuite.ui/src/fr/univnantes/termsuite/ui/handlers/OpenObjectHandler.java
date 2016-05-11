@@ -70,9 +70,11 @@ public class OpenObjectHandler {
 		MPartStack stack = (MPartStack) modelService.find(TermSuiteUI.UI_MAIN_PART_STACK, application);
 		String partId;
 		String label;
+		boolean editable = true;
 		String iconURI = null;
 
 		if(inputObject instanceof EDocument) {
+			editable = false;
 			partId = FileEditorPart.ID;
 			inputObject = new FileInput<EDocument>((EDocument)inputObject) {
 				@Override
@@ -80,7 +82,7 @@ public class OpenObjectHandler {
 					return corpusService.asFile(this.inputObject);
 				}
 			};
-			label = ((FileInput<?>)inputObject).asFile().getName();
+			label = ((FileInput<?>)inputObject).getFile().getName();
 		} else if(inputObject instanceof ELinguisticResource) {
 			partId = FileEditorPart.ID;
 			inputObject = new FileInput<ELinguisticResource>((ELinguisticResource)inputObject) {
@@ -89,7 +91,7 @@ public class OpenObjectHandler {
 					return new File(this.inputObject.getPath());
 				}
 			};
-			label = ((FileInput<?>)inputObject).asFile().getName();
+			label = ((FileInput<?>)inputObject).getFile().getName();
 		} else if(inputObject instanceof ETerminology) {
 			partId = TerminologyPart.ID;
 			ETerminology termino = (ETerminology)inputObject;
@@ -98,8 +100,6 @@ public class OpenObjectHandler {
 					termino.getCorpus().getCorpus().getName(), 
 					termino.getCorpus().getLanguage().getName().toLowerCase(), 
 					termino.getName());	
-		} else if(inputObject instanceof ELinguisticResource) {
-			throw new UnsupportedOperationException("Not yet implemented");
 		} else if(inputObject instanceof EPipeline) {
 			partId = PipelinePart.ID;
 			label = ((EPipeline)inputObject).getFilename();
@@ -115,6 +115,7 @@ public class OpenObjectHandler {
 		stack.getChildren().add(part);
 		partService.showPart(part, PartState.CREATE);
 		part.getContext().set(TermSuiteUI.INPUT_OBJECT,inputObject);
+		part.getContext().set(TermSuiteUI.EDITABLE,editable);
 		eventBroker.send(TermSuiteEvents.EDITOR_INITIATED, part.getObject());
 		partService.activate(part);
 	}
