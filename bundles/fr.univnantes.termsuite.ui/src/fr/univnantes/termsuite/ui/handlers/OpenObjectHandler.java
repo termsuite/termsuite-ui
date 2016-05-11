@@ -1,5 +1,7 @@
 package fr.univnantes.termsuite.ui.handlers;
 
+import java.io.File;
+
 import javax.inject.Named;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -14,6 +16,8 @@ import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 
+import com.google.common.base.Objects;
+
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
@@ -21,6 +25,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.parts.FileEditorPart;
+import fr.univnantes.termsuite.ui.parts.FileInput;
 import fr.univnantes.termsuite.ui.parts.PipelinePart;
 import fr.univnantes.termsuite.ui.parts.TerminologyPart;
 import fr.univnantes.termsuite.ui.parts.TermsuiteImg;
@@ -28,14 +33,13 @@ import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.LinguisticResourcesService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 
-public class OpenResourceHandler {
+public class OpenObjectHandler {
 
-	public static final String ID = "fr.univnantes.termsuite.ui.handler.OpenResource";
+	public static final String ID = "fr.univnantes.termsuite.ui.handler.OpenObject";
 
-	public static final String COMMAND_ID = "fr.univnantes.termsuite.ui.command.OpenResource";
+	public static final String COMMAND_ID = "fr.univnantes.termsuite.ui.command.OpenObject";
 	
-	public static final String PARAM_INPUT_OBJECT_ID = "fr.univnantes.termsuite.ui.commandparameter.InputObjectId";
-
+	public static final String PARAM_INPUT_OBJECT_ID = "fr.univnantes.termsuite.ui.commandparameter.InputResourceId";
 	public static final String PARAM_INPUT_OBJECT_PATH = "fr.univnantes.termsuite.ui.commandparameter.InputObjectPath";
 	
 	@Execute
@@ -45,7 +49,7 @@ public class OpenResourceHandler {
 			ResourceService resourceService,
 			LinguisticResourcesService linguisticResourcesService,
 			EPartService partService, 
-			CorpusService corpusService, 
+			final CorpusService corpusService, 
 			MApplication application,
 			EModelService modelService,
 			IEventBroker eventBroker) {
@@ -58,7 +62,7 @@ public class OpenResourceHandler {
 		for(MPart part:partService.getParts()) {
 			IEclipseContext context = part.getContext();
 			
-			if(context != null && context.get(TermSuiteUI.INPUT_OBJECT) == inputObject) {
+			if(context != null && Objects.equal(context.get(TermSuiteUI.INPUT_OBJECT),inputObject)) {
 				partService.bringToTop(part);
 				return;
 			}
@@ -70,7 +74,22 @@ public class OpenResourceHandler {
 
 		if(inputObject instanceof EDocument) {
 			partId = FileEditorPart.ID;
-			label = corpusService.asFile((EDocument)inputObject).getName();
+			inputObject = new FileInput<EDocument>((EDocument)inputObject) {
+				@Override
+				public File asFile() {
+					return corpusService.asFile(this.inputObject);
+				}
+			};
+			label = ((FileInput<?>)inputObject).asFile().getName();
+		} else if(inputObject instanceof ELinguisticResource) {
+			partId = FileEditorPart.ID;
+			inputObject = new FileInput<ELinguisticResource>((ELinguisticResource)inputObject) {
+				@Override
+				public File asFile() {
+					return new File(this.inputObject.getPath());
+				}
+			};
+			label = ((FileInput<?>)inputObject).asFile().getName();
 		} else if(inputObject instanceof ETerminology) {
 			partId = TerminologyPart.ID;
 			ETerminology termino = (ETerminology)inputObject;

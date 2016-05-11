@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.List;
 import java.util.Scanner;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 
 public class FileUtil {
@@ -46,5 +48,10 @@ public class FileUtil {
 			}
 		}
 		return remPaths;
+	}
+
+	public static String getFilename(String path) {
+		List<String> list = Splitter.on(File.separator).splitToList(path);
+		return list.get(list.size() - 1);
 	}
 }

@@ -22,6 +22,7 @@ import org.eclipse.e4.core.services.log.Logger;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
 
@@ -101,16 +102,30 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 	@Override
 	public Collection<ELinguisticResourceSet> getLinguisticResourceSets() {
 		Preconditions.checkState(withCustomResources, "The use of custom resources is not allowed");
+		
 		if(resourceSets == null) {
-			resourceSets = LinguisticResourceUtil.getLinguisticResourceSets(
-					this.customResourcePath, 
-					this.copyIfEmpty);
-			if(resourceSets.isEmpty() && this.copyIfEmpty) {
-				logger.info("Custom resource path is empty. Copying built-in resources to directory: " + customResourcePath);
-				if(!createLinguisticResourceDirectory(this.customResourcePath))
-					logger.warn("Custom resource directory could not be created");
-			} 
-			logger.debug(resourceSets.size() + " resource sets loaded from path: " + customResourcePath);
+			try {
+				resourceSets = LinguisticResourceUtil.getLinguisticResourceSets(
+						this.customResourcePath, 
+						this.copyIfEmpty);
+				if(resourceSets.isEmpty() && this.copyIfEmpty) {
+					logger.info("Custom resource path is empty. Copying built-in resources to directory: " + customResourcePath);
+					if(!createLinguisticResourceDirectory(this.customResourcePath))
+						logger.warn("Custom resource directory could not be created");
+					else {
+						/*
+						 * Resources have been copied. Reloads the resource sets.
+						 */
+						resourceSets = LinguisticResourceUtil.getLinguisticResourceSets(
+								this.customResourcePath, 
+								false);
+					}
+				} 
+				logger.debug(resourceSets.size() + " resource sets loaded from path: " + customResourcePath);
+			} catch(ValidationException e) {
+				logger.error("Could not load resources", e);
+				return Lists.newArrayList();
+			}
 		}
 		return resourceSets;
 	}

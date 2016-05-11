@@ -40,6 +40,7 @@ public class LinguisticResourceUtil {
 								resourceSet.getResources().add(res);
 								res.setDescription(tsResource.getDescription());
 								res.setName(tsResource.getTitle());
+								res.setPath(candidateResourceFile.getAbsolutePath());
 							}
 						}
 						if(!resourceSet.getResources().isEmpty())

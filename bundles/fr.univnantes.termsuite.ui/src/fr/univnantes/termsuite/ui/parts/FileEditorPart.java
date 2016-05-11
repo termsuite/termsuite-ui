@@ -57,7 +57,7 @@ public class FileEditorPart {
 	@Inject TermSuiteSelectionService tsSelectionService;
 
 	private StyledText text;
-	private EDocument inputDocument;
+	private FileInput<?> inputDocument;
 	private String textAsString;
 	private List<TermOccurrence> occurrences = Lists.newArrayList();
 	private TermOccurrence activeOccurrence = null;
@@ -123,7 +123,7 @@ public class FileEditorPart {
 		occurrences = Lists.newArrayList();
 		for(TermOccurrence occ : term.getOccurrences()) {
 			EDocument doc = corpusService.resolveEDocument(occ.getSourceDocument());
-			if(doc.equals(this.inputDocument))
+			if(doc.equals(this.inputDocument.getInputObject()))
 				occurrences.add(occ);
 		}
 		Collections.sort(occurrences);
@@ -131,7 +131,7 @@ public class FileEditorPart {
 	
 	private void setActiveTermOccurrence(TermOccurrence occ) {
 		EDocument doc = corpusService.resolveEDocument(occ.getSourceDocument());
-		if(doc != null && doc == this.inputDocument) {
+		if(doc != null && doc.equals(this.inputDocument.getInputObject())) {
 			this.activeOccurrence = occ;
 			if(!occurrences.contains(occ)) {
 				occurrences.add(occ);
@@ -198,21 +198,21 @@ public class FileEditorPart {
 			CorpusService corpusService, 
 			IEclipseContext context) {
 		if(this == part) {
-			inputDocument = (EDocument)context.get(TermSuiteUI.INPUT_OBJECT);
+			inputDocument = (FileInput<?>)context.get(TermSuiteUI.INPUT_OBJECT);
 			if(tsSelectionService.getActiveTerm() != null)
 				setActiveTerm(tsSelectionService.getActiveTerm());
 			if(tsSelectionService.getActiveTermOccurrence() != null)
 				setActiveTermOccurrence(tsSelectionService.getActiveTermOccurrence());
 
-			File file = corpusService.asFile(inputDocument);
 
+			File asFile = inputDocument.asFile();
 			try {
-				Scanner scanner = new Scanner(file);
+				Scanner scanner = new Scanner(asFile);
 				this.textAsString = scanner.useDelimiter("\\A").next();
 				text.setText(textAsString);
 				scanner.close();
 			} catch (FileNotFoundException e) {
-			    MessageDialog.openError(text.getShell(), "Error opening file", "File " + file.getAbsolutePath() + " could not be opened." );
+			    MessageDialog.openError(text.getShell(), "Error opening file", "File " + asFile.getAbsolutePath() + " could not be opened." );
 			}
 			
 

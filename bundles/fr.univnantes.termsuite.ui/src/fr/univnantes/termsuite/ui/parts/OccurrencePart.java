@@ -48,7 +48,7 @@ import eu.project.ttc.models.TermVariation;
 import fr.univnantes.termsuite.ui.TermOccurrenceContainer;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
-import fr.univnantes.termsuite.ui.handlers.OpenResourceHandler;
+import fr.univnantes.termsuite.ui.handlers.OpenObjectHandler;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
 import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
@@ -86,11 +86,14 @@ public class OccurrencePart implements TreePart {
 		public void partBroughtToTop(MPart part) {
 			// TODO Auto-generated method stub
 			if(part != null && part.getObject() instanceof FileEditorPart) {
-				EDocument doc = (EDocument)part.getContext().get(TermSuiteUI.INPUT_OBJECT);
-				for(TermOccurrenceContainer<EDocument> toc:documentContainers) {
-					if(toc.getContainer().equals(doc) && !toc.getOccurrences().isEmpty()) {
-						navigateToOccurrence(toc.getOccurrences().iterator().next());
-						break;
+				FileInput<?> fileInput = (FileInput<?>)part.getContext().get(TermSuiteUI.INPUT_OBJECT);
+				if(fileInput != null && fileInput.getInputObject() instanceof EDocument) {
+					EDocument doc  = (EDocument) fileInput.getInputObject();
+					for(TermOccurrenceContainer<EDocument> toc:documentContainers) {
+						if(toc.getContainer().equals(doc) && !toc.getOccurrences().isEmpty()) {
+							navigateToOccurrence(toc.getOccurrences().iterator().next());
+							break;
+						}
 					}
 				}
 			}
@@ -145,7 +148,6 @@ public class OccurrencePart implements TreePart {
 
 	private void navigateToOccurrence(TermOccurrence occ) {
 		viewer.setExpandedState(documentContainersMap.get(occ), true);
-		System.out.println("Set selection to " + occ + "["+occ.getBegin()+","+occ.getEnd()+"]");
 		viewer.setSelection(new StructuredSelection(occ), false);
 		viewer.reveal(occ);
 		showOccurrenceInDocument(occ);
@@ -244,8 +246,8 @@ public class OccurrencePart implements TreePart {
 		EDocument doc = corpusService.resolveEDocument(occ.getSourceDocument());
 		String resourceId = resourceService.getResourceId(doc);
 		ParameterizedCommand command = commandService.createCommand(
-				OpenResourceHandler.COMMAND_ID, 
-				CommandUtil.params(OpenResourceHandler.PARAM_INPUT_OBJECT_ID, resourceId));
+				OpenObjectHandler.COMMAND_ID, 
+				CommandUtil.params(OpenObjectHandler.PARAM_INPUT_OBJECT_ID, resourceId));
 		if(handlerService.canExecute(command))
 			handlerService.executeHandler(command);
 	}

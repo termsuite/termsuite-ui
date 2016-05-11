@@ -48,8 +48,8 @@ public class NewPipelineHandler {
 			try {
 				pipeline = pipelineService.createPipeline(filename);
 				ParameterizedCommand command = commandService.createCommand(
-						OpenResourceHandler.COMMAND_ID, 
-						CommandUtil.params(OpenResourceHandler.PARAM_INPUT_OBJECT_ID, resourceService.getResourceId(pipeline)));
+						OpenObjectHandler.COMMAND_ID, 
+						CommandUtil.params(OpenObjectHandler.PARAM_INPUT_OBJECT_ID, resourceService.getResourceId(pipeline)));
 				if(handlerService.canExecute(command))
 					handlerService.executeHandler(command);
 

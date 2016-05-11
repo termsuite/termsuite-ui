@@ -105,7 +105,7 @@
   <handlers xmi:id="_hNVDUEyiEeWINr2AFtxMwQ" elementId="fr.univnantes.termsuite.ui.handler.RemoveResource" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.RemoveResourceHandler" command="_RUf-4EyhEeWINr2AFtxMwQ"/>
   <handlers xmi:id="_hdniEEyiEeWINr2AFtxMwQ" elementId="fr.univnantes.termsuite.ui.handler.Exit" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.ExitHandler" command="_NzgkYEyhEeWINr2AFtxMwQ"/>
   <handlers xmi:id="_fx9aAE19EeWpcYFej9JPeQ" elementId="fr.univnantes.termsuite.ui.handler.ImportCorpus" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.ImportCorpusHandler" command="_hzlTgE19EeWpcYFej9JPeQ"/>
-  <handlers xmi:id="_OzodME_ZEeWST6jINIj7qQ" elementId="fr.univnantes.termsuite.ui.handler.OpenResource" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.OpenResourceHandler" command="_BSxgQE_ZEeWST6jINIj7qQ"/>
+  <handlers xmi:id="_OzodME_ZEeWST6jINIj7qQ" elementId="fr.univnantes.termsuite.ui.handler.OpenObject" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.OpenObjectHandler" command="_BSxgQE_ZEeWST6jINIj7qQ"/>
   <handlers xmi:id="_wJyT0FE9EeWJlbJYl3DYnQ" elementId="fr.univnantes.termsuite.ui.handler.NewPipeline" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.NewPipelineHandler" command="_paaRwFE9EeWJlbJYl3DYnQ"/>
   <handlers xmi:id="_RsR0YFJBEeWNjZ8iJmBR2A" elementId="fr.univnantes.termsuite.ui.handler.RunPipelineOnSelectedCorpus" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.RunPipelineOnSelectedCorpusHandler" command="_U1zxIFJBEeWNjZ8iJmBR2A"/>
   <handlers xmi:id="_tsikIJ_zEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.handler.Save" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.SaveHandler" command="_GQqeAEyhEeWINr2AFtxMwQ"/>
@@ -157,8 +157,9 @@
     <parameters xmi:id="_Yw9McMXOEeWpIJ-KlFcYkg" elementId="fr.univnantes.termsuite.ui.commandparameter.ResourceType" name="Resource Type"/>
   </commands>
   <commands xmi:id="_hzlTgE19EeWpcYFej9JPeQ" elementId="fr.univnantes.termsuite.ui.command.import" commandName="Import Corpus"/>
-  <commands xmi:id="_BSxgQE_ZEeWST6jINIj7qQ" elementId="fr.univnantes.termsuite.ui.command.OpenResource" commandName="Open Resource" description="Open resource in an editor">
-    <parameters xmi:id="_jzXIgLoeEeWOe4SAf8ad9Q" elementId="fr.univnantes.termsuite.ui.commandparameter.InputObjectId" name="InputObjectID"/>
+  <commands xmi:id="_BSxgQE_ZEeWST6jINIj7qQ" elementId="fr.univnantes.termsuite.ui.command.OpenObject" commandName="Open Object" description="Open object in an editor">
+    <parameters xmi:id="_jzXIgLoeEeWOe4SAf8ad9Q" elementId="fr.univnantes.termsuite.ui.commandparameter.InputResourceId" name="InputResourceID"/>
+    <parameters xmi:id="_4OLPUBdyEeayibHHymxkiw" elementId="fr.univnantes.termsuite.ui.commandparameter.InputObjectPath" name="InputObjectPath"/>
   </commands>
   <commands xmi:id="_paaRwFE9EeWJlbJYl3DYnQ" elementId="fr.univnantes.termsuite.ui.command.newpipeline" commandName="New Pipeline" description="Creates a new pipeline"/>
   <commands xmi:id="_U1zxIFJBEeWNjZ8iJmBR2A" elementId="fr.univnantes.termsuite.ui.command.runpipelineselectedcorpus" commandName="Run pipeline on selected corpus" description="Run the current pipeline on selected corpus"/>

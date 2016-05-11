@@ -1,6 +1,7 @@
 package fr.univnantes.termsuite.ui.parts;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,7 +43,7 @@ import com.google.common.io.Files;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
-import fr.univnantes.termsuite.ui.handlers.OpenResourceHandler;
+import fr.univnantes.termsuite.ui.handlers.OpenObjectHandler;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
@@ -58,6 +59,7 @@ import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.util.CommandUtil;
 import fr.univnantes.termsuite.ui.util.CustomTreeNode;
 import fr.univnantes.termsuite.ui.util.CustomTreeNodeManager;
+import fr.univnantes.termsuite.ui.util.FileUtil;
 import fr.univnantes.termsuite.ui.util.LangUtil;
 import fr.univnantes.termsuite.ui.util.jface.ExpandCollapseDoubleClickListener;
 import fr.univnantes.termsuite.ui.util.treeviewer.TreePart;
@@ -74,7 +76,22 @@ public class NavigatorPart implements TreePart {
 	private static final int NODE_FOLDER_DOCUMENT = 5;
 	private static final int NODE_RESOURCES = 6;
 
-	
+	public static class MsgNode {
+		private String msg;
+		private Object parent;
+
+		public MsgNode(Object parent, String msg) {
+			super();
+			this.parent = parent;
+			this.msg = msg;
+		}
+		public String getMsg() {
+			return msg;
+		}
+		public Object getParent() {
+			return parent;
+		}
+	}
 	private CustomTreeNodeManager nodeManager = new CustomTreeNodeManager();
 
 	private final CustomTreeNode THE_CORPORA_NODE = nodeManager.get(null, NODE_CORPORA);
@@ -137,16 +154,16 @@ public class NavigatorPart implements TreePart {
 				if(sel instanceof EResource) {
 					String resourceId = resourceService.getResourceId((EResource)sel);
 					ParameterizedCommand command = commandService.createCommand(
-							OpenResourceHandler.COMMAND_ID, 
-							CommandUtil.params(OpenResourceHandler.PARAM_INPUT_OBJECT_ID, resourceId));
+							OpenObjectHandler.COMMAND_ID, 
+							CommandUtil.params(OpenObjectHandler.PARAM_INPUT_OBJECT_ID, resourceId));
 					if(handlerService.canExecute(command))
 						handlerService.executeHandler(command);
 					
 				} else if(sel instanceof ELinguisticResource) {
 					ELinguisticResource res = (ELinguisticResource)sel;
 					ParameterizedCommand command = commandService.createCommand(
-							OpenResourceHandler.COMMAND_ID, 
-							CommandUtil.params(OpenResourceHandler.PARAM_INPUT_OBJECT_PATH, res.getPath()));
+							OpenObjectHandler.COMMAND_ID, 
+							CommandUtil.params(OpenObjectHandler.PARAM_INPUT_OBJECT_PATH, res.getPath()));
 					if(handlerService.canExecute(command))
 						handlerService.executeHandler(command);
 
@@ -249,7 +266,13 @@ public class NavigatorPart implements TreePart {
 					Collections.sort(documents, TermSuiteUI.DOCUMENT_COMPARATOR);
 					return documents.toArray();
 				} else if (node.getNodeType() == NODE_RESOURCES) {
-					return lingueeService.getLinguisticResourceSets().toArray();
+					Collection<ELinguisticResourceSet> linguisticResourceSets = lingueeService.getLinguisticResourceSets();
+					if(linguisticResourceSets.isEmpty())
+						return new MsgNode[]{new MsgNode(
+								node, 
+								"[An error occurred when loading linguistic resources]")};
+					else
+						return linguisticResourceSets.toArray();
 				}
 			} else if (parentElement instanceof ELinguisticResourceSet) {
 				ELinguisticResourceSet resSet = (ELinguisticResourceSet)parentElement;
@@ -282,6 +305,9 @@ public class NavigatorPart implements TreePart {
 				if (node.getNodeType() == NODE_FOLDER_TERMINO 
 						|| node.getNodeType() == NODE_FOLDER_DOCUMENT ) 
 					return node.getParent();
+			} else if (element instanceof MsgNode) {
+				return ((MsgNode)element).getParent();
+
 			} else if (element instanceof ESingleLanguageCorpus) {
 				ESingleLanguageCorpus c = (ESingleLanguageCorpus) element;
 				return c.getCorpus();
@@ -322,6 +348,8 @@ public class NavigatorPart implements TreePart {
 				}
 			} else if(element instanceof ECorpus)
 				return true;
+			else if (element instanceof ELinguisticResourceSet) 
+				return true;
 			else if(element instanceof ESingleLanguageCorpus)
 				return true;
 			return false;
@@ -351,13 +379,16 @@ public class NavigatorPart implements TreePart {
 					text.append("Documents");
 					cell.setImage(img.get(TermsuiteImg.FOLDER_DOCUMENT));
 				}
+			} else if (element instanceof MsgNode) {
+				MsgNode msgNode = (MsgNode)element;
+				text.append(msgNode.getMsg(), StyledString.COUNTER_STYLER);
 			} else if (cell.getElement() instanceof ELinguisticResourceSet) {
 				ELinguisticResourceSet resSet = (ELinguisticResourceSet) element;
 				text.append(resSet.getLanguage().getName());
 				cell.setImage(img.getFlag(resSet.getLanguage()));
 			} else if (cell.getElement() instanceof ELinguisticResource) {
 				ELinguisticResource res = (ELinguisticResource) element;
-				text.append(res.getName());
+				text.append(FileUtil.getFilename(res.getPath()));
 				cell.setImage(img.get(TermsuiteImg.FILE));
 			} else if (cell.getElement() instanceof File) {
 				File file = (File) element;
