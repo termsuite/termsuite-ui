@@ -3,6 +3,7 @@ package fr.univnantes.termsuite.ui.services;
 import java.io.IOException;
 import java.util.Collection;
 
+import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet;
 
 public interface LinguisticResourcesService {
@@ -17,7 +18,7 @@ public interface LinguisticResourcesService {
 	 * @param resourcePath
 	 * 			The path to the resources to load.
 	 */
-	public void loadCustomResources(String resourcePath);
+	public void loadCustomResourcesToClasspath(String resourcePath);
 	
 	
 	/**
@@ -26,16 +27,15 @@ public interface LinguisticResourcesService {
 	 * and reload the built-in bundle for linguistic resources.
 	 * 
 	 */
-	public void unloadCustomResources();
+	public void unloadCustomResourcesFromClasspath();
 
 	
 	/**
 	 * Loads all the resource sets from a given path into memory.
 	 * 
-	 * @param resourcePath
 	 * @return
 	 */
-	public Collection<ELinguisticResourceSet> getLinguisticResourceSets(String resourcePath);
+	public Collection<ELinguisticResourceSet> getLinguisticResourceSets();
 	
 	/**
 	 * 
@@ -57,7 +57,14 @@ public interface LinguisticResourcesService {
 	 * 
 	 * @throws IllegalArgumentException if the resourcePath is not empty
 	 */
-	public boolean createLinguisticResourceDirectory(String resourcePath) throws IOException;
+	public boolean createLinguisticResourceDirectory(String resourcePath);
+
+
+	
+	/**
+	 * Gets a resource by path.
+	 */
+	public ELinguisticResource getResource(String path);
 
 
 }

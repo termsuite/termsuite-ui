@@ -17,6 +17,7 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.parts.FileEditorPart;
@@ -24,6 +25,7 @@ import fr.univnantes.termsuite.ui.parts.PipelinePart;
 import fr.univnantes.termsuite.ui.parts.TerminologyPart;
 import fr.univnantes.termsuite.ui.parts.TermsuiteImg;
 import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.LinguisticResourcesService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 
 public class OpenResourceHandler {
@@ -33,17 +35,25 @@ public class OpenResourceHandler {
 	public static final String COMMAND_ID = "fr.univnantes.termsuite.ui.command.OpenResource";
 	
 	public static final String PARAM_INPUT_OBJECT_ID = "fr.univnantes.termsuite.ui.commandparameter.InputObjectId";
+
+	public static final String PARAM_INPUT_OBJECT_PATH = "fr.univnantes.termsuite.ui.commandparameter.InputObjectPath";
 	
 	@Execute
 	public void execute(               
 			@Optional @Named(PARAM_INPUT_OBJECT_ID) String inputObjectId,
+			@Optional @Named(PARAM_INPUT_OBJECT_PATH) String inputObjectPath,
 			ResourceService resourceService,
+			LinguisticResourcesService linguisticResourcesService,
 			EPartService partService, 
 			CorpusService corpusService, 
 			MApplication application,
 			EModelService modelService,
 			IEventBroker eventBroker) {
-		Object inputObject = resourceService.getResource(inputObjectId);
+		Object inputObject = null;
+		if(inputObjectId != null)
+			inputObject = resourceService.getResource(inputObjectId);
+		else if(inputObjectPath != null)
+			inputObject = linguisticResourcesService.getResource(inputObjectPath);
 //		Object inputObject = selectionService.getSelection();
 		for(MPart part:partService.getParts()) {
 			IEclipseContext context = part.getContext();
@@ -69,6 +79,8 @@ public class OpenResourceHandler {
 					termino.getCorpus().getCorpus().getName(), 
 					termino.getCorpus().getLanguage().getName().toLowerCase(), 
 					termino.getName());	
+		} else if(inputObject instanceof ELinguisticResource) {
+			throw new UnsupportedOperationException("Not yet implemented");
 		} else if(inputObject instanceof EPipeline) {
 			partId = PipelinePart.ID;
 			label = ((EPipeline)inputObject).getFilename();
@@ -91,7 +103,14 @@ public class OpenResourceHandler {
 	@CanExecute
 	public boolean canExecute(
 			@Optional @Named(PARAM_INPUT_OBJECT_ID) String inputObjectId,
+			@Optional @Named(PARAM_INPUT_OBJECT_PATH) String inputObjectPath,
+			LinguisticResourcesService linguisticResourcesService,
 			ResourceService resourceService) {
-		return resourceService.getResource(inputObjectId) != null;
+		if(inputObjectId != null)
+			return resourceService.getResource(inputObjectId) != null;
+		if(inputObjectPath != null)
+			return linguisticResourcesService.getResource(inputObjectPath) != null;
+		return false;
+
 	}
 }

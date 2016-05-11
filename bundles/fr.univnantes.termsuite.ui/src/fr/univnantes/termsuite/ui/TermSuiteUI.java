@@ -33,6 +33,7 @@ public class TermSuiteUI {
 	public static final String WEB_SITE_DOC_URL = WEB_SITE_URL + "documentation/";
 	public static final String WEB_SITE_TAGGER_DOC_URL = WEB_SITE_DOC_URL + "pos-tagger-lemmatizer/";
 	public static final String PLUGIN_ID = "fr.univnantes.termsuite.ui";
+	public static final String PLUGIN_TERMSUITE_RESOURCES_ID = "fr.univnantes.termsuite.resources";
 	public static final String UI_MAIN_PART_STACK = "fr.univnantes.termsuite.ui.partstack.main";
 
 	public static final String INPUT_OBJECT = "InputObject";

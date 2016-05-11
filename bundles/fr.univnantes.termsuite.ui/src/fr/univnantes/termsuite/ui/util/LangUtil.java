@@ -2,10 +2,12 @@ package fr.univnantes.termsuite.ui.util;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import eu.project.ttc.engines.desc.Lang;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
@@ -45,8 +47,29 @@ public class LangUtil {
 	public static Collection<ELang> getSupportedLanguages() {
 		return tsLangs.keySet();
 	}
+	
+	public static Collection<String> getSupportedLanguagesAsResourcePatterns() {
+		Set<String> patterns = Sets.newHashSet();
+		for(ELang supportedLang:getSupportedLanguages()) 
+			patterns.add(getCode(supportedLang) + "/");
+		return patterns;
+	}
+
+	private static String getCode(ELang supportedLang) {
+		return getTermsuiteLang(supportedLang).getCode();
+	}
+
+	
 	public static boolean isLangSupported(ELang lang) {
 		return tsLangs.containsKey(lang);
+	}
+
+	public static boolean isLangSupportedByCode(String code) {
+		ELang lang = getLangByCode(code);
+		if(lang == null)
+			return false;
+		else
+			return isLangSupported(lang);
 	}
 
 	public static String getCountry(ELang lang) {

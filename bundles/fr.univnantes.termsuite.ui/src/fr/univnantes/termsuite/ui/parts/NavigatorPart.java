@@ -45,6 +45,8 @@ import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.handlers.OpenResourceHandler;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
@@ -88,6 +90,9 @@ public class NavigatorPart implements TreePart {
 
 	@Inject
 	private PipelineService pipelineService;
+
+	@Inject
+	private LinguisticResourcesService lingueeService;
 
 	
 	@Inject
@@ -137,7 +142,16 @@ public class NavigatorPart implements TreePart {
 					if(handlerService.canExecute(command))
 						handlerService.executeHandler(command);
 					
-				} 
+				} else if(sel instanceof ELinguisticResource) {
+					ELinguisticResource res = (ELinguisticResource)sel;
+					ParameterizedCommand command = commandService.createCommand(
+							OpenResourceHandler.COMMAND_ID, 
+							CommandUtil.params(OpenResourceHandler.PARAM_INPUT_OBJECT_PATH, res.getPath()));
+					if(handlerService.canExecute(command))
+						handlerService.executeHandler(command);
+
+				}
+
 			}
 		};
 		viewer.addDoubleClickListener(doubleClickHandler);
@@ -234,7 +248,12 @@ public class NavigatorPart implements TreePart {
 					List<EDocument> documents = Lists.newArrayList(c.getDocuments());
 					Collections.sort(documents, TermSuiteUI.DOCUMENT_COMPARATOR);
 					return documents.toArray();
+				} else if (node.getNodeType() == NODE_RESOURCES) {
+					return lingueeService.getLinguisticResourceSets().toArray();
 				}
+			} else if (parentElement instanceof ELinguisticResourceSet) {
+				ELinguisticResourceSet resSet = (ELinguisticResourceSet)parentElement;
+				return resSet.getResources().toArray();
 			} else if (parentElement instanceof ECorpus) {
 				ECorpus c = (ECorpus) parentElement;
 				List<ESingleLanguageCorpus> slcList = Lists.newArrayList();
@@ -266,6 +285,10 @@ public class NavigatorPart implements TreePart {
 			} else if (element instanceof ESingleLanguageCorpus) {
 				ESingleLanguageCorpus c = (ESingleLanguageCorpus) element;
 				return c.getCorpus();
+			} else if (element instanceof ELinguisticResource) {
+				return ((ELinguisticResource)element).getResourceSet();
+			} else if (element instanceof ELinguisticResourceSet) {
+				return THE_RESOURCE_NODE;
 			} else if (element instanceof ECorpus) {
 				return THE_CORPORA_NODE;
 			} else if (element instanceof EPipeline) {
@@ -286,6 +309,8 @@ public class NavigatorPart implements TreePart {
 				CustomTreeNode node = (CustomTreeNode)element;
 				if(node.getNodeType() == NODE_CORPORA)
 					return !corpusService.getCorporaList().getCorpora().isEmpty();
+				else if (node.getNodeType() == NODE_RESOURCES)
+					return true;
 				else if (node.getNodeType() == NODE_PIPELINES)
 					return !pipelineService.getPipelineList().getPipelines().isEmpty();
 				else if (node.getNodeType() == NODE_FOLDER_TERMINO) {
@@ -319,10 +344,21 @@ public class NavigatorPart implements TreePart {
 				} else if (node.getNodeType() == NODE_FOLDER_TERMINO) {
 					text.append("Terminologies");
 					cell.setImage(img.get(TermsuiteImg.FOLDER_TERMINO));
+				} else if (node.getNodeType() == NODE_RESOURCES) {
+					text.append("Linguistic resources");
+					cell.setImage(img.get(TermsuiteImg.LINGUISTIC_RESOURCES));
 				} else if (node.getNodeType() == NODE_FOLDER_DOCUMENT) {
 					text.append("Documents");
 					cell.setImage(img.get(TermsuiteImg.FOLDER_DOCUMENT));
 				}
+			} else if (cell.getElement() instanceof ELinguisticResourceSet) {
+				ELinguisticResourceSet resSet = (ELinguisticResourceSet) element;
+				text.append(resSet.getLanguage().getName());
+				cell.setImage(img.getFlag(resSet.getLanguage()));
+			} else if (cell.getElement() instanceof ELinguisticResource) {
+				ELinguisticResource res = (ELinguisticResource) element;
+				text.append(res.getName());
+				cell.setImage(img.get(TermsuiteImg.FILE));
 			} else if (cell.getElement() instanceof File) {
 				File file = (File) element;
 				if (file.isDirectory()) {
