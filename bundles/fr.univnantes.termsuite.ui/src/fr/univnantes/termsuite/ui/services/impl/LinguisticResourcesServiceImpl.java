@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Map;
@@ -187,6 +189,7 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 								false);
 					}
 				} 
+				ensureMetainfPresent(this.customResourcePath);
 				logger.debug(resourceSets.size() + " resource sets loaded from path: " + customResourcePath);
 			} catch(ValidationException e) {
 				logger.error("Could not load resources", e);
@@ -194,6 +197,32 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 			}
 		}
 		return resourceSets;
+	}
+
+	private void ensureMetainfPresent(String customResourcePath) {
+		try {
+			Path metaInf = Paths.get(customResourcePath, "META-INF");
+			if(metaInf.toFile().exists()) {
+				logger.debug("META-INF/ directory found at " + customResourcePath);
+				Preconditions.checkArgument(metaInf.toFile().isDirectory(), "META-INF is not a directory");
+			} else 
+				metaInf.toFile().mkdirs();
+	
+			Path manifest = Paths.get(customResourcePath, "META-INF", "MANIFEST.MF");
+			if(manifest.toFile().exists()) {
+				logger.info("META-INF/MANIFEST.MF file found at " + customResourcePath);
+				Preconditions.checkArgument(manifest.toFile().isFile(), "MANIFEST.MF is not a file");
+			} else  {
+				URL skeletonURL = new URL("platform:/plugin/"+TermSuiteUI.PLUGIN_ID+"/resources/MANIFEST.MF.skeleton");
+			    
+				logger.info("Creating META-INF/MANIFEST.MF file found at " + customResourcePath);
+				ByteStreams.copy(skeletonURL.openStream(), new FileOutputStream(manifest.toFile()));
+			}
+		} catch (Exception e) {
+			logger.error("Could not create the META-INF/MANIFEST.MF file");
+			logger.error(e);
+		}
+
 	}
 
 	@Override
@@ -210,6 +239,7 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 	public boolean createLinguisticResourceDirectory(String resourcePath) {
 		try {
 			Stopwatch swTotal = Stopwatch.createStarted();
+			logger.info("Creating a custom resource directory at " + resourcePath);
 			URL resourceJarUrl = new URL("platform:/plugin/"+TermSuiteUI.PLUGIN_TERMSUITE_RESOURCES_ID+"/termsuite-resources.jar");
 			File tmpJarFile = File.createTempFile("termsuite-resources", ".jar");
 			FileUtil.inputStreamToFile(
@@ -236,7 +266,7 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 			jarFile.close();
 			tmpJarFile.deleteOnExit();
 			swTotal.stop();
-			logger.info("Total jar extraction time: " + swTotal.elapsed(TimeUnit.MILLISECONDS) + "ms" );
+			logger.debug("Total jar extraction time: " + swTotal.elapsed(TimeUnit.MILLISECONDS) + "ms" );
 			return true;
 		} catch (IOException e) {
 			logger.error(e);
