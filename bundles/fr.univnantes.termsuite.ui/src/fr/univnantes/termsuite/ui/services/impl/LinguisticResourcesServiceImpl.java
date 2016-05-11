@@ -15,10 +15,18 @@ import java.util.jar.JarFile;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.core.services.log.ILoggerProvider;
 import org.eclipse.e4.core.services.log.Logger;
+import org.eclipse.e4.ui.services.IServiceConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
@@ -54,6 +62,11 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 	private Map<String, ELinguisticResource> resourcesByPath = null;
 	private Collection<ELinguisticResourceSet> resourceSets = null;
 	
+	@Inject
+	IEclipseContext context;
+	
+	private Bundle customResourcesBundle = null;
+	
 	Logger logger;
 	
 	@PostConstruct
@@ -84,19 +97,72 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 			
 	}
 	
+	
 	@Override
-	public void loadCustomResourcesToClasspath(String resourcePath) {
+	public String loadCustomResourcesToClasspath(String resourcePath) {
 		Preconditions.checkState(withCustomResources, "The use of custom resources is not allowed");
-		logger.info("Unloading built-in linguistic resources from classpath");
-		logger.info("Loading custom linguistic resources ["+customResourcePath+"] to classpath");
-		throw new UnsupportedOperationException("Not yet implemented");
+		logger.info("Stopping built-in linguistic resources from classpath");
+		try {
+			
+			Bundle bundle = getBuiltinResourcesBundle();
+			bundle.stop();
+		} catch (Exception e) {
+			logger.error(e);
+			logger.error("Built-in linguistic resources could not be unloaded.");
+			logger.warn("Using built-in resources instead of custom resources.");
+			MessageDialog.openError(
+					(Shell)context.get(IServiceConstants.ACTIVE_SHELL), 
+					"Error",
+					"Custom linguistic resources could not be loaded. Using built-in resources instead of custom resources.");
+			return null;
+		}
+		try {
+			logger.info("Loading custom linguistic resources at "+customResourcePath+" to classpath");
+			customResourcesBundle = getBundleCtx().installBundle("reference:file:" + resourcePath);
+			customResourcesBundle.start();
+			return customResourcesBundle.getSymbolicName();
+		} catch (Exception e) {
+			logger.error(e);
+			logger.error("Custom linguistic resources could not be loaded.");
+			logger.warn("Reloading built-in resources instead of custom resources.");
+			try {
+				 getBuiltinResourcesBundle().start();
+			} catch (BundleException e1) {
+				logger.error("Unable to restart the built-in resources plugin " + getBuiltinResourcesBundle().getSymbolicName());
+				logger.error(e);
+			}
+			MessageDialog.openError(
+					(Shell)context.get(IServiceConstants.ACTIVE_SHELL), 
+					"Error",
+					"Custom linguistic resources could not be loaded. Using built-in resources instead of custom resources.");
+			return null;
+		}
+	}
+
+	private Bundle getBuiltinResourcesBundle() {
+		return Platform.getBundle(TermSuiteUI.PLUGIN_TERMSUITE_RESOURCES_ID);
+	}
+
+	private BundleContext getBundleCtx() {
+		return Platform.getBundle(TermSuiteUI.PLUGIN_ID).getBundleContext();
 	}
 
 	@Override
 	public void unloadCustomResourcesFromClasspath() {
-		logger.info("Unloading custom linguistic resources ["+customResourcePath+"] from classpath");
-		logger.info("Loading built-in linguistic resources to classpath");
-		throw new UnsupportedOperationException("Not yet implemented");		
+		if(customResourcesBundle != null)
+			try {
+				logger.info("Unloading custom linguistic resources ["+customResourcePath+"] from classpath");
+				customResourcesBundle.stop();
+				logger.info("Loading built-in linguistic resources to classpath");
+				getBuiltinResourcesBundle().start();
+			} catch (BundleException e) {
+				logger.error("Could not reload custom resources.");
+				logger.error(e);
+				MessageDialog.openError(
+						(Shell)context.get(IServiceConstants.ACTIVE_SHELL), 
+						"Error",
+						"Custom linguistic resources could not be loaded. Using built-in resources instead of custom resources.");
+			}
 	}
 
 	@Override

@@ -65,6 +65,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ETaggerConfig;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
 import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.LinguisticResourcesService;
 import fr.univnantes.termsuite.ui.services.TaggerService;
 import fr.univnantes.termsuite.ui.services.TerminoService;
 import fr.univnantes.termsuite.ui.util.FileUtil;
@@ -255,10 +256,19 @@ public class CorpusServiceImpl implements CorpusService {
 	 * @see fr.univnantes.termsuite.ui.services.CorpusService#runPipelineOnCorpus(fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline, fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus)
 	 */
 	private void runPipelineOnCorpus(final EPipeline pipeline, final Iterable<ESingleLanguageCorpus> corpusList) {
-		
-		
+		String resourcePrefix = "platform:/plugin/fr.univnantes.termsuite.resources/";
+
+		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(TermSuiteUI.PLUGIN_ID);
+		boolean customResourceActivated = preferences.getBoolean(TermSuiteUIPreferences.ACTIVATE_CUSTOM_RESOURCES, false);
+		LinguisticResourcesService linguisticResourcesService = context.get(LinguisticResourcesService.class);
+		if(customResourceActivated) {
+			String customResourcePath = preferences.get(TermSuiteUIPreferences.LINGUISTIC_RESOURCES_DIRECTORY, "");
+			String customResourcesPluginId = linguisticResourcesService.loadCustomResourcesToClasspath(customResourcePath);
+			resourcePrefix = String.format("platform:/plugin/%s/", customResourcesPluginId);
+		}
+
 		for(final ESingleLanguageCorpus corpus:corpusList) {
-			final TermSuitePipeline tsp = toTermSuitePipeline(pipeline, corpus);
+			final TermSuitePipeline tsp = toTermSuitePipeline(pipeline, corpus, resourcePrefix);
 	
 			String jobName = "Running pipeline " + pipeline.getFilename() + " on corpus " + corpus.getCorpus().getPath() + "/" + corpus.getLanguage().getName();
 			
@@ -292,17 +302,21 @@ public class CorpusServiceImpl implements CorpusService {
 				}
 			});
 		}
+		
+		if(customResourceActivated) 
+			linguisticResourcesService.unloadCustomResourcesFromClasspath();
+
 	}
 
 
 
-	private TermSuitePipeline toTermSuitePipeline(EPipeline pipeline, ESingleLanguageCorpus corpus) {
+	private TermSuitePipeline toTermSuitePipeline(EPipeline pipeline, ESingleLanguageCorpus corpus, String resourcePrefix) {
 		TaggerService taggerService = context.get(TaggerService.class);
 		
 		TermSuiteCLIUtils.disableLogging();
 		Lang tsLang = LangUtil.getTermsuiteLang(corpus.getLanguage());
 		
-		TermSuitePipeline tsp = TermSuitePipeline.create(tsLang.getCode(), "platform:/plugin/fr.univnantes.termsuite.resources/");
+		TermSuitePipeline tsp = TermSuitePipeline.create(tsLang.getCode(), resourcePrefix);
 		
 		tsp
 			.setCollection(
@@ -310,7 +324,6 @@ public class CorpusServiceImpl implements CorpusService {
 					this.getCollectionPath(corpus), 
 					"UTF-8");
 		
-//			.setResourcePath("/home/cram-d/AppData/termsuite-resources.jar")
 		tsp.aeWordTokenizer();
 		
 		ETaggerConfig taggerConfig = taggerService.getTaggerConfig(pipeline);

@@ -1,6 +1,5 @@
 package fr.univnantes.termsuite.ui.services;
 
-import java.io.IOException;
 import java.util.Collection;
 
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
@@ -17,8 +16,10 @@ public interface LinguisticResourcesService {
 	 * 
 	 * @param resourcePath
 	 * 			The path to the resources to load.
+	 * @return
+	 * 			The OSGi plugin ID of the created bundle.
 	 */
-	public void loadCustomResourcesToClasspath(String resourcePath);
+	public String loadCustomResourcesToClasspath(String resourcePath);
 	
 	
 	/**
