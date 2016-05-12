@@ -17,7 +17,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -47,7 +46,6 @@ import eu.project.ttc.models.OccurrenceType;
 import eu.project.ttc.models.TermIndex;
 import eu.project.ttc.models.TermOccurrence;
 import eu.project.ttc.tools.TermSuitePipeline;
-import eu.project.ttc.tools.cli.TermSuiteCLIUtils;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
@@ -438,7 +436,7 @@ public class CorpusServiceImpl implements CorpusService {
 		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(TermSuiteUI.PLUGIN_ID);
 		String rootOutputDir = preferences.get(
 				TermSuiteUIPreferences.OUTPUT_DIRECTORY, 
-				Paths.get(Platform.getInstanceLocation().getURL().getPath(), "output").toUri().getPath());
+				WorkspaceUtil.getWorkspacePath( "output").toString());
 		Path path = Paths.get(
 				rootOutputDir, 
 				corpus.getCorpus().getName(), 

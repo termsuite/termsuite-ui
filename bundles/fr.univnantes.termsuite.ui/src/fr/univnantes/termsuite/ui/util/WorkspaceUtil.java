@@ -3,6 +3,8 @@ package fr.univnantes.termsuite.ui.util;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -76,6 +78,23 @@ public class WorkspaceUtil {
 		p.toFile().delete();
 	}
 	
+
+	public static URL getWorkspaceURL() {
+		return Platform.getInstanceLocation().getURL();
+	}
+	
+	public static Path getWorkspacePath() {
+		try {
+			return Paths.get(getWorkspaceURL().toURI());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static Path getWorkspacePath(String... elements) {
+		return Paths.get(getWorkspacePath().toString(), elements);
+	}
 
 	
 	public static <T extends EObject> List<T> loadResources(String dir, final String extension, Class<T> cls) {
