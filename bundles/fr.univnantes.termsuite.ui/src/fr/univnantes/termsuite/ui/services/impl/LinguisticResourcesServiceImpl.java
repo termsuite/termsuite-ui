@@ -44,6 +44,7 @@ import fr.univnantes.termsuite.ui.util.FileUtil;
 import fr.univnantes.termsuite.ui.util.LangUtil;
 import fr.univnantes.termsuite.ui.util.LinguisticResourceUtil;
 import fr.univnantes.termsuite.ui.util.ValidationException;
+import fr.univnantes.termsuite.ui.util.WorkspaceUtil;
 
 @SuppressWarnings("restriction")
 public class LinguisticResourcesServiceImpl implements LinguisticResourcesService {
@@ -265,7 +266,7 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 			Stopwatch swTotal = Stopwatch.createStarted();
 			logger.info("Creating a custom resource directory at " + this.customResourcePath);
 			URL resourceJarUrl = new URL("platform:/plugin/"+TermSuiteUI.PLUGIN_TERMSUITE_RESOURCES_ID+"/termsuite-resources.jar");
-			File tmpJarFile = File.createTempFile("termsuite-resources", ".jar");
+			File tmpJarFile = File.createTempFile("termsuite-resources", ".jar", WorkspaceUtil.getTempDir());
 			FileUtil.inputStreamToFile(
 					resourceJarUrl.openConnection().getInputStream(), 
 					tmpJarFile);

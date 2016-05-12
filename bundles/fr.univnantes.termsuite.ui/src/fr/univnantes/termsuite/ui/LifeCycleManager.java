@@ -39,7 +39,7 @@ import fr.univnantes.termsuite.ui.services.impl.TaggerServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.TermIndexServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.TermSuiteSelectionServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.TerminoServiceImpl;
-import fr.univnantes.termsuite.ui.util.FileUtil;
+import fr.univnantes.termsuite.ui.util.WorkspaceUtil;
 
 @SuppressWarnings("restriction")
 public class LifeCycleManager {
@@ -56,14 +56,9 @@ public class LifeCycleManager {
 		logStartup();		
 		logContextualInfo();
 		addServicesToContext(cont);
-		deleteTermSuiteTempFiles();
+		WorkspaceUtil.deleteTermSuiteTempFiles();
 	}
 
-	private void deleteTermSuiteTempFiles() {
-		logger.debug("Removing TermSuite temp files");
-		for(String file:FileUtil.removeTermSuiteTempFiles())
-			logger.debug("Temp file removed: " + file);
-	}
 
 	private void addServicesToContext(IEclipseContext cont) {
 		cont.set(LinguisticResourcesService.class, ContextInjectionFactory.make(LinguisticResourcesServiceImpl.class, cont));

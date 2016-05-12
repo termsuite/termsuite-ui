@@ -6,12 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 
 import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 
 public class FileUtil {
 
@@ -39,18 +37,6 @@ public class FileUtil {
 		outStream.close();
 	}
 	
-	public static final Collection<String> removeTermSuiteTempFiles() {
-		Collection<String> remPaths = Lists.newArrayList();
-		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
-		for(File tmpFile:tmpDir.listFiles()) {
-			if(tmpFile.getName().startsWith("termsuite-")) {
-				remPaths.add(tmpFile.getPath());
-				tmpFile.delete();
-			}
-		}
-		return remPaths;
-	}
-
 	public static String getFilename(String path) {
 		List<String> list = Splitter.on(File.separator).splitToList(path);
 		return list.get(list.size() - 1);

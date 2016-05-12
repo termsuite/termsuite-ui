@@ -146,5 +146,15 @@ public class WorkspaceUtil {
 		return file.toString();
 	}
 
+	public static File getTempDir() {
+		File tmpDir = getWorkspacePath("tmp").toFile();
+		if(!tmpDir.exists())
+			tmpDir.mkdir();
+		return tmpDir;
+	}
+
+	public static void deleteTermSuiteTempFiles() {
+		getTempDir().delete();
+	}
 	
 }
