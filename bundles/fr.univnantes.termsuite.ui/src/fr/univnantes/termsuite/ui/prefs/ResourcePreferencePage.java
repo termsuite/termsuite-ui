@@ -63,6 +63,11 @@ public class ResourcePreferencePage extends FieldEditorPreferencePage {
 		 */
 		addField(new DirectoryFieldEditor(TermSuiteUIPreferences.DICTIONARY_DIRECTORY, "Location of bilingual dictionaries:", getFieldEditorParent()));		
 		
+	}
+	
+	@Override
+	protected void initialize() {
+		super.initialize();
 		validate();
 	}
 
@@ -75,7 +80,8 @@ public class ResourcePreferencePage extends FieldEditorPreferencePage {
 	private void validate() {
 		String errorMsg = null;
 		if(linguisticPathField != null) {
-			linguisticPathField.setEnabled(activeCustomResourcesEditor.getBooleanValue(), linguisticPathFieldEditorParent);
+			boolean active = activeCustomResourcesEditor.getBooleanValue();
+			linguisticPathField.setEnabled(active, linguisticPathFieldEditorParent);
 			copyBuiltinResourcesIfEmptyEditor.setEnabled(activeCustomResourcesEditor.getBooleanValue(), copyBuiltinResourcesIfEmptyEditorParent);
 			if(activeCustomResourcesEditor.getBooleanValue()) {
 				try {
