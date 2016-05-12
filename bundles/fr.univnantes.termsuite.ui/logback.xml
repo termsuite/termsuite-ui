@@ -1,20 +1,50 @@
 <configuration>
    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+       <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+	      <level>INFO</level>
+	    </filter>
       <encoder>
          <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
       </encoder>
    </appender>
 
-   <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-      <file>termsuite.log</file>
+   <appender name="FILE_DEBUG" class="ch.qos.logback.core.FileAppender">
+      <file>termsuite-debug.log</file>
       <append>true</append>
+       <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+	      <level>DEBUG</level>
+	    </filter>
       <encoder>
-         <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+         <pattern>%d [%thread] %-5level %logger{36} - %msg%n</pattern>
+      </encoder>
+   </appender>
+
+   <appender name="FILE_INFO" class="ch.qos.logback.core.FileAppender">
+      <file>termsuite-info.log</file>
+      <append>true</append>
+       <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+	      <level>INFO</level>
+	    </filter>
+      <encoder>
+         <pattern>%d [%thread] %-5level %logger{36} - %msg%n</pattern>
+      </encoder>
+   </appender>
+
+   <appender name="FILE_ERROR" class="ch.qos.logback.core.FileAppender">
+      <file>termsuite-error.log</file>
+      <append>true</append>
+       <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+	      <level>WARN</level>
+	    </filter>
+      <encoder>
+         <pattern>%d [%thread] %-5level %logger{36} - %msg%n</pattern>
       </encoder>
    </appender>
 
    <root level="debug">
-      <appender-ref ref="FILE" />
+      <appender-ref ref="FILE_DEBUG" />
+      <appender-ref ref="FILE_INFO" />
+      <appender-ref ref="FILE_ERROR" />
       <appender-ref ref="STDOUT" />
    </root>
 
