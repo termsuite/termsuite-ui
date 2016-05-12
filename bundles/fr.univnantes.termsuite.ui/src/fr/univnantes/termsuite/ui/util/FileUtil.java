@@ -35,6 +35,7 @@ public class FileUtil {
 		is.read(buffer);
 		OutputStream outStream = new FileOutputStream(targetFile);
 		outStream.write(buffer);
+		outStream.flush();
 		outStream.close();
 	}
 	
