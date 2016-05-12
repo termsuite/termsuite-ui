@@ -19,12 +19,8 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
 import fr.univnantes.termsuite.ui.styles.StylerBuilder;
 import fr.univnantes.termsuite.ui.util.CorpusUtil;
 /*
- * TODO Remove Pipeline main section
  * TODO Clean Pipeline model's obsolete fields
  * TODO Make the "run" button disabled if pipeline is not validated
- * TODO Debug the highlight in Document Editor
- * TODO Listen to preferences's Wrap option
- * TODO TermSuite resources as OSGi
  */
 public class TermSuiteUI {
 	
