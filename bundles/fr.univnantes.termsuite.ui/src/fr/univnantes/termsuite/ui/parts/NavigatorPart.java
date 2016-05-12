@@ -221,9 +221,11 @@ public class NavigatorPart implements TreePart {
 			@Preference(value = TermSuiteUIPreferences.LINGUISTIC_RESOURCES_DIRECTORY) String customResourcePath
 			) {
 		this.withCustomResources = active;
-		if(active)
+		if(active) {
 			this.customResourcePath = customResourcePath;
-		
+			if(this.viewer != null)
+				this.viewer.collapseToLevel(THE_RESOURCE_NODE, 0);
+		}
 		if(this.viewer != null)
 			this.viewer.setInput(getRootNodes());
 	}

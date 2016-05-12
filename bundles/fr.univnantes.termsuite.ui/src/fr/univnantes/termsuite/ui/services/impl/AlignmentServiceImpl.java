@@ -58,7 +58,7 @@ public class AlignmentServiceImpl implements AlignmentService {
 	@Inject
 	@Optional
 	public void reactOnInputDirectoryChange( @Preference(value = TermSuiteUIPreferences.DICTIONARY_DIRECTORY) String dictionaryDirectory) {
-		getLogger().info("New value for pref " + TermSuiteUIPreferences.DICTIONARY_DIRECTORY + ": " + dictionaryDirectory);
+		getLogger().debug("Modification detected in preferences: " + TermSuiteUIPreferences.DICTIONARY_DIRECTORY + "=" + dictionaryDirectory);
 	}
 	
 

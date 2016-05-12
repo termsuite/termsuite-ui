@@ -61,14 +61,16 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 	@Preference(value = TermSuiteUIPreferences.LINGUISTIC_RESOURCES_DIRECTORY)
 	private String customResourcePath;
 	
-	private Map<String, ELinguisticResource> resourcesByPath = null;
-	private Collection<ELinguisticResourceSet> resourceSets = null;
-	
 	@Inject
 	IEclipseContext context;
-	
+
+	/*
+	 * Cache fields
+	 */
+	private Map<String, ELinguisticResource> resourcesByPath = null;
+	private Collection<ELinguisticResourceSet> resourceSets = null;
 	private Bundle customResourcesBundle = null;
-	
+
 	Logger logger;
 	
 	@PostConstruct
@@ -77,31 +79,66 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 		logger.debug("Loading service " + LinguisticResourcesServiceImpl.class);		
 	}
 	
+	private void resetCache() {
+		customResourcesBundle = null;
+		resourcesByPath = null;
+		resourceSets = null;
+	}
+	
+	@Inject
+	@Optional
+	public void reactOnCustomResourceActiveChange( 
+			LinguisticResourcesService lingueeService, 
+			@Preference(value = TermSuiteUIPreferences.ACTIVATE_CUSTOM_RESOURCES) boolean active
+			) {
+		this.withCustomResources = active;
+		logger.debug("Modification detected in preferences: custom resources are now " + (this.withCustomResources ? "activated": "deactivated") );
+		if(this.withCustomResources == false) {
+			this.unloadCustomResourcesFromClasspath();
+		}
+		resetCache();
+	}
+
 	@Inject
 	@Optional
 	public void reactOnCustomResourceChange( 
 			LinguisticResourcesService lingueeService, 
-			@Preference(value = TermSuiteUIPreferences.ACTIVATE_CUSTOM_RESOURCES) boolean active,
-			@Preference(value = TermSuiteUIPreferences.COPY_BUILTIN_RESOURCES_IF_EMPTY) boolean copyIfEmpty,
+			@Preference(value = TermSuiteUIPreferences.COPY_BUILTIN_RESOURCES_IF_EMPTY) boolean copyIfEmpty
+			) {
+		this.copyIfEmpty = copyIfEmpty;
+		logger.debug("Modification detected in preferences: copy built-in resources if target dir empty: " + this.copyIfEmpty);
+		resetCache();
+	}
+
+	@Inject
+	@Optional
+	public void reactOnCustomResourceChange( 
+			LinguisticResourcesService lingueeService, 
 			@Preference(value = TermSuiteUIPreferences.LINGUISTIC_RESOURCES_DIRECTORY) String customResourcePath
 			) {
-		logger.debug("New value detected for Custom resources preferences");		
-		this.withCustomResources = active;
-		this.copyIfEmpty = copyIfEmpty;
 		this.customResourcePath = customResourcePath;
-		logger.debug("Custom resources activated: " + this.withCustomResources);
-		logger.debug("Custom resources path: " + this.customResourcePath);
-		logger.debug("Create/copy if empty: " + this.copyIfEmpty);
-		if(this.withCustomResources == false) {
-			this.resourcesByPath = null;
-			this.resourceSets = null;
-		}
-			
+		logger.debug("Modification detected in preferences: customResourcePath is " + this.customResourcePath);
+		resetCache();
+	}
+
+	@Override
+	public Bundle getLinguisticResourceBundle() {
+		if(this.withCustomResources) 
+			return getCustomResourcesBundle();
+		else 
+			return getBuiltinResourcesBundle();
 	}
 	
+	private Bundle getCustomResourcesBundle(){
+		Preconditions.checkState(this.withCustomResources, "Custom resources are not activated");
+		if(this.customResourcesBundle == null) {
+			this.customResourcesBundle = loadCustomResourcesToClasspath();
+			
+		}
+		return this.customResourcesBundle;
+	}
 	
-	@Override
-	public String loadCustomResourcesToClasspath(String resourcePath) {
+	public Bundle loadCustomResourcesToClasspath() {
 		Preconditions.checkState(withCustomResources, "The use of custom resources is not allowed");
 		logger.info("Stopping built-in linguistic resources from classpath");
 		try {
@@ -120,9 +157,9 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 		}
 		try {
 			logger.info("Loading custom linguistic resources at "+customResourcePath+" to classpath");
-			customResourcesBundle = getBundleCtx().installBundle("reference:file:" + resourcePath);
-			customResourcesBundle.start();
-			return customResourcesBundle.getSymbolicName();
+			Bundle bundle = getBundleCtx().installBundle("reference:file:" + this.customResourcePath);
+			bundle.start();
+			return bundle;
 		} catch (Exception e) {
 			logger.error(e);
 			logger.error("Custom linguistic resources could not be loaded.");
@@ -149,7 +186,6 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 		return Platform.getBundle(TermSuiteUI.PLUGIN_ID).getBundleContext();
 	}
 
-	@Override
 	public void unloadCustomResourcesFromClasspath() {
 		if(customResourcesBundle != null)
 			try {
@@ -178,7 +214,7 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 						this.copyIfEmpty);
 				if(resourceSets.isEmpty() && this.copyIfEmpty) {
 					logger.info("Custom resource path is empty. Copying built-in resources to directory: " + customResourcePath);
-					if(!createLinguisticResourceDirectory(this.customResourcePath))
+					if(!createLinguisticResourceDirectory())
 						logger.warn("Custom resource directory could not be created");
 					else {
 						/*
@@ -225,21 +261,10 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 
 	}
 
-	@Override
-	public boolean isValidLinguisticResourceDirectory(String resourcePath) {
-		try {
-			LinguisticResourceUtil.getLinguisticResourceSets(resourcePath, false);
-			return true;
-		} catch(ValidationException e) {
-			return false;
-		}
-	}
-
-	@Override
-	public boolean createLinguisticResourceDirectory(String resourcePath) {
+	private boolean createLinguisticResourceDirectory() {
 		try {
 			Stopwatch swTotal = Stopwatch.createStarted();
-			logger.info("Creating a custom resource directory at " + resourcePath);
+			logger.info("Creating a custom resource directory at " + this.customResourcePath);
 			URL resourceJarUrl = new URL("platform:/plugin/"+TermSuiteUI.PLUGIN_TERMSUITE_RESOURCES_ID+"/termsuite-resources.jar");
 			File tmpJarFile = File.createTempFile("termsuite-resources", ".jar");
 			FileUtil.inputStreamToFile(
@@ -252,7 +277,7 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 			    JarEntry srcFile = enumEntries.nextElement();
 			    if(!isResourceNameValid(srcFile.getName()))
 			    	continue;
-			    java.io.File targetFile = new java.io.File(resourcePath + java.io.File.separator + srcFile.getName());
+			    java.io.File targetFile = new java.io.File(this.customResourcePath + java.io.File.separator + srcFile.getName());
 				if(srcFile.isDirectory()) {
 					targetFile.mkdir();
 					continue;

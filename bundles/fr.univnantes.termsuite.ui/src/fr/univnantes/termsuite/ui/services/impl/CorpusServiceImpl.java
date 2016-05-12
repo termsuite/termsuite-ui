@@ -256,16 +256,10 @@ public class CorpusServiceImpl implements CorpusService {
 	 * @see fr.univnantes.termsuite.ui.services.CorpusService#runPipelineOnCorpus(fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline, fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus)
 	 */
 	private void runPipelineOnCorpus(final EPipeline pipeline, final Iterable<ESingleLanguageCorpus> corpusList) {
-		String resourcePrefix = "platform:/plugin/fr.univnantes.termsuite.resources/";
-
-		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(TermSuiteUI.PLUGIN_ID);
-		boolean customResourceActivated = preferences.getBoolean(TermSuiteUIPreferences.ACTIVATE_CUSTOM_RESOURCES, false);
 		LinguisticResourcesService linguisticResourcesService = context.get(LinguisticResourcesService.class);
-		if(customResourceActivated) {
-			String customResourcePath = preferences.get(TermSuiteUIPreferences.LINGUISTIC_RESOURCES_DIRECTORY, "");
-			String customResourcesPluginId = linguisticResourcesService.loadCustomResourcesToClasspath(customResourcePath);
-			resourcePrefix = String.format("platform:/plugin/%s/", customResourcesPluginId);
-		}
+		String resourcePrefix = String.format(
+				"platform:/plugin/%s/", 
+				linguisticResourcesService.getLinguisticResourceBundle().getSymbolicName());
 
 		for(final ESingleLanguageCorpus corpus:corpusList) {
 			final TermSuitePipeline tsp = toTermSuitePipeline(pipeline, corpus, resourcePrefix);
@@ -302,9 +296,6 @@ public class CorpusServiceImpl implements CorpusService {
 				}
 			});
 		}
-		
-		if(customResourceActivated) 
-			linguisticResourcesService.unloadCustomResourcesFromClasspath();
 
 	}
 
@@ -313,7 +304,6 @@ public class CorpusServiceImpl implements CorpusService {
 	private TermSuitePipeline toTermSuitePipeline(EPipeline pipeline, ESingleLanguageCorpus corpus, String resourcePrefix) {
 		TaggerService taggerService = context.get(TaggerService.class);
 		
-		TermSuiteCLIUtils.disableLogging();
 		Lang tsLang = LangUtil.getTermsuiteLang(corpus.getLanguage());
 		
 		TermSuitePipeline tsp = TermSuitePipeline.create(tsLang.getCode(), resourcePrefix);
