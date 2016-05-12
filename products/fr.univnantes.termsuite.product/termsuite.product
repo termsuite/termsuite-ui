@@ -4,12 +4,11 @@
 <product name="TermSuite" uid="fr.univnantes.termsuite" id="fr.univnantes.termsuite.ui.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="2.1.2.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
-      <image path="/fr.univnantes.termsuite.ui.product/img/logo-termsuite.png"/>
+      <image path="img/logo-termsuite.png"/>
       <text>
          TermSuite is a Java UIMA-based toolbox for terminology extraction and multilingual term alignment.
 
-
-MultiwTermSuite is a software developed at the University of Nantes, by the research lab LINA, UMR 6241 CNRS. TermSuite is currently supported by the French National Research Agency (CNRS) under grant ANR-10-IDEX-0004-02 and contributes to the project ISTEX, led by INIST.
+TermSuite is a software developed at the University of Nantes, by the research lab LINA, UMR 6241 CNRS. TermSuite is currently supported by the French National Research Agency (CNRS) under grant ANR-10-IDEX-0004-02 and contributes to the project ISTEX, led by INIST.
 
 http://termsuite.github.io/
       </text>
@@ -25,7 +24,7 @@ http://termsuite.github.io/
       </vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/fr.univnantes.termsuite.ui.product/img/logo-16x16.png" i32="/fr.univnantes.termsuite.ui.product/img/logo-32x32.png" i48="/fr.univnantes.termsuite.ui.product/img/logo-48x48.png" i64="/fr.univnantes.termsuite.ui.product/img/logo-64x64.png" i128="/fr.univnantes.termsuite.ui.product/img/logo-128x128.png" i256="/fr.univnantes.termsuite.ui.product/img/logo-256x256.png"/>
+   <windowImages i16="img/logo-16x16.png" i32="img/logo-32x32.png" i48="img/logo-48x48.png" i64="img/logo-64x64.png" i128="img/logo-128x128.png" i256="img/logo-256x256.png"/>
 
    <splash
       location="fr.univnantes.termsuite.ui"
@@ -33,18 +32,19 @@ http://termsuite.github.io/
       startupMessageRect="7,252,445,20"
       startupForegroundColor="000000" />
    <launcher name="termsuite">
-      <linux icon="/fr.univnantes.termsuite.ui.product/img/logo.xpm"/>
-      <macosx icon="/fr.univnantes.termsuite.ui.product/img/logo.icns"/>
+      <linux icon="img/logo.xpm"/>
+      <macosx icon="img/logo.icns"/>
       <solaris
-            solarisLarge="/fr.univnantes.termsuite.ui.product/img/logo-48x48.l.pm"
-            solarisMedium="/fr.univnantes.termsuite.ui.product/img/logo-32x32.m.pm"
-            solarisSmall="/fr.univnantes.termsuite.ui.product/img/logo-24x24.s.pm"
-            solarisTiny="/fr.univnantes.termsuite.ui.product/img/logo-16x16.t.pm"/>
+            solarisLarge="img/logo-48x48.l.pm"
+            solarisMedium="img/logo-32x32.m.pm"
+            solarisSmall="img/logo-24x24.s.pm"
+            solarisTiny="img/logo-16x16.t.pm"/>
       <win useIco="true">
-         <ico path="/fr.univnantes.termsuite.ui.product/img/logo.ico"/>
+         <ico path="img/logo.ico"/>
          <bmp/>
       </win>
    </launcher>
+
 
    <vm>
    </vm>
