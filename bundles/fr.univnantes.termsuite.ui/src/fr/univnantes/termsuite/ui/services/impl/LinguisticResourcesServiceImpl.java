@@ -2,7 +2,6 @@ package fr.univnantes.termsuite.ui.services.impl;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
@@ -293,7 +292,8 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 			swTotal.stop();
 			logger.debug("Total jar extraction time: " + swTotal.elapsed(TimeUnit.MILLISECONDS) + "ms" );
 			return true;
-		} catch (IOException e) {
+		} catch (Exception e) {
+			logger.error("Could not intiliaze custom resource directory from built-in termsuite-resources.jar");
 			logger.error(e);
 			return false;
 		}
