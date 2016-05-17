@@ -15,6 +15,8 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.core.services.log.ILoggerProvider;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
@@ -39,6 +41,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -76,6 +79,9 @@ public class OccurrencePart implements TreePart {
 	@Inject ESelectionService selectionService;
 	@Inject TermSuiteSelectionService termSuiteSelectionService;
 
+	private Logger logger;
+
+	
 	private LinkedHashMap<TermOccurrence, TermOccurrenceContainer<EDocument>> documentContainersMap = Maps.newLinkedHashMap();
 	private List<TermOccurrence> occurrencesList = Lists.newArrayList();
 	private List<TermOccurrenceContainer<EDocument>> documentContainers = Lists.newArrayList();
@@ -84,13 +90,17 @@ public class OccurrencePart implements TreePart {
 		
 		@Override
 		public void partBroughtToTop(MPart part) {
-			// TODO Auto-generated method stub
 			if(part != null && part.getObject() instanceof FileEditorPart) {
 				FileInput<?> fileInput = (FileInput<?>)part.getContext().get(TermSuiteUI.INPUT_OBJECT);
 				if(fileInput != null && fileInput.getInputObject() instanceof EDocument) {
 					EDocument doc  = (EDocument) fileInput.getInputObject();
+					if(doc == null) {
+						logger.warn("Input Object for FileEditorPart " + part.getLabel() + " is null");
+						return;
+					}
+						
 					for(TermOccurrenceContainer<EDocument> toc:documentContainers) {
-						if(toc.getContainer().equals(doc) && !toc.getOccurrences().isEmpty()) {
+						if(Objects.equal(toc.getContainer(), doc) && !toc.getOccurrences().isEmpty()) {
 							navigateToOccurrence(toc.getOccurrences().iterator().next());
 							break;
 						}
@@ -197,8 +207,9 @@ public class OccurrencePart implements TreePart {
 	private TreeViewer viewer;
 
 	@PostConstruct
-	public void createControls(IEclipseContext context, final Composite parent, MPart part) {
+	public void createControls(ILoggerProvider loggerProvider, IEclipseContext context, final Composite parent, MPart part) {
 		
+		this.logger = loggerProvider.getClassLogger(this.getClass());
 		
 		
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
