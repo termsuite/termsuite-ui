@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.google.common.base.Splitter;
+import com.google.common.io.ByteStreams;
 
 public class FileUtil {
 
@@ -29,8 +30,7 @@ public class FileUtil {
 	}
 
 	public static void inputStreamToFile(InputStream is, File targetFile) throws IOException {
-		byte[] buffer = new byte[is.available()];
-		is.read(buffer);
+		byte[] buffer = ByteStreams.toByteArray(is);
 		OutputStream outStream = new FileOutputStream(targetFile);
 		outStream.write(buffer);
 		outStream.flush();
