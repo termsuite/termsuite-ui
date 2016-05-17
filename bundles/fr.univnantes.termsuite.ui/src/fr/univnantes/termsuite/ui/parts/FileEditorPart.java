@@ -227,7 +227,7 @@ public class FileEditorPart {
 			File asFile = fileInput.getFile();
 			
 			try {
-				Scanner scanner = new Scanner(asFile);
+				Scanner scanner = new Scanner(asFile, "UTF-8");
 				this.textAsString = scanner.useDelimiter("\\A").next();
 				text.setText(textAsString);
 				text.setEditable(editable);
@@ -261,7 +261,7 @@ public class FileEditorPart {
 
 		try {
 			fileInput.save(this.text.getText());
-
+			
 			// save was successful
 			dirty.setDirty(false);
 		} catch (IOException e) {
