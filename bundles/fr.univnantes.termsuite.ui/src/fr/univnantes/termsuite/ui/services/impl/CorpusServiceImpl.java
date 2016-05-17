@@ -559,7 +559,7 @@ public class CorpusServiceImpl implements CorpusService {
 		EDocument doc = getDocumentCache().get(sourceDocument.getUrl());
 		
 		if(doc == null)
-			this.logger.warn("Could not resolve document with url {}", sourceDocument.getUrl());
+			this.logger.warn("Could not resolve document with url " + sourceDocument.getUrl());
 		
 		return doc;
 	}
