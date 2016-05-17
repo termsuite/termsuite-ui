@@ -35,7 +35,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.TreeColumn;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 
@@ -98,8 +97,9 @@ public class TerminologyPart implements TreePart {
 	    populateInfoContainer(parent);
 	    
 		// populate viewer
-		this.viewer = new TermIndexViewer(viewerConfig, parent, SWT.SINGLE| SWT.H_SCROLL | SWT.V_SCROLL);
+		this.viewer = new TermIndexViewer(viewerConfig, parent, SWT.SINGLE| SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(viewer.getControl());
+		
 		subscribe(context, termIndexService, parent);
 		
 		addColumn(UITermProperty.TERM_RANK, 50);

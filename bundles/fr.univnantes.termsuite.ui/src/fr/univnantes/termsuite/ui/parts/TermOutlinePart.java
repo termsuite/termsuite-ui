@@ -103,7 +103,7 @@ public class TermOutlinePart {
 	  
 	@PostConstruct
 	public void createControls(IEclipseContext context, final Composite parent, MPart part) {
-		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		viewer.getTree().setHeaderVisible(true);
 		viewer.getTree().setLinesVisible(true);
 		viewer.setContentProvider( 
