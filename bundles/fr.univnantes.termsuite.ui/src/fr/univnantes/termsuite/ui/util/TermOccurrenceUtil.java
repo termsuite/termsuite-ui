@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -49,7 +50,9 @@ public class TermOccurrenceUtil {
 		return toList(o, new KeyGetter<EDocument>() {
 			@Override
 			public EDocument getKey(TermOccurrence o) {
-				return corpusService.resolveEDocument(o.getSourceDocument());
+				EDocument resolvedDoc = corpusService.resolveEDocument(o.getSourceDocument());
+				Preconditions.checkNotNull(resolvedDoc);
+				return resolvedDoc;
 			}
 		});
 

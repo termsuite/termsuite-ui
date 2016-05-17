@@ -2,6 +2,7 @@ package fr.univnantes.termsuite.ui;
 
 import java.util.List;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ComparisonChain;
 
 import eu.project.ttc.models.TermOccurrence;
@@ -12,6 +13,7 @@ public class TermOccurrenceContainer<T> implements Comparable<TermOccurrenceCont
 
 	public TermOccurrenceContainer(T form, List<TermOccurrence> occurrences) {
 		super();
+		Preconditions.checkNotNull(form);
 		this.container = form;
 		this.occurrences = occurrences;
 	}
