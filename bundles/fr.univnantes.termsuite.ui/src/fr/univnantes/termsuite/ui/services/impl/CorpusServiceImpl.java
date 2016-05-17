@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -22,6 +23,8 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.core.services.log.ILoggerProvider;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
@@ -72,6 +75,7 @@ import fr.univnantes.termsuite.ui.util.WorkspaceUtil;
 
 
 @Singleton
+@SuppressWarnings("restriction")
 public class CorpusServiceImpl implements CorpusService {
 
 	@Inject
@@ -90,6 +94,8 @@ public class CorpusServiceImpl implements CorpusService {
 	@Inject
 	@Named(IServiceConstants.ACTIVE_SHELL) 
 	private Shell parent;
+	
+	private Logger logger;
 	
 	private Map<String, EDocument> documentCache = null;
 	
@@ -111,6 +117,12 @@ public class CorpusServiceImpl implements CorpusService {
 		m.put(CORPUS_EXTENSION, new XMIResourceFactoryImpl());
 	
 		loadCorpora();
+	}
+	
+	@PostConstruct
+	public void init(ILoggerProvider loggerProvider) {
+		this.logger = loggerProvider.getClassLogger(this.getClass());
+		this.logger.debug("Initalizing service " + this.getClass());
 	}
 	
 	
@@ -544,8 +556,12 @@ public class CorpusServiceImpl implements CorpusService {
 	
 	@Override
 	public EDocument resolveEDocument(Document sourceDocument) {
+		EDocument doc = getDocumentCache().get(sourceDocument.getUrl());
 		
-		return getDocumentCache().get(sourceDocument.getUrl());
+		if(doc == null)
+			this.logger.warn("Could not resolve document with url {}", sourceDocument.getUrl());
+		
+		return doc;
 	}
 
 
