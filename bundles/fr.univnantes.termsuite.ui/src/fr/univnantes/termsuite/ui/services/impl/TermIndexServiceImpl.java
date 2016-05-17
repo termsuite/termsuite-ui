@@ -1,9 +1,12 @@
 package fr.univnantes.termsuite.ui.services.impl;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
@@ -21,6 +24,7 @@ import eu.project.ttc.models.index.io.SaveOptions;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.TermIndexService;
+import fr.univnantes.termsuite.ui.util.IOUtil;
 
 public class TermIndexServiceImpl implements TermIndexService {
 
@@ -28,7 +32,13 @@ public class TermIndexServiceImpl implements TermIndexService {
 	private LoadingCache<ETerminology, TermIndex> terminoCache = CacheBuilder.newBuilder().maximumSize(1).recordStats()
 			.build(new CacheLoader<ETerminology, TermIndex>() {
 				public TermIndex load(ETerminology terminology) throws IOException {
-					return JSONTermIndexIO.load(new FileReader(terminology.getFilepath()), new LoadOptions());
+					FileInputStream fis = new FileInputStream(terminology.getFilepath());
+					InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+					TermIndex termino = JSONTermIndexIO.load(
+							isr, 
+							new LoadOptions());
+					IOUtil.closeSilently(fis, isr);
+					return termino;
 				}
 			});
 
@@ -39,9 +49,13 @@ public class TermIndexServiceImpl implements TermIndexService {
 
 	@Override
 	public void saveTermIndex(ETerminology terminology, TermIndex termIndex, boolean withOccurrences, boolean withContexts) throws IOException {
-		JSONTermIndexIO.save(new FileWriter(terminology.getFilepath()), 
+		FileOutputStream fos = new FileOutputStream(terminology.getFilepath());
+		Writer writer2 = new OutputStreamWriter(fos, "UTF-8");
+		JSONTermIndexIO.save(writer2, 
 				termIndex, 
 				new SaveOptions().withOccurrences(withOccurrences).withContexts(withContexts));
+		writer2.flush();
+		IOUtil.closeSilently(fos, writer2);
 	}
 
 	@Inject
@@ -61,9 +75,13 @@ public class TermIndexServiceImpl implements TermIndexService {
 
 	@Override
 	public TermIndex getTermIndexMetadata(ETerminology terminology) throws IOException {
-		return JSONTermIndexIO.load(
-				new FileReader(terminology.getFilepath()),
+		FileInputStream fis = new FileInputStream(terminology.getFilepath());
+		InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+		TermIndex termino = JSONTermIndexIO.load(
+				isr, 
 				new LoadOptions().metadataOnly(true));
+		IOUtil.closeSilently(fis, isr);
+		return termino;
 	}
 
 }
