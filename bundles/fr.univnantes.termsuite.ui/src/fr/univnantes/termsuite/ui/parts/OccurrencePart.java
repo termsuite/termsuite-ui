@@ -314,19 +314,21 @@ public class OccurrencePart implements TreePart {
 			} else if(element instanceof TermOccurrence) {
 				TermOccurrence occ = (TermOccurrence) element;
 				EDocument doc = corpusService.resolveEDocument(occ.getSourceDocument());
+				String lineNb = doc == null ? "??" : Integer.toString(corpusService.getLineNumber(doc, occ));
 				styledString.append(
-						"Line " + corpusService.getLineNumber(doc, occ) + ": ", 
+						"Line " + lineNb + ": ", 
 						TermSuiteUI.STYLE_MATCHES);
-				styledString.append(
-						"..." + StringUtil.noLinebreak(corpusService.getDocumentExcerpt(doc, occ.getBegin() - OCCURRENCE_CONTEXT_SIZE, occ.getBegin())), 
-						TermSuiteUI.STYLE_GRAYED);
-				styledString.append(
-						StringUtil.noLinebreak(corpusService.getDocumentExcerpt(doc, occ.getBegin(), occ.getEnd())), 
-						TermSuiteUI.STYLE_GRAYED_BOLD);
-				styledString.append(
-						StringUtil.noLinebreak(corpusService.getDocumentExcerpt(doc, occ.getEnd(), occ.getEnd() + OCCURRENCE_CONTEXT_SIZE)) + "...", 
-						TermSuiteUI.STYLE_GRAYED);
-				
+				if(doc != null) {
+					styledString.append(
+							"..." + StringUtil.noLinebreak(corpusService.getDocumentExcerpt(doc, occ.getBegin() - OCCURRENCE_CONTEXT_SIZE, occ.getBegin())), 
+							TermSuiteUI.STYLE_GRAYED);
+					styledString.append(
+							StringUtil.noLinebreak(corpusService.getDocumentExcerpt(doc, occ.getBegin(), occ.getEnd())), 
+							TermSuiteUI.STYLE_GRAYED_BOLD);
+					styledString.append(
+							StringUtil.noLinebreak(corpusService.getDocumentExcerpt(doc, occ.getEnd(), occ.getEnd() + OCCURRENCE_CONTEXT_SIZE)) + "...", 
+							TermSuiteUI.STYLE_GRAYED);
+				}
 			}
 			return styledString;
 
