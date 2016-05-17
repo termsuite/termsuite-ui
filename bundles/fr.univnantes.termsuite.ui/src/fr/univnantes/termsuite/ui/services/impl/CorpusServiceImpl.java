@@ -3,6 +3,8 @@ package fr.univnantes.termsuite.ui.services.impl;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -97,7 +99,7 @@ public class CorpusServiceImpl implements CorpusService {
 	
 	private Logger logger;
 	
-	private Map<String, EDocument> documentCache = null;
+	private Map<URI, EDocument> documentCache = null;
 	
 	
 	private static final String CAS_JSON_DIR = "json";
@@ -140,7 +142,8 @@ public class CorpusServiceImpl implements CorpusService {
 	 */
 	@Override
 	public Path getDocumentPath(ESingleLanguageCorpus slc) {
-		return Paths.get(getPath(slc).toString(), slc.getCollectionType().toString().toLowerCase());
+		Path path = Paths.get(getPath(slc).toString(), slc.getCollectionType().toString().toLowerCase());
+		return path;
 	}
 	
 	/* (non-Javadoc)
@@ -149,7 +152,9 @@ public class CorpusServiceImpl implements CorpusService {
 	@Override
 	public Path getPath(ESingleLanguageCorpus slc) {
 		Lang termsuiteLang = LangUtil.getTermsuiteLang(slc.getLanguage());
-		return Paths.get(slc.getCorpus().getPath(), termsuiteLang.getNameUC());
+		String corpusPath = slc.getCorpus().getPath();
+		Path path = Paths.get(corpusPath, termsuiteLang.getNameUC());
+		return path;
 	}
 	
 	/* (non-Javadoc)
@@ -157,7 +162,9 @@ public class CorpusServiceImpl implements CorpusService {
 	 */
 	@Override
 	public Path getPath(EDocument d) {
-		return Paths.get(getDocumentPath(d.getSingleLanguageCorpus()).toString(), d.getFilename());
+		String string = getDocumentPath(d.getSingleLanguageCorpus()).toString();
+		Path path = Paths.get(string, d.getFilename());
+		return path;
 	}
 
 	/* (non-Javadoc)
@@ -165,7 +172,8 @@ public class CorpusServiceImpl implements CorpusService {
 	 */
 	@Override
 	public File asFile(EDocument d) {
-		return getPath(d).toFile();
+		Path path = getPath(d);
+		return path.toFile();
 	}
 
 	/* (non-Javadoc)
@@ -535,16 +543,15 @@ public class CorpusServiceImpl implements CorpusService {
 		documentCache = null;
 	}
 
-	private Map<String, EDocument> getDocumentCache() {
+	private Map<URI, EDocument> getDocumentCache() {
 		if (documentCache == null) {
-			final String FILE_PROTOCOL = "file:";
 			documentCache = Maps.newHashMap();
 			for (ECorpus corpus : getCorporaList().getCorpora()) {
 				for (ESingleLanguageCorpus slc : corpus.getSingleLanguageCorpora()) {
 					for (EDocument d : slc.getDocuments()) {
 						File file = asFile(d);
-						documentCache.put(FILE_PROTOCOL + file.getAbsolutePath(), d);
-						documentCache.put(FILE_PROTOCOL + file.getPath(), d);
+						documentCache.put(file.toURI(), d);
+						documentCache.put(file.toURI(), d);
 					}
 				}
 			}
@@ -556,12 +563,19 @@ public class CorpusServiceImpl implements CorpusService {
 	
 	@Override
 	public EDocument resolveEDocument(Document sourceDocument) {
-		EDocument doc = getDocumentCache().get(sourceDocument.getUrl());
+		URI uri;
+		try {
+			uri = new URI(sourceDocument.getUrl());
+			EDocument doc = getDocumentCache().get(uri);
+			
+			if(doc == null)
+				this.logger.warn("Could not resolve document with url " + sourceDocument.getUrl());
+			return doc;
+		} catch (URISyntaxException e) {
+			this.logger.error(e);			
+			return null;
+		}
 		
-		if(doc == null)
-			this.logger.warn("Could not resolve document with url " + sourceDocument.getUrl());
-		
-		return doc;
 	}
 
 
