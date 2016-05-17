@@ -17,6 +17,8 @@ import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
@@ -55,8 +57,67 @@ public class LifeCycleManager {
 		configureLogging();  
 		logStartup();		
 		logContextualInfo();
+		logBundles();
 		addServicesToContext(cont);
 		WorkspaceUtil.deleteTermSuiteTempFiles();
+	}
+
+
+	private enum BundleState {
+		ACTIVE(Bundle.ACTIVE),
+		RESOLVED(Bundle.RESOLVED),
+		INSTALLED(Bundle.INSTALLED),
+		UNINSTALLED(Bundle.UNINSTALLED),
+		STARTING(Bundle.STARTING),
+		STOPPING(Bundle.STOPPING),
+		;
+		
+		private int osgiCode;
+
+		private BundleState(int osgiCode) {
+			this.osgiCode = osgiCode;
+		}
+		
+		public int getOsgiCode() {
+			return osgiCode;
+		}
+		
+		private static BundleState byOsgiCode(int code) {
+			for(BundleState s:values())
+				if(s.getOsgiCode() == code)
+					return s;
+			throw new IllegalArgumentException("Unknown OSGi state code");
+		}
+	}
+	
+	private void logBundles() {
+		BundleContext bundleContext = Platform.getBundle(TermSuiteUI.PLUGIN_ID).getBundleContext();
+		Multimap<BundleState, Bundle> counters = HashMultimap.create();
+		int total = 0;
+		for(Bundle bundle:bundleContext.getBundles()) {
+			counters.put(BundleState.byOsgiCode(bundle.getState()), bundle);
+			total++;
+		}
+		logger.info(String.format("Found %d bundles. [active: %d, resolved: %d, installed: %d, uninstalled: %d, starting: %d, stopping: %d]",
+				total,
+				counters.get(BundleState.ACTIVE).size(),
+				counters.get(BundleState.RESOLVED).size(),
+				counters.get(BundleState.INSTALLED).size(),
+				counters.get(BundleState.UNINSTALLED).size(),
+				counters.get(BundleState.STARTING).size(),
+				counters.get(BundleState.STOPPING).size()
+			));
+
+		for(BundleState state:BundleState.values()) {
+			StringBuffer buffer = new StringBuffer();
+			for(Bundle bundle:counters.get(state))
+				buffer.append("\n\t -> "+bundle.getSymbolicName() + ":" + bundle.getVersion());
+			logger.debug(String.format("%d %s bundles.%s",
+					counters.get(state).size(),
+					state.toString().toLowerCase(),
+					buffer.toString()
+				));
+		}
 	}
 
 
