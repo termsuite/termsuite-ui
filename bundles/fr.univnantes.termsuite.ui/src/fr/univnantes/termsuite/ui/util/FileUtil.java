@@ -15,7 +15,7 @@ import com.google.common.io.ByteStreams;
 public class FileUtil {
 
 	public static String toString(File file) throws FileNotFoundException {
-		Scanner scanner = new Scanner(file);
+		Scanner scanner = new Scanner(file, "UTF-8");
 		String next = scanner.useDelimiter("\\Z").next();
 		scanner.close();
 		return next;
