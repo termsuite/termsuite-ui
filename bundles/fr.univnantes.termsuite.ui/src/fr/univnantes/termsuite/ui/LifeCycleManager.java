@@ -112,7 +112,7 @@ public class LifeCycleManager {
 			StringBuffer buffer = new StringBuffer();
 			for(Bundle bundle:counters.get(state))
 				buffer.append("\n\t -> "+bundle.getSymbolicName() + ":" + bundle.getVersion());
-			logger.debug(String.format("%d %s bundles.%s",
+			logger.info(String.format("%d %s bundles.%s",
 					counters.get(state).size(),
 					state.toString().toLowerCase(),
 					buffer.toString()
