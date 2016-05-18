@@ -35,15 +35,15 @@
          </property>
           <property
                 name="aboutImage"
-                value="/fr.univnantes.termsuite.ui.product/img/logo-termsuite.png">
+                value="img/logo-termsuite.png">
           </property>
           <property
                 name="aboutText"
-                value="TermSuite is a Java UIMA-based toolbox for terminology extraction and multilingual term alignment.&#x0A;&#x0A;&#x0A;MultiwTermSuite is a software developed at the University of Nantes, by the research lab LINA, UMR 6241 CNRS. TermSuite is currently supported by the French National Research Agency (CNRS) under grant ANR-10-IDEX-0004-02 and contributes to the project ISTEX, led by INIST.&#x0A;&#x0A;http://termsuite.github.io/">
+                value="TermSuite is a Java UIMA-based toolbox for terminology extraction and multilingual term alignment.&#x0A;&#x0A;TermSuite is a software developed at the University of Nantes, by the research lab LINA, UMR 6241 CNRS. TermSuite is currently supported by the French National Research Agency (CNRS) under grant ANR-10-IDEX-0004-02 and contributes to the project ISTEX, led by INIST.&#x0A;&#x0A;http://termsuite.github.io/">
           </property>
           <property
                 name="windowImages"
-                value="/fr.univnantes.termsuite.ui.product/img/logo-16x16.png,/fr.univnantes.termsuite.ui.product/img/logo-32x32.png,/fr.univnantes.termsuite.ui.product/img/logo-48x48.png,/fr.univnantes.termsuite.ui.product/img/logo-64x64.png,/fr.univnantes.termsuite.ui.product/img/logo-128x128.png,/fr.univnantes.termsuite.ui.product/img/logo-256x256.png">
+                value="img/logo-16x16.png,img/logo-32x32.png,img/logo-48x48.png,img/logo-64x64.png,img/logo-128x128.png,img/logo-256x256.png">
           </property>
           <property
                 name="startupForegroundColor"
