@@ -2,7 +2,7 @@
 <feature
       id="fr.univnantes.termsuite.feature"
       label="Feature"
-      version="2.1.2.qualifier">
+      version="2.2.0.qualifier">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -20,14 +20,21 @@
          id="fr.univnantes.termsuite.ui"
          download-size="0"
          install-size="0"
-         version="2.1.2.qualifier"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="fr.univnantes.termsuite.core"
          download-size="0"
          install-size="0"
-         version="2.1.2.qualifier"/>
+         version="2.2.0.qualifier"/>
+
+   <plugin
+         id="com.opcoach.e4.preferences"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="fr.univnantes.termsuite.resources"

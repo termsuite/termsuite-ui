@@ -84,7 +84,6 @@
       </children>
       <children xsi:type="menu:Menu" xmi:id="_U-iEwMT_EeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.menu.run" label="Tools">
         <children xsi:type="menu:HandledMenuItem" xmi:id="_-guWsMXJEeWpIJ-KlFcYkg" elementId="fr.univnantes.termsuite.ui.handledmenuitem.RunPipeline" label="Run Pipeline..." tooltip="Run the active pipeline" command="_zpB2oMUUEeWcSafn8uq1Yw"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_4sz_kMm0EeWMTIcqIQJn_g" elementId="fr.univnantes.termsuite.ui.handledmenuitem.checkforupdates" label="Check for updates" command="_qzb08Mm0EeWMTIcqIQJn_g"/>
       </children>
       <children xsi:type="menu:Menu" xmi:id="_XHkN0MT_EeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.menu.help" label="Help">
         <children xsi:type="menu:HandledMenuItem" xmi:id="_alwL8MT_EeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.handledmenuitem.about" label="About TermSuite" command="_cgtKcMwKEeWh7K416TAaxg"/>

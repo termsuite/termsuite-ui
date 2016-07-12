@@ -33,7 +33,6 @@ public class LinguisticResourceUtil {
 						resourceSet.setLanguage(lang);
 						for(File candidateResourceFile:child.listFiles()) {
 							TermSuiteResource tsResource = TermSuiteResource.forFileName(
-									LangUtil.getTermsuiteLang(lang), 
 									candidateResourceFile.getName());
 							if(tsResource != null) {
 								ELinguisticResource res = TermsuiteuiFactory.eINSTANCE.createELinguisticResource();

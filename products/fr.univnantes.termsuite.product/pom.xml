@@ -4,14 +4,14 @@
 	<parent>
 		<groupId>fr.univnantes.termsuite</groupId>
 		<artifactId>fr.univnantes.termsuite.root</artifactId>
-		<version>2.1.0-SNAPSHOT</version>
+		<version>2.2.0-SNAPSHOT</version>
 		<relativePath>../../</relativePath>
 	</parent>
 
 	<groupId>fr.univnantes.termsuite</groupId>
 	<artifactId>fr.univnantes.termsuite.product</artifactId>
 	<packaging>eclipse-repository</packaging>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>2.2.0-SNAPSHOT</version>
 
 	<build>
 		<plugins>
