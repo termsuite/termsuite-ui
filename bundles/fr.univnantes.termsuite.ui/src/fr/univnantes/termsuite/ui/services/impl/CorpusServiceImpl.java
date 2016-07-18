@@ -321,10 +321,11 @@ public class CorpusServiceImpl implements CorpusService {
 
 	private TermSuitePipeline toTermSuitePipeline(EPipeline pipeline, ESingleLanguageCorpus corpus, String resourcePrefix) {
 		TaggerService taggerService = context.get(TaggerService.class);
-		
 		Lang tsLang = LangUtil.getTermsuiteLang(corpus.getLanguage());
 		
-		TermSuitePipeline tsp = TermSuitePipeline.create(tsLang.getCode(), resourcePrefix);
+		TermSuitePipeline tsp = TermSuitePipeline.create(tsLang.getCode());
+
+		tsp.setResourceUrlPrefix(resourcePrefix);
 		
 		tsp
 			.setCollection(

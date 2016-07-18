@@ -1,9 +1,11 @@
 package fr.univnantes.termsuite.ui.util;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import com.google.common.io.Files;
 
 import eu.project.ttc.tools.TermSuiteResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
@@ -24,23 +26,27 @@ public class LinguisticResourceUtil {
 		else {
 			List<ELinguisticResourceSet> resourceSets = Lists.newArrayList();
 			if(f.listFiles().length > 0) {
-				for(File child:f.listFiles()) {
-					ELang lang = LangUtil.getLangByCode(child.getName());
-					if(child.isDirectory() 
+				
+				for(File langDir:f.listFiles()) {
+					ELang lang = LangUtil.getLangByCode(langDir.getName());
+					if(langDir.isDirectory() 
 							&& lang != null 
 							&& LangUtil.isLangSupported(lang)) {
 						ELinguisticResourceSet resourceSet = TermsuiteuiFactory.eINSTANCE.createELinguisticResourceSet(); 
 						resourceSet.setLanguage(lang);
-						for(File candidateResourceFile:child.listFiles()) {
-							TermSuiteResource tsResource = TermSuiteResource.forFileName(
-									candidateResourceFile.getName());
-							if(tsResource != null) {
-								ELinguisticResource res = TermsuiteuiFactory.eINSTANCE.createELinguisticResource();
-								resourceSet.getResources().add(res);
-								res.setDescription(tsResource.getDescription());
-								res.setName(tsResource.getTitle());
-								res.setPath(candidateResourceFile.getAbsolutePath());
-							}
+						
+						for (File candidateResourceFile : Files.fileTreeTraverser().preOrderTraversal(langDir)) {
+						    Path relativePath = langDir.toPath().getParent().relativize(candidateResourceFile.toPath());
+						    System.out.println(relativePath.toString());
+					    	TermSuiteResource tsResource = TermSuiteResource.forFileName(
+					    			relativePath.toString());
+					    	if(tsResource != null) {
+					    		ELinguisticResource res = TermsuiteuiFactory.eINSTANCE.createELinguisticResource();
+					    		resourceSet.getResources().add(res);
+					    		res.setDescription(tsResource.getDescription());
+					    		res.setName(tsResource.getTitle());
+					    		res.setPath(candidateResourceFile.getAbsolutePath());
+					    	}
 						}
 						if(!resourceSet.getResources().isEmpty())
 							resourceSets.add(resourceSet);
