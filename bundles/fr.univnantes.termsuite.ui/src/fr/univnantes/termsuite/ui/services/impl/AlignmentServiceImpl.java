@@ -209,7 +209,8 @@ public class AlignmentServiceImpl implements AlignmentService {
 			} catch (ExecutionException e) {
 				throw new RuntimeException(e);
 			}
-		return aligner.alignDistributional(term, 100, 2);
+			
+			return aligner.align(term, 20, 2);
 		}
 	}
 
