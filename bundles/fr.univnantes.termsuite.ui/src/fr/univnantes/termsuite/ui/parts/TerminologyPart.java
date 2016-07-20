@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -24,9 +25,6 @@ import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
@@ -42,7 +40,6 @@ import com.google.common.collect.Lists;
 
 import eu.project.ttc.models.Term;
 import eu.project.ttc.models.TermIndex;
-import eu.project.ttc.models.TermVariation;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.UITermProperty;
@@ -56,6 +53,7 @@ import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
 import fr.univnantes.termsuite.ui.util.treeviewer.TreePart;
 import fr.univnantes.termsuite.ui.viewers.TermIndexViewer;
 import fr.univnantes.termsuite.ui.viewers.TermLabelProvider;
+import fr.univnantes.termsuite.ui.viewers.TermSelectionListener;
 
 public class TerminologyPart implements TreePart {
 	
@@ -110,28 +108,8 @@ public class TerminologyPart implements TreePart {
 		addColumn(UITermProperty.DOCUMENT_FREQUENCY, 60);
 		addColumn(UITermProperty.VARIATION_RULE, 100);
 		
-		  // attach a selection listener to our jface viewer
-		  viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-		    public void selectionChanged(SelectionChangedEvent event) {
-		      IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-		      // set the selection to the service
-		      if(selection.size() == 1) {
-		    	  Object sel = selection.getFirstElement();
-		    	  Term t;
-		    	  if(sel instanceof TermVariation)
-		    		  t = ((TermVariation)sel).getVariant();
-		    	  else if(sel instanceof Term)
-		    		  t = (Term)sel;
-		    	  else
-		    		  throw new IllegalStateException();
-		    	  selectionService.setSelection(t);
-		    	  termSuiteSelectionService.setActiveTerm(t);
-		    	  MPart outlinePart = partService.findPart(TermOutlinePart.ID);
-		    	  if(outlinePart != null)
-		    		  partService.bringToTop(outlinePart);
-		      }
-		    }
-		  });
+	  // attach a selection listener to our jface viewer
+	  viewer.addSelectionChangedListener(ContextInjectionFactory.make(TermSelectionListener.class, context));
 		  
 		menuService.registerContextMenu(viewer.getControl(), POPUP_MENU_ID);
 
