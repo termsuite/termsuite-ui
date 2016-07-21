@@ -358,26 +358,14 @@ public class CorpusServiceImpl implements CorpusService {
 			tsp.aeSyntacticVariantGatherer();
 		}
 
-		if(pipeline.isGraphicalVariationAnalysisEnabled()) {
-			tsp.setGraphicalVariantSimilarityThreshold((float)pipeline.getGraphicalSimilarityThreshhold())
-				.aeGraphicalVariantGatherer();
-		}
-		
-		if(pipeline.isContextualizerEnabled()) {
-			tsp.setContextualizeCoTermsType(pipeline.isContextAllowMWTAsCooc() ? OccurrenceType.ALL : OccurrenceType.SINGLE_WORD)
-				/*
-				 * TODO Set as GUI param
-				 */
-			   .setContextualizeWithCoOccurrenceFrequencyThreshhold(2)
-			   .aeContextualizer(pipeline.getContextScope(), !pipeline.isContextualizeOnSWTOnly());
-		}
-
-		tsp.aeExtensionDetector()
-			.aeScorer()
-			.aeRanker(TermProperty.SPECIFICITY, true);
-
 		
 		
+		/*
+		 * Placement of filtering is strategic:
+		 *  - before graphical variant gathering that tend to be long for some languages
+		 *  - before contextualizer
+		 *  - before Scorer, which needs to remove some terms and make take some time if TermIndex is huge.
+		 */
 		if(pipeline.isFilteringEnabled()) {
 			tsp.haeCasStatCounter("Before Filtering");
 			
@@ -397,6 +385,27 @@ public class CorpusServiceImpl implements CorpusService {
 			tsp.haeCasStatCounter("After Filtering");
 
 		}
+
+		
+		if(pipeline.isGraphicalVariationAnalysisEnabled()) {
+			tsp.setGraphicalVariantSimilarityThreshold((float)pipeline.getGraphicalSimilarityThreshhold())
+				.aeGraphicalVariantGatherer();
+		}
+		
+		if(pipeline.isContextualizerEnabled()) {
+			tsp.setContextualizeCoTermsType(pipeline.isContextAllowMWTAsCooc() ? OccurrenceType.ALL : OccurrenceType.SINGLE_WORD)
+				/*
+				 * TODO Set as GUI param
+				 */
+			  .setContextualizeWithCoOccurrenceFrequencyThreshhold(2)
+			  .aeContextualizer(pipeline.getContextScope(), !pipeline.isContextualizeOnSWTOnly());
+		}
+
+		tsp.aeExtensionDetector()
+			.aeScorer()
+			.aeRanker(TermProperty.SPECIFICITY, true);
+
+		
 		
 		if(pipeline.isBigCorporaHandlingEnabled()) {
 			TermProperty termProperty = TermProperty.forName(pipeline.getBigCorporaFilteringProperty());
