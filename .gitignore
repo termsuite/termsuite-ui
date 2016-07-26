@@ -10,7 +10,7 @@
 *.class
 
 # Package files
-*.jar
+#*.jar
 *.war
 *.ear
 
@@ -44,7 +44,7 @@ releng/fr.univnantes.termsuite.ui.product/bin
 bundles/org.eclipse.e4.ui.progress/bin
 
 # Remove jar
-bundles/fr.termsuite.univnantes.core/lib/*.jar
+bundles/fr.univnantes.termsuite.ui/lib/termsuite-core*.jar
 
 bintray.api
 bintray.properties

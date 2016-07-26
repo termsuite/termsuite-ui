@@ -15,7 +15,6 @@
     <modules>
         <module>org.eclipse.e4.ui.progress</module>
         <module>fr.univnantes.termsuite.resources</module>
-        <module>fr.univnantes.termsuite.core</module>
         <module>fr.univnantes.termsuite.ui</module>
     </modules>
 </project> 

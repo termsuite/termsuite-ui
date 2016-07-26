@@ -24,12 +24,6 @@
          unpack="false"/>
 
    <plugin
-         id="fr.univnantes.termsuite.core"
-         download-size="0"
-         install-size="0"
-         version="2.2.0.qualifier"/>
-
-   <plugin
          id="com.opcoach.e4.preferences"
          download-size="0"
          install-size="0"
