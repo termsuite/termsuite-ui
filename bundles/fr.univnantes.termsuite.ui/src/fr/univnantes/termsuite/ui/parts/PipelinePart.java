@@ -3,7 +3,6 @@ package fr.univnantes.termsuite.ui.parts;
 import java.io.IOException;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -21,11 +20,9 @@ import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Persist;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.MDirtyable;
-import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
-import org.eclipse.e4.ui.workbench.modeling.ISelectionListener;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.ecore.EAttribute;
@@ -47,11 +44,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ColumnLayout;
 import org.eclipse.ui.forms.widgets.Form;
-import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -64,7 +58,6 @@ import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EFilteringMode;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPeriodicCleaningMode;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
 import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.PipelineService;
@@ -164,50 +157,10 @@ public class PipelinePart {
 		createDealingWithBigCorpusSection(toolkit, form);
 		// a- set a max term index size constraint
 
-		configureActions(corpusService, selectionService);
-//		bindForm();	
 	}
 
 
-	private void configureActions(
-//			final ECommandService commandService, 
-			final CorpusService corpusService, 
-//			final EHandlerService handlerService,
-			final ESelectionService selectionService) {
-		formText.setEnabled(selectionService.getSelection(NavigatorPart.ID) instanceof ESingleLanguageCorpus);
-		formText.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				if(e.getHref().equals("runOnSelected")) {
-					ESingleLanguageCorpus corpus = (ESingleLanguageCorpus)selectionService.getSelection(NavigatorPart.ID);
-					corpusService.runPipelineOnCorpus((EPipeline)pipelineValue.getValue(), corpus);
-//					PipelinePart.this.context.set(
-//							ESingleLanguageCorpus.class, 
-//							corpus);
-//					ParameterizedCommand command = commandService.createCommand(
-//							"fr.univnantes.termsuite.ui.command.runpipeline", null);
-//					if (handlerService.canExecute(command))
-//						handlerService.executeHandler(command);
-				}
-			}
-		});
-		selectionService.addSelectionListener(navigatorSelectionListener);
-	}
 	
-	private ISelectionListener navigatorSelectionListener = new ISelectionListener() {
-		@Override
-		public void selectionChanged(MPart part, Object selection) {
-			if (part.getElementId().equals(NavigatorPart.ID))
-				formText.setEnabled(selection instanceof ESingleLanguageCorpus);
-		}
-	};
-	
-	@PreDestroy
-	public void preDestroy(ESelectionService selectionService) {
-		selectionService.removeSelectionListener(navigatorSelectionListener);
-	}
-	
-	private FormText formText;
 	private void createMainSection(FormToolkit toolkit, final ScrolledForm form) {
 		Form mainSection = toolkit.createForm(form.getBody());
 		toolkit.paintBordersFor(mainSection);
@@ -222,13 +175,6 @@ public class PipelinePart {
 				new NonEmptyStringValidator(), 
 				null);
 		t.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.MIDDLE));
-
-		StringBuffer buf = new StringBuffer();
-		buf.append("<form><p><img href=\"run\"/> <a href=\"runOnSelected\" nowrap=\"true\">Run</a> this pipeline on selected corpus.</p></form>");
-		formText = toolkit.createFormText(body, true);
-		formText.setText(buf.toString(), true, false);
-		applyTableWrapLayout(formText, 1, 2);
-		formText.setImage("run", TermSuiteUI.getImg(TermSuiteUI.RUN).createImage());
 	}
 
 	private void createTaggerSection(FormToolkit toolkit, final ScrolledForm form) {
@@ -598,27 +544,8 @@ public class PipelinePart {
 		final Composite sectionClient = toolkit.createComposite(sectionExportTerminology);
 		setTableWrapLayout(sectionClient, 2);
 
-//		StringBuffer buf = new StringBuffer();
-//		buf.append("<form><p>Output directory (<a href=\"change\">Change</a>):</p></form>");
-//		FormText formText = toolkit.createFormText(sectionClient, true);
-//		formText.setText(buf.toString(), true, false);
-//		formText.addHyperlinkListener(new HyperlinkAdapter(){
-//			@Override
-//			public void linkActivated(HyperlinkEvent e) {
-//				if(e.getHref().equals("change")) {
-//					MessageDialog.openInformation(sectionClient.getShell(), "Not yet implemented", "This functionality is not yet implemented");
-//				}
-//			}
-//		});
-//		toolkit.createLabel(sectionClient, outputDirectory);
-		
-		
 		Label label1 = toolkit.createLabel(sectionClient, "Export terminology to:");
 		label1.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.MIDDLE, 1, 2));
-
-//		createExportTerminoLine(toolkit, sectionClient, 
-//				TermsuiteuiPackage.Literals.EPIPELINE__EXPORT_TERMINO_TO_JSON_ENABLED, 
-//				"json");
 
 		createExportTerminoLine(toolkit, sectionClient, 
 				TermsuiteuiPackage.Literals.EPIPELINE__EXPORT_TERMINO_TO_TSV_ENABLED, 
