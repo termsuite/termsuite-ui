@@ -82,6 +82,7 @@ public class PipelineServiceImpl implements PipelineService {
 		p.setFilteringProperty(TermProperty.FREQUENCY.getPropertyName());
 		p.setBigCorporaFilteringProperty(TermProperty.FREQUENCY.getPropertyName());
 		p.setExportTerminoToJsonEnabled(true);
+		p.setExportTerminoToTsvEnabled(true);
 //		p.setExportTerminoToJsonFile(WorkspaceUtil.getLocation(DEFAULT_TERMINO_DIR));
 		pipelines.getPipelines().add(p);
 		savePipeline(p);
