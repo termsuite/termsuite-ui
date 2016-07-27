@@ -29,16 +29,30 @@ public class TermIndexContentProvider implements ITreeContentProvider {
 				Pattern pattern = Pattern.compile(viewerConfig.getSearchString());
 				if(termOrVariant instanceof Term) {
 					Term t = (Term)termOrVariant;
-					return pattern.matcher(t.getGroupingKey()).find()
-							|| pattern.matcher(t.getPilot()).find();
+					if(pattern.matcher(t.getGroupingKey()).find()
+							|| pattern.matcher(t.getPilot()).find())
+						return true;
+					
+					/*
+					 * Checks if any variant matches
+					 */
+					
+					for(TermVariation tv:t.getVariations())
+						if(isVariationMatching(pattern, tv))
+							return true;
+					return false;
 				} else if (termOrVariant instanceof TermVariation) {
-					TermVariation v = (TermVariation)termOrVariant;
-					return pattern.matcher(v.getVariant().getGroupingKey()).find()
-							|| pattern.matcher(v.getVariant().getPilot()).find();
+					return isVariationMatching(pattern, (TermVariation)termOrVariant);
 				} else
 					return false;
 			} else
 				return true;
+		}
+
+		private boolean isVariationMatching(Pattern pattern, TermVariation v) {
+			return pattern.matcher(v.getVariant().getGroupingKey()).find()
+					|| pattern.matcher(v.getVariant().getPilot()).find()
+					|| pattern.matcher((String)v.getLabel()).find();
 		}
 	};
 
@@ -75,7 +89,13 @@ public class TermIndexContentProvider implements ITreeContentProvider {
 	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof Term) {
-			List<TermVariation> variations = Lists.newArrayList(((Term)parentElement).getVariations());
+			List<TermVariation> variations = Lists.newArrayList();
+			for(TermVariation tv:((Term)parentElement).getVariations()) {
+				if(!isMatchingSearchText.apply(tv))
+					continue;
+				else
+					variations.add(tv);
+			}
 			return variations.toArray();
 		}
 		return null;
