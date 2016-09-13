@@ -11,7 +11,7 @@
   <parent>
     <artifactId>fr.univnantes.termsuite.bundles</artifactId>
     <groupId>fr.univnantes.termsuite</groupId>
-    <version>2.2.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
   <groupId>fr.univnantes.termsuite</groupId>
   <artifactId>fr.univnantes.termsuite.resources</artifactId>
