@@ -2,7 +2,7 @@
 <feature
       id="fr.univnantes.termsuite.feature"
       label="Feature"
-      version="2.2.0.qualifier">
+      version="2.3.0.qualifier">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -20,7 +20,7 @@
          id="fr.univnantes.termsuite.ui"
          download-size="0"
          install-size="0"
-         version="2.2.0.qualifier"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
