@@ -32,7 +32,7 @@ nb-configuration.xml
 *.iws
 
 # ecore generated model
-bundles/fr.univnantes.termsuite.ui/src/fr/univnantes/termsuite/ui/model/
+#bundles/fr.univnantes.termsuite.ui/src/fr/univnantes/termsuite/ui/model/
 
 
 # Remove bin dirs
