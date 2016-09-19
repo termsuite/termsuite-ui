@@ -10,8 +10,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
-import fr.univnantes.termsuite.ui.util.LinguisticResourceUtil;
-import fr.univnantes.termsuite.ui.util.ValidationException;
 
 public class ResourcePreferencePage extends FieldEditorPreferencePage {
 
@@ -22,9 +20,7 @@ public class ResourcePreferencePage extends FieldEditorPreferencePage {
 	private DirectoryFieldEditor linguisticPathField = null;
 	
 	private BooleanFieldEditor activeCustomResourcesEditor;
-	private BooleanFieldEditor copyBuiltinResourcesIfEmptyEditor;
 	private Composite linguisticPathFieldEditorParent;
-	private Composite copyBuiltinResourcesIfEmptyEditorParent;
 	
 	@Override
 	protected void createFieldEditors() {
@@ -41,16 +37,6 @@ public class ResourcePreferencePage extends FieldEditorPreferencePage {
 		linguisticPathFieldEditorParent = getFieldEditorParent();
 		linguisticPathField = new DirectoryFieldEditor(TermSuiteUIPreferences.LINGUISTIC_RESOURCES_DIRECTORY, "Location of linguistic resources:", linguisticPathFieldEditorParent);
 		addField(linguisticPathField);
-		
-		
-		copyBuiltinResourcesIfEmptyEditorParent = getFieldEditorParent();
-		copyBuiltinResourcesIfEmptyEditor = new BooleanFieldEditor(
-				TermSuiteUIPreferences.COPY_BUILTIN_RESOURCES_IF_EMPTY, 
-				"Copy built-in resources to directory if target directory is empty.", 
-				copyBuiltinResourcesIfEmptyEditorParent);
-		addField(copyBuiltinResourcesIfEmptyEditor);
-
-		
 		
 		/*
 		 * separator
@@ -78,33 +64,13 @@ public class ResourcePreferencePage extends FieldEditorPreferencePage {
 	}
 
 	private void validate() {
-		String errorMsg = null;
 		if(linguisticPathField != null) {
 			boolean active = activeCustomResourcesEditor.getBooleanValue();
 			linguisticPathField.setEnabled(active, linguisticPathFieldEditorParent);
-			copyBuiltinResourcesIfEmptyEditor.setEnabled(activeCustomResourcesEditor.getBooleanValue(), copyBuiltinResourcesIfEmptyEditorParent);
-			if(activeCustomResourcesEditor.getBooleanValue()) {
-				try {
-					String path = (String) linguisticPathField.getTextControl(linguisticPathFieldEditorParent).getText();
-					LinguisticResourceUtil.getLinguisticResourceSets(
-							path, 
-							copyBuiltinResourcesIfEmptyEditor.getBooleanValue());
-					errorMsg = null;
-				} catch(ValidationException e) {
-					errorMsg = e.getMessage();	
-				}
-			} else 
-				errorMsg = null;
 		}
-		if(errorMsg == null) {
-			setMessage(null);
-			setErrorMessage(null);
-			setValid(true);
-		} else {
-			setErrorMessage(errorMsg);
-			setValid(false);
-		}
-			
-		
+		setMessage(null);
+		setErrorMessage(null);
+		setValid(true);
+
 	}
 }

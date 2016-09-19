@@ -79,7 +79,7 @@ public class PipelinePart {
 
 	Shell parentShell;
 	
-	private WritableValue pipelineValue = new WritableValue();
+	private WritableValue<EPipeline> pipelineValue = new WritableValue<EPipeline>();
 	private DataBindingContext dbc = new DataBindingContext();
 
 	// Widgets

@@ -274,13 +274,9 @@ public class CorpusServiceImpl implements CorpusService {
 	 * @see fr.univnantes.termsuite.ui.services.CorpusService#runPipelineOnCorpus(fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline, fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus)
 	 */
 	private void runPipelineOnCorpus(final EPipeline pipeline, final Iterable<ESingleLanguageCorpus> corpusList) {
-		LinguisticResourcesService linguisticResourcesService = context.get(LinguisticResourcesService.class);
-		String resourcePrefix = String.format(
-				"platform:/plugin/%s/", 
-				linguisticResourcesService.getLinguisticResourceBundle().getSymbolicName());
 
 		for(final ESingleLanguageCorpus corpus:corpusList) {
-			final TermSuitePipeline tsp = toTermSuitePipeline(pipeline, corpus, resourcePrefix);
+			final TermSuitePipeline tsp = toTermSuitePipeline(pipeline, corpus);
 	
 			String jobName = "Running pipeline " + pipeline.getFilename() + " on corpus " + corpus.getCorpus().getPath() + "/" + corpus.getLanguage().getName();
 			
@@ -319,13 +315,17 @@ public class CorpusServiceImpl implements CorpusService {
 
 
 
-	private TermSuitePipeline toTermSuitePipeline(EPipeline pipeline, ESingleLanguageCorpus corpus, String resourcePrefix) {
+	private TermSuitePipeline toTermSuitePipeline(EPipeline pipeline, ESingleLanguageCorpus corpus) {
 		TaggerService taggerService = context.get(TaggerService.class);
 		Lang tsLang = LangUtil.getTermsuiteLang(corpus.getLanguage());
 		
 		TermSuitePipeline tsp = TermSuitePipeline.create(tsLang.getCode());
 
-		tsp.setResourceUrlPrefix(resourcePrefix);
+		LinguisticResourcesService resService = context.get(LinguisticResourcesService.class);
+		
+		
+		if(resService.areCustomResourcesActivated())
+			tsp.setResourceDir(resService.getCustomResourcesPath());
 		
 		tsp
 			.setCollection(
