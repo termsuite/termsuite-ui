@@ -23,6 +23,15 @@
 
   <build>
     <plugins>
+    <!--  
+    
+    TODO: develop and use a maven plugin for generating ecore classes
+    from a genmodel. Currently, generated classes are put to version control...
+    
+    See emf tools api: http://download.eclipse.org/modeling/emf/emf/javadoc/2.6.0/org/eclipse/emf/codegen/ecore/generator/Generator.html
+    
+    
+    -->
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-maven-plugin</artifactId>
