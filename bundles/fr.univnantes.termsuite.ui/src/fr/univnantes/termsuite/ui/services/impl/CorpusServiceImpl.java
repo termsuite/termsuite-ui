@@ -51,6 +51,7 @@ import eu.project.ttc.models.OccurrenceType;
 import eu.project.ttc.models.TermIndex;
 import eu.project.ttc.models.TermOccurrence;
 import eu.project.ttc.tools.TermSuitePipeline;
+import eu.project.ttc.tools.TermSuiteResourceManager;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
@@ -316,6 +317,7 @@ public class CorpusServiceImpl implements CorpusService {
 
 
 	private TermSuitePipeline toTermSuitePipeline(EPipeline pipeline, ESingleLanguageCorpus corpus) {
+		TermSuiteResourceManager.getInstance().clear();
 		TaggerService taggerService = context.get(TaggerService.class);
 		Lang tsLang = LangUtil.getTermsuiteLang(corpus.getLanguage());
 		

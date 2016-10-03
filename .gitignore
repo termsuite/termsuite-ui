@@ -49,3 +49,5 @@ bundles/fr.univnantes.termsuite.ui/lib/termsuite-core*.jar
 bintray.api
 bintray.properties
 *.swp
+/log
+/pref1.txt
