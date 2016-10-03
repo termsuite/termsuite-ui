@@ -261,7 +261,14 @@ public class NavigatorPart implements TreePart {
 					return pipelineService.getPipelineList().getPipelines().toArray();
 				else if (node.getNodeType() == NODE_FOLDER_TERMINO) {
 					ESingleLanguageCorpus c = (ESingleLanguageCorpus)node.getParent();
-					return c.getTerminologies().toArray();
+					return c
+							.getTerminologies()
+							.stream()
+							.filter(t -> {
+								File f = new File(t.getFilepath());
+								return f.exists() && f.length() > 0;
+							})
+							.toArray();
 				} else if (node.getNodeType() == NODE_FOLDER_DOCUMENT) {
 					ESingleLanguageCorpus c = (ESingleLanguageCorpus)node.getParent();
 					List<EDocument> documents = Lists.newArrayList(c.getDocuments());
