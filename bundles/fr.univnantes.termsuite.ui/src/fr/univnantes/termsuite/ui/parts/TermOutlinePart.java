@@ -1,5 +1,6 @@
 package fr.univnantes.termsuite.ui.parts;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -55,6 +56,11 @@ public class TermOutlinePart {
 		public boolean isDirect() {
 			return direct;
 		}
+		
+		private static Object[] fromObjects(boolean direct, Collection<?> objects) {
+			return fromObjects(direct, objects.toArray());
+		}
+
 		private static Object[] fromObjects(boolean direct, Object... objects) {
 			List<DirectionalObject> list = Lists.newArrayList();
 			for(Object o:objects)
@@ -248,11 +254,9 @@ public class TermOutlinePart {
 					cell.setText(t.getPilot());
 				} else if (element instanceof DirectionalObject) {
 					DirectionalObject o = (DirectionalObject)element;
-					if(element instanceof TermVariation) {
-						TermVariation tv = (TermVariation)o.getObject();
-						cell.setText((o.isDirect() ? tv.getVariant(): tv.getBase()).getPilot());
-					} else if(element instanceof TermVariation) {
-						TermVariation tv = (TermVariation)o.getObject();
+					Object object = o.getObject();
+					if(object instanceof TermVariation) {
+						TermVariation tv = (TermVariation)object;
 						cell.setText((o.isDirect() ? tv.getVariant(): tv.getBase()).getPilot());
 					}	
 				} 			
