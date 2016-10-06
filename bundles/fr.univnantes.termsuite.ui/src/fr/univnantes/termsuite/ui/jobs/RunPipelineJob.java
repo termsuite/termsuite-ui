@@ -12,6 +12,7 @@ import org.eclipse.e4.ui.di.UISynchronize;
 import eu.project.ttc.models.TermIndex;
 import eu.project.ttc.tools.PipelineListener;
 import eu.project.ttc.tools.TermSuitePipeline;
+import eu.project.ttc.tools.TermSuiteResourceManager;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 
 public class RunPipelineJob extends Job {
@@ -70,6 +71,7 @@ public class RunPipelineJob extends Job {
 			tsp.addPipelineListener(pipelineListener);
 			tsp.run();
 			terminologyCreated(tsp.getTermIndex());
+			TermSuiteResourceManager.getInstance().remove(tsp.getTermIndex().getName());
 			return Status.OK_STATUS;
 		} catch(Exception e) {
 			if(e.getCause() != null && e.getCause() instanceof OperationCanceledException)

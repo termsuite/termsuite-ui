@@ -267,6 +267,11 @@ public class CorpusServiceImpl implements CorpusService {
 
 	@Override
 	public void runPipelineOnSeveralCorpus(EPipeline pipeline, Iterable<ESingleLanguageCorpus> corpusList) {
+		/*
+		 * Prevent from a too big memory leak by removing TermSuite managed memory-resources.
+		 */
+		TermSuiteResourceManager.getInstance().clear();
+		
 		runPipelineOnCorpus(pipeline, corpusList);		
 	}
 	
@@ -317,7 +322,6 @@ public class CorpusServiceImpl implements CorpusService {
 
 
 	private TermSuitePipeline toTermSuitePipeline(EPipeline pipeline, ESingleLanguageCorpus corpus) {
-		TermSuiteResourceManager.getInstance().clear();
 		TaggerService taggerService = context.get(TaggerService.class);
 		Lang tsLang = LangUtil.getTermsuiteLang(corpus.getLanguage());
 		
