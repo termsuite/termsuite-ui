@@ -16,7 +16,8 @@ public class StringToTermPropertyConverter extends Converter {
 	    	return TermProperty.forName(String.valueOf(fromObject));
 	    } else if (fromObject instanceof TermProperty) {
 	    	return ((TermProperty)fromObject).getPropertyName();
-	    }
+	    } else if(fromObject == null)
+	    	return null;
 	    throw new IllegalArgumentException(fromObject.getClass() + " type cannot be converted by " + getClass());
 	} 
 }

@@ -16,7 +16,8 @@ public class StringToIntegerConverter extends Converter {
 	    	return StringConverter.asInt(fromObject.toString());
 	    } else if (fromObject instanceof Integer) {
 	    	return StringConverter.asString((Integer)fromObject);
-	    }
+	    } else if(fromObject == null)
+	    	return null;
 	    throw new IllegalArgumentException(fromObject.getClass() + " type cannot be converted by " + getClass());
 	} 
 }
