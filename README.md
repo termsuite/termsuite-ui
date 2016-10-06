@@ -1,3 +1,6 @@
+ [ ![Download](https://api.bintray.com/packages/termsuite/termsuite-ui/pkg/images/download.svg) ](https://bintray.com/termsuite/termsuite-ui/pkg/_latestVersion/)
+
+
 # Developer instructions for `termsuite-ui`
 
 [![Build Status](https://travis-ci.org/termsuite/termsuite-ui.svg?branch=develop)](https://travis-ci.org/termsuite/termsuite-ui)
