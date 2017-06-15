@@ -37,7 +37,6 @@ public class LinguisticResourceUtil {
 						
 						for (File candidateResourceFile : Files.fileTreeTraverser().preOrderTraversal(langDir)) {
 						    Path relativePath = langDir.toPath().getParent().relativize(candidateResourceFile.toPath());
-						    System.out.println(relativePath.toString());
 					    	TermSuiteResource tsResource = TermSuiteResource.forFileName(
 					    			relativePath.toString());
 					    	if(tsResource != null) {
