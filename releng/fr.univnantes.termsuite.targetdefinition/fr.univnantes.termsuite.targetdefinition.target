@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="termsuite_ui" sequenceNumber="49">
+<?pde version="3.8"?><target name="termsuite_ui" sequenceNumber="54">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="com.opcoach.e4.preferences.feature.feature.group" version="1.0.0.201603310905"/>
@@ -20,10 +20,6 @@
 <unit id="org.eclipse.swt.dummyfragments.feature.group" version="1.0.0.v20160603-0902"/>
 <repository location="https://eclipseguru.github.io/missing-swt-fragments/"/>
 </location>
-<location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="fr.univnantes.termsuite.core.feature.feature.group" version="2.3.0.bnd-7hlg1A"/>
-<unit id="fr.univnantes.termsuite.thirdparty.feature.feature.group" version="2.3.0.bnd-EfsoLw"/>
-<repository location="https://dl.bintray.com/termsuite/termsuite-ui"/>
-</location>
+<location path="${project_loc}/../../../termsuite-core/build/updatesite" type="Directory"/>
 </locations>
 </target>
