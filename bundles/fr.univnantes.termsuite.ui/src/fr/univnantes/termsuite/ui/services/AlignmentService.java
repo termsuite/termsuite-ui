@@ -3,8 +3,8 @@ package fr.univnantes.termsuite.ui.services;
 import java.util.Collection;
 import java.util.List;
 
-import eu.project.ttc.engines.BilingualAligner.TranslationCandidate;
-import eu.project.ttc.models.Term;
+import fr.univnantes.termsuite.alignment.TranslationCandidate;
+import fr.univnantes.termsuite.model.Term;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EBilingualDictionary;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;

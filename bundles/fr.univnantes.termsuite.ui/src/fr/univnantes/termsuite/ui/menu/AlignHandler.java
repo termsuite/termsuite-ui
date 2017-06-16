@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.google.common.base.Joiner;
 
-import eu.project.ttc.engines.BilingualAligner.TranslationCandidate;
-import eu.project.ttc.models.Term;
+import fr.univnantes.termsuite.alignment.TranslationCandidate;
+import fr.univnantes.termsuite.model.Term;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.events.AlignmentResultPayload;

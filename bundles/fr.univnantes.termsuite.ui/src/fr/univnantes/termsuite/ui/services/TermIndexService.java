@@ -3,7 +3,8 @@ package fr.univnantes.termsuite.ui.services;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-import eu.project.ttc.models.TermIndex;
+import fr.univnantes.termsuite.index.TermIndex;
+import fr.univnantes.termsuite.model.IndexedCorpus;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 
@@ -21,7 +22,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 public interface TermIndexService {
 	
 	/**
-	 * Gets the TermSuite {@link TermIndex} associated to the
+	 * Gets the TermSuite {@link IndexedCorpus} associated to the
 	 * <code>terminology</code> object, or loads it from local drive
 	 * if not in memory.
 	 * 
@@ -32,7 +33,7 @@ public interface TermIndexService {
 	 * @throws ExecutionException 
 	 * 				if an {@link IOException} occurs while loading the {@link TermIndex} from file.
 	 */
-	public TermIndex getTermIndex(ETerminology terminology) throws ExecutionException;
+	public IndexedCorpus getTermIndex(ETerminology terminology) throws ExecutionException;
 	
 	/**
 	 * 
@@ -41,7 +42,7 @@ public interface TermIndexService {
 	 * @return
 	 * @throws ExecutionException
 	 */
-	public TermIndex getTermIndexMetadata(ETerminology terminology) throws IOException;
+	public IndexedCorpus getTermIndexMetadata(ETerminology terminology) throws IOException;
 
 	
 
@@ -59,7 +60,7 @@ public interface TermIndexService {
 	 *  		Set it to <code>true</code> if context vectors should be stored.
 	 * @throws IOException 
 	 */
-	public void saveTermIndex(ETerminology terminology, TermIndex termIndex, boolean withOccurrences, boolean withContexts) throws IOException;
+	public void saveTermIndex(ETerminology terminology, IndexedCorpus termIndex, boolean withOccurrences, boolean withContexts) throws IOException;
 	
 	/**
 	 * Removes from file system the term index associated with the 

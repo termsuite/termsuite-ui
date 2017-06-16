@@ -45,8 +45,8 @@ import org.eclipse.swt.widgets.Shell;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Ints;
 
-import eu.project.ttc.models.Term;
-import eu.project.ttc.models.TermOccurrence;
+import fr.univnantes.termsuite.framework.service.TermService;
+import fr.univnantes.termsuite.model.TermOccurrence;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
@@ -127,14 +127,14 @@ public class FileEditorPart {
 	};
 
 	@Inject @Optional
-	void updateTerm(@UIEventTopic(TermSuiteEvents.ACTIVE_TERM) Term term) {
+	void updateTerm(@UIEventTopic(TermSuiteEvents.ACTIVE_TERM) TermService term) {
 		if(term != null) {
 			setActiveTerm(term);
 			text.redraw();
 		}
 	}
 
-	private void setActiveTerm(Term term) {
+	private void setActiveTerm(TermService term) {
 		occurrences = Lists.newArrayList();
 		for(TermOccurrence occ : term.getOccurrences()) {
 			EDocument doc = corpusService.resolveEDocument(occ.getSourceDocument());

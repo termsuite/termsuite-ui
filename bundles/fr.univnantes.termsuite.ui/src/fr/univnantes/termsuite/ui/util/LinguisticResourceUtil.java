@@ -7,11 +7,11 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 
-import eu.project.ttc.tools.TermSuiteResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
+import fr.univnantes.termsuite.uima.ResourceType;
 
 public class LinguisticResourceUtil {
 
@@ -25,6 +25,7 @@ public class LinguisticResourceUtil {
 			throw new ValidationException("Not a directory: " + resourcePath);
 		else {
 			List<ELinguisticResourceSet> resourceSets = Lists.newArrayList();
+			
 			if(f.listFiles().length > 0) {
 				
 				for(File langDir:f.listFiles()) {
@@ -37,7 +38,7 @@ public class LinguisticResourceUtil {
 						
 						for (File candidateResourceFile : Files.fileTreeTraverser().preOrderTraversal(langDir)) {
 						    Path relativePath = langDir.toPath().getParent().relativize(candidateResourceFile.toPath());
-					    	TermSuiteResource tsResource = TermSuiteResource.forFileName(
+						    ResourceType tsResource = ResourceType.forFileName(
 					    			relativePath.toString());
 					    	if(tsResource != null) {
 					    		ELinguisticResource res = TermsuiteuiFactory.eINSTANCE.createELinguisticResource();

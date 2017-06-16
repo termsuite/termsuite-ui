@@ -2,16 +2,14 @@
  */
 package fr.univnantes.termsuite.ui.model.termsuiteui.impl;
 
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
 import fr.univnantes.termsuite.ui.model.termsuiteui.EFilteringMode;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPeriodicCleaningMode;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
-
-import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.ecore.EClass;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->

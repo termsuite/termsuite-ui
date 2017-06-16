@@ -14,7 +14,7 @@ import org.eclipse.e4.ui.model.application.ui.menu.MMenuElement;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenuFactory;
 import org.eclipse.e4.ui.services.IServiceConstants;
 
-import eu.project.ttc.models.Term;
+import fr.univnantes.termsuite.model.Term;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;

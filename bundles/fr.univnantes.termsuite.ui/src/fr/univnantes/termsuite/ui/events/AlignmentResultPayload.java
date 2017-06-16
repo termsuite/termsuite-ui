@@ -2,8 +2,8 @@ package fr.univnantes.termsuite.ui.events;
 
 import java.util.List;
 
-import eu.project.ttc.engines.BilingualAligner.TranslationCandidate;
-import eu.project.ttc.models.Term;
+import fr.univnantes.termsuite.alignment.TranslationCandidate;
+import fr.univnantes.termsuite.model.Term;
 
 public class AlignmentResultPayload {
 	private Term term;

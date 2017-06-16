@@ -8,8 +8,6 @@ import java.util.concurrent.ExecutionException;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
@@ -36,13 +34,16 @@ import org.eclipse.swt.widgets.Label;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
-import eu.project.ttc.models.Term;
-import eu.project.ttc.models.TermIndex;
+import fr.univnantes.termsuite.model.IndexedCorpus;
+import fr.univnantes.termsuite.model.Property;
+import fr.univnantes.termsuite.model.RelationProperty;
+import fr.univnantes.termsuite.model.Term;
+import fr.univnantes.termsuite.model.TermProperty;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
-import fr.univnantes.termsuite.ui.UITermProperty;
 import fr.univnantes.termsuite.ui.controls.DelayableText;
 import fr.univnantes.termsuite.ui.controls.DelayedModificationListener;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
@@ -100,13 +101,13 @@ public class TerminologyPart implements TreePart {
 		
 		subscribe(context, termIndexService, parent);
 		
-		addColumn(UITermProperty.TERM_RANK, 50);
-		addColumn(UITermProperty.TERM_PILOT, 300);
-		addColumn(UITermProperty.TERM_PATTERN, 100);
-		addColumn(UITermProperty.SPECIFICITY, 60);
-		addColumn(UITermProperty.FREQUENCY, 60);
-		addColumn(UITermProperty.DOCUMENT_FREQUENCY, 60);
-		addColumn(UITermProperty.VARIATION_RULE, 100);
+		addColumn(TermProperty.RANK, 50);
+		addColumn(TermProperty.PILOT, 300);
+		addColumn(TermProperty.PATTERN, 100);
+		addColumn(TermProperty.SPECIFICITY, 60);
+		addColumn(TermProperty.FREQUENCY, 60);
+		addColumn(TermProperty.DOCUMENT_FREQUENCY, 60);
+		addColumn(RelationProperty.VARIATION_RULES, 100);
 		
 	  // attach a selection listener to our jface viewer
 	  viewer.addSelectionChangedListener(ContextInjectionFactory.make(TermSelectionListener.class, context));
@@ -122,13 +123,13 @@ public class TerminologyPart implements TreePart {
 	 * 
 	 * http://www.programcreek.com/java-api-examples/index.php?api=org.eclipse.jface.viewers.TreeViewerColumn
 	 */
-	private void addColumn(final UITermProperty property, int width) {
+	private void addColumn(final Property<?> property, int width) {
 		TreeViewerColumn column1 = new TreeViewerColumn(viewer, property.getRange().equals(String.class) ? SWT.LEFT : SWT.RIGHT);
 		column1.setLabelProvider(new DelegatingStyledCellLabelProvider(new TermLabelProvider(property, viewerConfig)));
 		column1.getColumn().setWidth(width);
-		column1.getColumn().setText(property.getLabel());
-		column1.getColumn().setToolTipText(property.getTooltip());
-		if(property.isNumber()) {
+		column1.getColumn().setText(property.getPropertyName());
+		column1.getColumn().setToolTipText(property.getDescription());
+		if(property.isNumeric()) {
 			column1.getColumn().addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -146,10 +147,10 @@ public class TerminologyPart implements TreePart {
 		}
 	}
 
-	private UITermProperty sortingProperty = UITermProperty.TERM_RANK;
+	private Property<?> sortingProperty = TermProperty.RANK;
 	boolean desc = false;
 	
-	private void updateSortingProperty(UITermProperty property) {
+	private void updateSortingProperty(Property<?> property) {
 		if(sortingProperty == property) 
 			this.desc = !desc;
 		else {
@@ -158,11 +159,13 @@ public class TerminologyPart implements TreePart {
 		}
 	}
 	
-	private TermIndex termIndex = null;
+	private IndexedCorpus termIndex = null;
 
 	private void setSortedInput() {
-		List<Term> sortedTerms = Lists.newArrayList(termIndex.getTerms());
-		Collections.sort(sortedTerms, sortingProperty.getTermProperty().getComparator(desc));
+		List<Term> sortedTerms = Lists.newArrayList(termIndex.getTerminology().getTerms().values());
+		Preconditions.checkState(sortingProperty instanceof TermProperty,
+				"Can only sort on a TermProperty. Got: %s", sortingProperty);
+		Collections.sort(sortedTerms, ((TermProperty) sortingProperty).getComparator(desc));
 		this.viewer.setInput(sortedTerms);
 	}
 
@@ -230,23 +233,18 @@ public class TerminologyPart implements TreePart {
 			ETerminology terminology = (ETerminology)context.get(TermSuiteUI.INPUT_OBJECT);
 			try {
 				if(terminology != null) {
-					final TermIndex termIndex = termIndexService.getTermIndex(terminology);
-					Job job = new Job("Open terminology") {
-
-						@Override
-						protected IStatus run(IProgressMonitor monitor) {
+					final IndexedCorpus termIndex = termIndexService.getTermIndex(terminology);
+					Job job = Job.create("Open terminology", monitor -> {
 							sync.asyncExec(new Runnable() {
 								@Override
 								public void run() {
-									numOfTermsBeforeFiltering.setText(Integer.toString(termIndex.getTerms().size()));
+									numOfTermsBeforeFiltering.setText(Integer.toString(termIndex.getTerminology().getTerms().size()));
 									TerminologyPart.this.termIndex = termIndex;
 									TerminologyPart.this.setSortedInput();
 								}
 							});
 							return Status.OK_STATUS;
-						}
-						
-					};
+					});
 					job.schedule();
 
 				} else
@@ -270,11 +268,6 @@ public class TerminologyPart implements TreePart {
 			}
 		});
 
-//		this.eventBroker.subscribe(TermSuiteEvents.EDITOR_INITIATED, new EventHandler(){
-//			@Override
-//			public void handleEvent(Event event) {
-//			}
-//		});
 	}
 
 

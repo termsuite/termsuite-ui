@@ -3,7 +3,6 @@
 package fr.univnantes.termsuite.ui.model.termsuiteui;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**

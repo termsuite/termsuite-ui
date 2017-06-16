@@ -52,7 +52,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
-import eu.project.ttc.engines.cleaner.TermProperty;
+import fr.univnantes.termsuite.model.TermProperty;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EFilteringMode;
@@ -507,8 +507,8 @@ public class PipelinePart {
 			TermProperty.FREQUENCY_NORM,
 			TermProperty.DOCUMENT_FREQUENCY,
 			TermProperty.GENERAL_FREQUENCY_NORM,
-			TermProperty.WR,
-			TermProperty.WR_LOG
+			TermProperty.SPECIFICITY,
+			TermProperty.INDEPENDANCE,
 		});
 		dbc.bindValue(
 			ViewerProperties.singleSelection().observe(propertyComboViewer), 

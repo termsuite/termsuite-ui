@@ -25,8 +25,10 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import fr.univnantes.termsuite.ui.services.AlignmentService;
 import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.ExtractorService;
 import fr.univnantes.termsuite.ui.services.LinguisticResourcesService;
 import fr.univnantes.termsuite.ui.services.PipelineService;
+import fr.univnantes.termsuite.ui.services.PreprocessorService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.services.TaggerService;
 import fr.univnantes.termsuite.ui.services.TermIndexService;
@@ -34,8 +36,10 @@ import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
 import fr.univnantes.termsuite.ui.services.TerminoService;
 import fr.univnantes.termsuite.ui.services.impl.AlignmentServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.CorpusServiceImpl;
+import fr.univnantes.termsuite.ui.services.impl.ExtractorServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.LinguisticResourcesServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.PipelineServiceImpl;
+import fr.univnantes.termsuite.ui.services.impl.PreprocessorServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.ResourceServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.TaggerServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.TermIndexServiceImpl;
@@ -123,6 +127,8 @@ public class LifeCycleManager {
 
 	private void addServicesToContext(IEclipseContext cont) {
 		cont.set(LinguisticResourcesService.class, ContextInjectionFactory.make(LinguisticResourcesServiceImpl.class, cont));
+		cont.set(PreprocessorService.class, ContextInjectionFactory.make(PreprocessorServiceImpl.class, cont));
+		cont.set(ExtractorService.class, ContextInjectionFactory.make(ExtractorServiceImpl.class, cont));
 		cont.set(TermIndexService.class, ContextInjectionFactory.make(TermIndexServiceImpl.class, cont));
 		cont.set(CorpusService.class, ContextInjectionFactory.make(CorpusServiceImpl.class, cont));
 		cont.set(TerminoService.class, ContextInjectionFactory.make(TerminoServiceImpl.class, cont));

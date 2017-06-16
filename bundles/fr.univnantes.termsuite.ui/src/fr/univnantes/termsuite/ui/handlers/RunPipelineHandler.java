@@ -18,6 +18,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETaggerConfig;
 import fr.univnantes.termsuite.ui.parts.PipelinePart;
 import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.ExtractorService;
 import fr.univnantes.termsuite.ui.services.TaggerService;
 
 public class RunPipelineHandler {
@@ -35,11 +36,13 @@ public class RunPipelineHandler {
 
 	@Execute
 	public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
-			@Named(IServiceConstants.ACTIVE_PART) MPart part, CorpusService corpusService) {
+			@Named(IServiceConstants.ACTIVE_PART) MPart part, 
+			ExtractorService extractorService,
+			CorpusService corpusService) {
 		EPipeline pipeline = (EPipeline) part.getContext().get(TermSuiteUI.INPUT_OBJECT);
 
 		ESingleLanguageCorpus[] selectedCorpus = corpusService.selectCorpus(shell);
-		corpusService.runPipelineOnSeveralCorpus(pipeline, Lists.newArrayList(selectedCorpus));
+		extractorService.runPipelineOnSeveralCorpus(pipeline, Lists.newArrayList(selectedCorpus));
 
 	}
 	

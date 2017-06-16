@@ -1,8 +1,6 @@
 package fr.univnantes.termsuite.ui.services.impl;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -26,9 +24,9 @@ import org.osgi.framework.BundleException;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.io.ByteStreams;
 
-import eu.project.ttc.tools.ResourceExporter;
+import fr.univnantes.termsuite.api.ResourceConfig;
+import fr.univnantes.termsuite.tools.ResourceExporter;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
@@ -172,8 +170,16 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 	}
 
 	@Override
-	public String getCustomResourcesPath() {
+	public Path getCustomResourcesPath() {
 		Preconditions.checkState(withCustomResources, "Custom resources are not activated");
-		return this.customResourcePath;
+		return Paths.get(this.customResourcePath);
+	}
+
+	@Override
+	public ResourceConfig getResourceConfig() {
+		ResourceConfig config = new ResourceConfig();
+		if(areCustomResourcesActivated())
+			config.addDirectory(getCustomResourcesPath());
+		return config;
 	}
 }

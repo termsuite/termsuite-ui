@@ -2,19 +2,16 @@
  */
 package fr.univnantes.termsuite.ui.model.termsuiteui.impl;
 
-import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
-import fr.univnantes.termsuite.ui.model.termsuiteui.EPipelineList;
-import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
-
 import java.util.Collection;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+
+import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
+import fr.univnantes.termsuite.ui.model.termsuiteui.EPipelineList;
+import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
 
 /**
  * <!-- begin-user-doc -->

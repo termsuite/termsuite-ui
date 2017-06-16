@@ -4,12 +4,12 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.widgets.Composite;
 
 import com.google.common.collect.ComparisonChain;
 
-import eu.project.ttc.models.TermVariation;
+import fr.univnantes.termsuite.framework.service.RelationService;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
 import fr.univnantes.termsuite.ui.util.jface.ExpandCollapseDoubleClickListener;
@@ -24,15 +24,15 @@ import fr.univnantes.termsuite.ui.util.jface.ExpandCollapseDoubleClickListener;
 public class TermIndexViewer extends TreeViewer {
 
 
-	private ViewerSorter variationSorter = new ViewerSorter() {
+	private ViewerComparator variationComparator = new ViewerComparator() {
 		public int compare(Viewer viewer, Object e1, Object e2) {
-			if(e1 instanceof TermVariation && e2 instanceof TermVariation) {
-				TermVariation v1 = (TermVariation) e1;
-				TermVariation v2 = (TermVariation) e2;
+			if(e1 instanceof RelationService && e2 instanceof RelationService) {
+				RelationService v1 = (RelationService) e1;
+				RelationService v2 = (RelationService) e2;
 				return ComparisonChain.start()
 						.compare(
-								v2.getScore(),
-								v1.getScore())
+								v2.getVariantScore(),
+								v1.getVariantScore())
 						.result();
 			} else
 				return 0;
@@ -56,8 +56,8 @@ public class TermIndexViewer extends TreeViewer {
 		
 		getTree().setLinesVisible(true);
 		getTree().setHeaderVisible(true);
-		setSorter(variationSorter);
-		setContentProvider(new TermIndexContentProvider(config));
+		setComparator(variationComparator);
+		setContentProvider(new TerminologyContentProvider(config));
 
 		addDoubleClickListener(new ExpandCollapseDoubleClickListener(this));
 

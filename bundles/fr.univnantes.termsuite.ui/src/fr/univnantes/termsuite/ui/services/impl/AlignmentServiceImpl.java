@@ -1,6 +1,7 @@
 package fr.univnantes.termsuite.ui.services.impl;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -26,11 +27,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
-import eu.project.ttc.engines.BilingualAligner;
-import eu.project.ttc.engines.BilingualAligner.TranslationCandidate;
-import eu.project.ttc.metrics.Cosine;
-import eu.project.ttc.models.Term;
-import eu.project.ttc.tools.TermSuiteAlignerBuilder;
+import fr.univnantes.termsuite.alignment.BilingualAlignmentService;
+import fr.univnantes.termsuite.alignment.TranslationCandidate;
+import fr.univnantes.termsuite.api.TermSuite;
+import fr.univnantes.termsuite.metrics.Cosine;
+import fr.univnantes.termsuite.model.Term;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.exceptions.DictionaryException;
@@ -198,13 +199,13 @@ public class AlignmentServiceImpl implements AlignmentService {
 					targetTerminology.getCorpus().getLanguage().getName()));
 			
 		} else {
-			BilingualAligner aligner;
+			BilingualAlignmentService aligner;
 			try {
-				aligner = TermSuiteAlignerBuilder.start()
+				aligner = TermSuite.bilingualAligner()
 						.setSourceTerminology(context.get(TermIndexService.class).getTermIndex(sourceTerminology))
 						.setTargetTerminology(context.get(TermIndexService.class).getTermIndex(targetTerminology))
-						.setDicoPath(dico.getPath())
-						.setDistance(new Cosine())
+						.setDicoPath(Paths.get(dico.getPath()))
+						.setDistance(Cosine.class)
 						.create();
 			} catch (ExecutionException e) {
 				throw new RuntimeException(e);

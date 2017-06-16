@@ -16,7 +16,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
-import eu.project.ttc.engines.BilingualAligner.TranslationCandidate;
+import fr.univnantes.termsuite.alignment.TranslationCandidate;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.events.AlignmentResultPayload;
 import fr.univnantes.termsuite.ui.viewers.TermSelectionListener;

@@ -5,7 +5,7 @@ import org.eclipse.e4.core.di.annotations.Execute;
 
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
-import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.ExtractorService;
 
 public class RunPipelineOnSelectedCorpusHandler {
 
@@ -13,12 +13,12 @@ public class RunPipelineOnSelectedCorpusHandler {
 
 	@Execute
 	public void execute(IEclipseContext context, 
-			final CorpusService corpusService
+			final ExtractorService extractorService
 			) {
 
 		final EPipeline pipeline = context.get(EPipeline.class);
 		final ESingleLanguageCorpus corpus = context.get(ESingleLanguageCorpus.class);
 		
-		corpusService.runPipelineOnCorpus(pipeline, corpus);
+		extractorService.runPipelineOnCorpus(pipeline, corpus);
 	}
 }

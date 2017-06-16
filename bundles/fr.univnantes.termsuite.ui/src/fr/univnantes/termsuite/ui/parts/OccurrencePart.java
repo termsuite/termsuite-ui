@@ -45,9 +45,9 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import eu.project.ttc.models.Term;
-import eu.project.ttc.models.TermOccurrence;
-import eu.project.ttc.models.TermVariation;
+import fr.univnantes.termsuite.framework.service.RelationService;
+import fr.univnantes.termsuite.framework.service.TermService;
+import fr.univnantes.termsuite.model.TermOccurrence;
 import fr.univnantes.termsuite.ui.TermOccurrenceContainer;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
@@ -171,11 +171,11 @@ public class OccurrencePart implements TreePart {
 		if(viewer != null && object != null) {
 			if(object instanceof TermOccurrenceContainer) {
 				occurrences = ((TermOccurrenceContainer<?>)object).getOccurrences();
-			} else if (object instanceof Term) {
-				occurrences = ((Term)object).getOccurrences();
-			} else if (object instanceof TermVariation) {
-				TermVariation sv = (TermVariation)object;
-				occurrences = sv.getVariant().getOccurrences();
+			} else if (object instanceof TermService) {
+				occurrences = ((TermService)object).getOccurrences();
+			} else if (object instanceof RelationService) {
+				RelationService sv = (RelationService)object;
+				occurrences = sv.getTo().getOccurrences();
 			} else
 				return;
 			documentContainers = TermOccurrenceUtil.toDocumentContainers(occurrences, corpusService);

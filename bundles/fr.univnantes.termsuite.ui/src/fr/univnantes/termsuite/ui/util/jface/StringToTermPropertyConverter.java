@@ -2,7 +2,7 @@ package fr.univnantes.termsuite.ui.util.jface;
 
 import org.eclipse.core.databinding.conversion.Converter;
 
-import eu.project.ttc.engines.cleaner.TermProperty;
+import fr.univnantes.termsuite.model.TermProperty;
 
 public class StringToTermPropertyConverter extends Converter {
 

@@ -17,10 +17,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-import eu.project.ttc.api.JsonOptions;
-import eu.project.ttc.api.TermIndexIO;
-import eu.project.ttc.models.TermIndex;
-import eu.project.ttc.models.index.JsonTermIndexIO;
+import fr.univnantes.termsuite.io.json.JsonOptions;
+import fr.univnantes.termsuite.io.json.JsonTerminologyIO;
+import fr.univnantes.termsuite.model.IndexedCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.TermIndexService;
@@ -29,12 +28,12 @@ import fr.univnantes.termsuite.ui.util.IOUtil;
 public class TermIndexServiceImpl implements TermIndexService {
 
 
-	private LoadingCache<ETerminology, TermIndex> terminoCache = CacheBuilder.newBuilder().maximumSize(1).recordStats()
-			.build(new CacheLoader<ETerminology, TermIndex>() {
-				public TermIndex load(ETerminology terminology) throws IOException {
+	private LoadingCache<ETerminology, IndexedCorpus> terminoCache = CacheBuilder.newBuilder().maximumSize(1).recordStats()
+			.build(new CacheLoader<ETerminology, IndexedCorpus>() {
+				public IndexedCorpus load(ETerminology terminology) throws IOException {
 					FileInputStream fis = new FileInputStream(terminology.getFilepath());
 					InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
-					TermIndex termino = JsonTermIndexIO.load(
+					IndexedCorpus termino = JsonTerminologyIO.load(
 							isr, 
 							new JsonOptions());
 					IOUtil.closeSilently(fis, isr);
@@ -43,17 +42,17 @@ public class TermIndexServiceImpl implements TermIndexService {
 			});
 
 	@Override
-	public TermIndex getTermIndex(ETerminology terminology) throws ExecutionException {
+	public IndexedCorpus getTermIndex(ETerminology terminology) throws ExecutionException {
 		return terminoCache.get(terminology);
 	}
 
 	@Override
-	public void saveTermIndex(ETerminology terminology, TermIndex termIndex, boolean withOccurrences, boolean withContexts) throws IOException {
+	public void saveTermIndex(ETerminology terminology, IndexedCorpus termIndex, boolean withOccurrences, boolean withContexts) throws IOException {
 		FileOutputStream fos = new FileOutputStream(terminology.getFilepath());
 		Writer writer2 = new OutputStreamWriter(fos, "UTF-8");
-		TermIndexIO.toJson(
-				termIndex, 
+		JsonTerminologyIO.save(
 				writer2, 
+				termIndex, 
 				new JsonOptions().withOccurrences(withOccurrences).withContexts(withContexts));
 		writer2.flush();
 		IOUtil.closeSilently(fos, writer2);
@@ -75,10 +74,10 @@ public class TermIndexServiceImpl implements TermIndexService {
 	}
 
 	@Override
-	public TermIndex getTermIndexMetadata(ETerminology terminology) throws IOException {
+	public IndexedCorpus getTermIndexMetadata(ETerminology terminology) throws IOException {
 		FileInputStream fis = new FileInputStream(terminology.getFilepath());
 		InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
-		TermIndex termino = JsonTermIndexIO.load(
+		IndexedCorpus termino = JsonTerminologyIO.load(
 				isr, 
 				new JsonOptions().metadataOnly(true));
 		IOUtil.closeSilently(fis, isr);

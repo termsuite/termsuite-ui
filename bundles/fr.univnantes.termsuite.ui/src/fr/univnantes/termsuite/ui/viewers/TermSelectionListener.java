@@ -9,9 +9,9 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 
-import eu.project.ttc.engines.BilingualAligner.TranslationCandidate;
-import eu.project.ttc.models.Term;
-import eu.project.ttc.models.TermVariation;
+import fr.univnantes.termsuite.alignment.TranslationCandidate;
+import fr.univnantes.termsuite.framework.service.RelationService;
+import fr.univnantes.termsuite.framework.service.TermService;
 import fr.univnantes.termsuite.ui.parts.TermOutlinePart;
 import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
 
@@ -26,22 +26,21 @@ public class TermSelectionListener implements ISelectionChangedListener {
 	@Inject
 	private EPartService partService;
 
-	
-	 @Override
+	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 	      IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 	      // set the selection to the service
 	      if(selection.size() == 1) {
 	    	  Object sel = selection.getFirstElement();
-	    	  Term t;
-	    	  if(sel instanceof TermVariation)
-	    		  t = ((TermVariation)sel).getVariant();
+	    	  TermService t;
+	    	  if(sel instanceof RelationService)
+	    		  t = ((RelationService)sel).getTo();
 	    	  else if(sel instanceof TranslationCandidate)
 	    		  t = ((TranslationCandidate)sel).getTerm();
-	    	  else if(sel instanceof Term)
-	    		  t = (Term)sel;
+	    	  else if(sel instanceof TermService)
+	    		  t = (TermService)sel;
 	    	  else
-	    		  throw new IllegalStateException();
+	    		  throw new IllegalStateException("No such selected type allowed: " + sel.getClass());
 	    	  selectionService.setSelection(t);
 	    	  termSuiteSelectionService.setActiveTerm(t);
 	    	  MPart outlinePart = partService.findPart(TermOutlinePart.ID);

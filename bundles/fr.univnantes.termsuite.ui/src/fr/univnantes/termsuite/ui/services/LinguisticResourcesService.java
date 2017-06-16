@@ -1,7 +1,9 @@
 package fr.univnantes.termsuite.ui.services;
 
+import java.nio.file.Path;
 import java.util.Collection;
 
+import fr.univnantes.termsuite.api.ResourceConfig;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet;
 
@@ -24,5 +26,8 @@ public interface LinguisticResourcesService {
 	public boolean areCustomResourcesActivated();
 
 
-	public String getCustomResourcesPath();
+	public Path getCustomResourcesPath();
+
+
+	public ResourceConfig getResourceConfig();
 }

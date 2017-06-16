@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import eu.project.ttc.engines.desc.Lang;
+import fr.univnantes.termsuite.model.Lang;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
 
 public class LangUtil {

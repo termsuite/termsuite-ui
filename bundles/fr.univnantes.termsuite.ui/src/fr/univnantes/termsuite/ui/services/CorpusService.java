@@ -10,9 +10,9 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.google.common.collect.ImmutableSet;
 
-import eu.project.ttc.engines.desc.TermSuiteCollection;
-import eu.project.ttc.models.Document;
-import eu.project.ttc.models.TermOccurrence;
+import fr.univnantes.termsuite.api.TXTCorpus;
+import fr.univnantes.termsuite.model.Document;
+import fr.univnantes.termsuite.model.TermOccurrence;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorporaList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
@@ -68,15 +68,9 @@ public interface CorpusService {
 	public String getTsvCasOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline);
 	public String getJsonCasOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline);
 	
-	
-	public TermSuiteCollection getCollectionType(ESingleLanguageCorpus corpus);
-
 	public String getCollectionPath(ESingleLanguageCorpus corpus);
 
 	
-	public void runPipelineOnCorpus(EPipeline pipeline, ESingleLanguageCorpus corpus);
-	public void runPipelineOnSeveralCorpus(EPipeline pipeline, Iterable<ESingleLanguageCorpus> corpus);
-
 	public void saveCorpus(ECorpus corpus) throws IOException;
 
 
@@ -137,5 +131,6 @@ public interface CorpusService {
 
 	public File[] candidateSLCChildrenForPath(String path);
 
+	public TXTCorpus asTxtCorpus(ESingleLanguageCorpus corpus);
 
 }

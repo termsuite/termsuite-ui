@@ -20,7 +20,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -30,10 +29,8 @@ import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
-import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
 import com.google.common.cache.CacheBuilder;
@@ -43,20 +40,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.primitives.Ints;
 
-import eu.project.ttc.engines.cleaner.TermProperty;
-import eu.project.ttc.engines.desc.Lang;
-import eu.project.ttc.engines.desc.TermSuiteCollection;
-import eu.project.ttc.models.Document;
-import eu.project.ttc.models.OccurrenceType;
-import eu.project.ttc.models.TermIndex;
-import eu.project.ttc.models.TermOccurrence;
-import eu.project.ttc.tools.TermSuitePipeline;
-import eu.project.ttc.tools.TermSuiteResourceManager;
+import fr.univnantes.termsuite.api.TXTCorpus;
+import fr.univnantes.termsuite.model.Document;
+import fr.univnantes.termsuite.model.Lang;
+import fr.univnantes.termsuite.model.TermOccurrence;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.dialogs.CorpusSelectionDialog;
-import fr.univnantes.termsuite.ui.jobs.RunPipelineJob;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECollectionType;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorporaList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
@@ -64,14 +55,9 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ETagger;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ETaggerConfig;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
 import fr.univnantes.termsuite.ui.services.CorpusService;
-import fr.univnantes.termsuite.ui.services.LinguisticResourcesService;
-import fr.univnantes.termsuite.ui.services.TaggerService;
-import fr.univnantes.termsuite.ui.services.TerminoService;
 import fr.univnantes.termsuite.ui.util.FileUtil;
 import fr.univnantes.termsuite.ui.util.LangUtil;
 import fr.univnantes.termsuite.ui.util.WorkspaceUtil;
@@ -231,19 +217,6 @@ public class CorpusServiceImpl implements CorpusService {
 
 	
 	/* (non-Javadoc)
-	 * @see fr.univnantes.termsuite.ui.services.CorpusService#getCollectionType(fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus)
-	 */
-	@Override
-	public TermSuiteCollection getCollectionType(ESingleLanguageCorpus corpus) {
-		switch (corpus.getCollectionType()) {
-		case TEI:
-			return TermSuiteCollection.TEI;
-		default:
-			return TermSuiteCollection.TXT;
-		}
-	}
-	
-	/* (non-Javadoc)
 	 * @see fr.univnantes.termsuite.ui.services.CorpusService#getCollectionPath(fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus)
 	 */
 	@Override
@@ -251,208 +224,11 @@ public class CorpusServiceImpl implements CorpusService {
 		return Paths.get(
 				corpus.getCorpus().getPath(), 
 				LangUtil.getTermsuiteLang(corpus.getLanguage()).getNameUC(),
-				getCollectionType(corpus).toString().toLowerCase()
+				"txt"
 				).toString();
 	}
 
 
-	@Override
-	public void runPipelineOnCorpus(EPipeline pipeline, ESingleLanguageCorpus corpus) {
-		List<ESingleLanguageCorpus> l = Lists.newArrayList();
-		l.add(corpus);
-		runPipelineOnCorpus(pipeline, l);
-	}
-
-
-
-	@Override
-	public void runPipelineOnSeveralCorpus(EPipeline pipeline, Iterable<ESingleLanguageCorpus> corpusList) {
-		/*
-		 * Prevent from a too big memory leak by removing TermSuite managed memory-resources.
-		 */
-		TermSuiteResourceManager.getInstance().clear();
-		
-		runPipelineOnCorpus(pipeline, corpusList);		
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see fr.univnantes.termsuite.ui.services.CorpusService#runPipelineOnCorpus(fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline, fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus)
-	 */
-	private void runPipelineOnCorpus(final EPipeline pipeline, final Iterable<ESingleLanguageCorpus> corpusList) {
-
-		for(final ESingleLanguageCorpus corpus:corpusList) {
-			final TermSuitePipeline tsp = toTermSuitePipeline(pipeline, corpus);
-	
-			String jobName = "Running pipeline " + pipeline.getFilename() + " on corpus " + corpus.getCorpus().getPath() + "/" + corpus.getLanguage().getName();
-			
-			Job job = new RunPipelineJob(jobName, tsp, sync) {
-				@Override
-				public void terminologyCreated(final TermIndex termIndex) {
-					sync.asyncExec(new Runnable() {
-						@Override
-						public void run() {
-							ETerminology terminology = context.get(TerminoService.class).createTerminology(
-									corpus, 
-									pipeline.getTargetTerminologyName(), 
-									getTerminoJsonFile(corpus, pipeline),
-									pipeline.isSpotWithOccurrences(),
-									pipeline.isContextualizerEnabled());
-							try {
-								saveCorpus(corpus.getCorpus());
-								eventBroker.post(TermSuiteEvents.NEW_TERMINOLOGY, terminology);
-							} catch(IOException e) {
-								MessageDialog.openError(activeShell, "Error saving terminology", e.getMessage());
-							}
-						}
-					});
-				}
-			};
-			job.schedule();
-			sync.asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					partService.showPart(TermSuiteUI.PROGRESS_VIEW_ID, PartState.VISIBLE);
-				}
-			});
-		}
-
-	}
-
-
-
-	private TermSuitePipeline toTermSuitePipeline(EPipeline pipeline, ESingleLanguageCorpus corpus) {
-		TaggerService taggerService = context.get(TaggerService.class);
-		Lang tsLang = LangUtil.getTermsuiteLang(corpus.getLanguage());
-		
-		TermSuitePipeline tsp = TermSuitePipeline.create(tsLang.getCode());
-
-		LinguisticResourcesService resService = context.get(LinguisticResourcesService.class);
-		
-		
-		if(resService.areCustomResourcesActivated())
-			tsp.setResourceDir(resService.getCustomResourcesPath());
-		
-		tsp
-			.setCollection(
-					this.getCollectionType(corpus), 
-					this.getCollectionPath(corpus), 
-					"UTF-8");
-		
-		tsp.aeWordTokenizer();
-		
-		ETaggerConfig taggerConfig = taggerService.getTaggerConfig(pipeline);
-		if(taggerConfig.getTaggerType() == ETagger.TREE_TAGGER) {
-			tsp.setTreeTaggerHome(taggerConfig.getPath())
-				.aeTreeTagger();
-		} else if(taggerConfig.getTaggerType() == ETagger.MATE) {
-			tsp.setMateModelPath(taggerConfig.getPath())
-				.aeMateTaggerLemmatizer();
-		}
-		
-		tsp.aeUrlFilter()
-			.aeStemmer()
-			.setSpotWithOccurrences(pipeline.isSpotWithOccurrences())
-			.aeRegexSpotter()
-			.aeSpecificityComputer();
-			
-		if(pipeline.isMorphosyntacticAnalysisEnabled()) {
-			tsp.aeCompostSplitter();
-		}
-
-		if(pipeline.isSyntacticVariationEnabled()) {
-			tsp.aeSyntacticVariantGatherer();
-		}
-
-		
-		
-		/*
-		 * Placement of filtering is strategic:
-		 *  - before graphical variant gathering that tend to be long for some languages
-		 *  - before contextualizer
-		 *  - before Scorer, which needs to remove some terms and make take some time if TermIndex is huge.
-		 */
-		if(pipeline.isFilteringEnabled()) {
-			tsp.haeCasStatCounter("Before Filtering");
-			
-			TermProperty termProperty = TermProperty.forName(pipeline.getFilteringProperty());
-			/*
-			 * TODO Set as GUI param
-			 */
-			tsp.setKeepVariantsWhileCleaning(true); 
-			switch(pipeline.getFilteringMode()) {
-			case THRESHOLD: 
-				tsp.aeThresholdCleaner(termProperty, (float)pipeline.getFilteringThreshold());
-				break;
-			case TOP_N: 
-				tsp.aeTopNCleaner(termProperty, pipeline.getFilteringTopN());
-			}
-			
-			tsp.haeCasStatCounter("After Filtering");
-
-		}
-
-		
-		if(pipeline.isGraphicalVariationAnalysisEnabled()) {
-			tsp.setGraphicalVariantSimilarityThreshold((float)pipeline.getGraphicalSimilarityThreshhold())
-				.aeGraphicalVariantGatherer();
-		}
-		
-		if(pipeline.isContextualizerEnabled()) {
-			tsp.setContextualizeCoTermsType(pipeline.isContextAllowMWTAsCooc() ? OccurrenceType.ALL : OccurrenceType.SINGLE_WORD)
-				/*
-				 * TODO Set as GUI param
-				 */
-			  .setContextualizeWithCoOccurrenceFrequencyThreshhold(2)
-			  .aeContextualizer(pipeline.getContextScope(), !pipeline.isContextualizeOnSWTOnly());
-		}
-
-		tsp.aeExtensionDetector()
-			.aeScorer()
-			.aeRanker(TermProperty.SPECIFICITY, true);
-
-		
-		
-		if(pipeline.isBigCorporaHandlingEnabled()) {
-			TermProperty termProperty = TermProperty.forName(pipeline.getBigCorporaFilteringProperty());
-			switch(pipeline.getBigCorporaCleaningMode()) {
-			case DOCUMENT_PERIOD: 
-				tsp.aeThresholdCleanerPeriodic(
-						termProperty, 
-						(float)pipeline.getBigCorporaFilteringPropertyThreshold(), 
-						pipeline.getBigCorporaDocumentPeriod());
-				break;
-			case MAX_NUMBER_OF_TERMS: 
-				tsp.aeMaxSizeThresholdCleaner(termProperty, pipeline.getBigCorporaMaxNumberOfTerms());
-			}
-		}
-		
-		/* CAS export */
-		if(pipeline.isExportCasToJsonEnabled())
-			tsp.haeXmiCasExporter(getCasOutputDirectory(corpus, pipeline, CAS_JSON_DIR));
-		if(pipeline.isExportCasToTsvEnabled())
-			tsp.haeSpotterTSVWriter(getCasOutputDirectory(corpus, pipeline, CAS_TSV_DIR));
-		if(pipeline.isExportCasToXmiEnabled())
-			tsp.haeJsonExporter(getCasOutputDirectory(corpus, pipeline, CAS_XMI_DIR));
-
-		/* termino export */
-		if(pipeline.isExportTerminoToJsonEnabled()) {
-			tsp.setExportJsonWithContext(true);
-			tsp.setExportJsonWithOccurrences(true);
-			tsp.haeJsonExporter(getTerminoOutputDirectory(corpus, pipeline, JSON_EXTENSION));
-		}
-		if(pipeline.isExportTerminoToTbxEnabled())
-			tsp.haeTbxExporter(getTerminoOutputDirectory(corpus, pipeline, TBX_EXTENSION));
-		if(pipeline.isExportTerminoToTsvEnabled())
-			/*
-			 * TODO Set as GUI params
-			 */
-			tsp.setTsvShowHeaders(true)
-			   .setTsvShowScores(false)
-			   .setTsvExportProperties(TermProperty.PATTERN, TermProperty.PILOT, TermProperty.FREQUENCY, TermProperty.WR_LOG)
-			   .haeTsvExporter(getTerminoOutputDirectory(corpus, pipeline, TSV_EXTENSION));
-		return tsp;
-	}
 
 	private void loadCorpora() {
 		List<ECorpus> list = WorkspaceUtil.loadResources(CORPUS_DIR, CORPUS_EXTENSION, ECorpus.class);
@@ -684,4 +460,12 @@ public class CorpusServiceImpl implements CorpusService {
 	public boolean isLanguageSupported(ELang language) {
 		return SUPPORTED_LANGUAGES.contains(language);
 	}
+
+	@Override
+	public TXTCorpus asTxtCorpus(ESingleLanguageCorpus corpus) {
+		return new TXTCorpus(
+				Lang.forName(corpus.getLanguage().getName()), 
+				getDocumentPath(corpus));
+	}
+
 }

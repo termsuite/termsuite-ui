@@ -2,14 +2,25 @@
  */
 package fr.univnantes.termsuite.ui.model.termsuiteui.util;
 
-import fr.univnantes.termsuite.ui.model.termsuiteui.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+
+import fr.univnantes.termsuite.ui.model.termsuiteui.EBilingualDictionary;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ECorporaList;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
+import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet;
+import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
+import fr.univnantes.termsuite.ui.model.termsuiteui.EPipelineList;
+import fr.univnantes.termsuite.ui.model.termsuiteui.EResource;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ETaggerConfig;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
+import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
 
 /**
  * <!-- begin-user-doc -->
