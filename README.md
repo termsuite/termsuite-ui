@@ -39,3 +39,21 @@ mvn org.eclipse.tycho:tycho-versions-plugin:update-pom
 ```
 
  > **Note:** `tycho` does not require the same version numbers for `.product` configuration and their associated `pom.xml` files, neither for `.target` configurations and their their associated `pom.xml` files.
+
+## Updating dev environment with your lastest changes in `termsuite-core`
+
+Within `termsuite-core/` run:
+
+`$gradle clean build updatesite`
+
+Then in Eclipse IDE, do:
+
+1. Open `fr.univnantes.termsuite.targetdefinition.target`
+2. Select the `${project_loc}/../../../termsuite-core/build/updatesite` location
+3. Click on `Reload`
+4. Window > Preferences > Target Platform
+5. Select you target platform
+6. Click on `Reload` and `Apply`
+
+
+
