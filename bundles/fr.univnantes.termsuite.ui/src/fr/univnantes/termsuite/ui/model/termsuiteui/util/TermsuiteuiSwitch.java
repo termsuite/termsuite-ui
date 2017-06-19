@@ -2,6 +2,7 @@
  */
 package fr.univnantes.termsuite.ui.model.termsuiteui.util;
 
+import fr.univnantes.termsuite.ui.model.termsuiteui.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
@@ -156,6 +157,12 @@ public class TermsuiteuiSwitch<T> extends Switch<T> {
 			case TermsuiteuiPackage.ELINGUISTIC_RESOURCE_SET: {
 				ELinguisticResourceSet eLinguisticResourceSet = (ELinguisticResourceSet)theEObject;
 				T result = caseELinguisticResourceSet(eLinguisticResourceSet);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TermsuiteuiPackage.ETERMINO_FILTER: {
+				ETerminoFilter eTerminoFilter = (ETerminoFilter)theEObject;
+				T result = caseETerminoFilter(eTerminoFilter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -355,6 +362,21 @@ public class TermsuiteuiSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseELinguisticResourceSet(ELinguisticResourceSet object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>ETermino Filter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>ETermino Filter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseETerminoFilter(ETerminoFilter object) {
 		return null;
 	}
 

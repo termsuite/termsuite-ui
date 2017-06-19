@@ -139,6 +139,15 @@ public interface TermsuiteuiFactory extends EFactory {
 	ELinguisticResourceSet createELinguisticResourceSet();
 
 	/**
+	 * Returns a new object of class '<em>ETermino Filter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>ETermino Filter</em>'.
+	 * @generated
+	 */
+	ETerminoFilter createETerminoFilter();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

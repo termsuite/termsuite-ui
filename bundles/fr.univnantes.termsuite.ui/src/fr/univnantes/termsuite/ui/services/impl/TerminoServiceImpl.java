@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
+import fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
@@ -36,7 +37,7 @@ public class TerminoServiceImpl implements TerminoService {
 
 
 	@Override
-	public ETerminology createTerminology(ESingleLanguageCorpus corpus, String terminologyName, String filepath, boolean hasOccurrences, boolean hasContexts) {
+	public ETerminology createTerminology(ESingleLanguageCorpus corpus, String terminologyName, String filepath, EOccurrenceMode occMode, boolean hasContexts) {
 		/*
 		 * Ensure that any termino with the same name is removed. 
 		 * (Override behaviour)
@@ -48,7 +49,7 @@ public class TerminoServiceImpl implements TerminoService {
 		ETerminology terminology = TermsuiteuiFactory.eINSTANCE.createETerminology();
 		terminology.setFilepath(filepath);
 		terminology.setName(terminologyName);
-		terminology.setHasOccurrences(hasOccurrences);
+		terminology.setHasOccurrences(occMode != EOccurrenceMode.DO_NOT_KEEP);
 		terminology.setHasContexts(hasContexts);
 		
 		corpus.getTerminologies().add(terminology);
@@ -70,19 +71,5 @@ public class TerminoServiceImpl implements TerminoService {
 			MessageDialog.openError(parent, "Error", "Could not remove the terminology. Error: " + e.getMessage());
 		}
 	}
-
-
-	@Override
-	public boolean hasContexts(ETerminology element) {
-		
-		return false;
-	}
-
-
-	@Override
-	public boolean hasOccurrences(ETerminology element) {
-		return false;
-	}
-
 
 }

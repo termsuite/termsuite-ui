@@ -75,7 +75,7 @@ public class RemoveResourceHandler {
 
 	private String getResourceName(Object s) {
 		if (s instanceof EPipeline) {
-			return ((EPipeline) s).getFilename();
+			return ((EPipeline) s).getName();
 		} else if (s instanceof ECorpus) {
 			return ((ECorpus) s).getName();
 		} else if (s instanceof ETerminology) {

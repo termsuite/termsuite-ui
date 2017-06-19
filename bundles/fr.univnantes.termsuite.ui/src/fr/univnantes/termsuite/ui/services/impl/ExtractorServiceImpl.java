@@ -27,14 +27,23 @@ import com.google.common.collect.Lists;
 import fr.univnantes.termsuite.api.ExtractorOptions;
 import fr.univnantes.termsuite.api.TermSuite;
 import fr.univnantes.termsuite.api.TerminoExtractor;
+import fr.univnantes.termsuite.engines.cleaner.TerminoFilterOptions;
+import fr.univnantes.termsuite.engines.contextualizer.AssociationRate;
+import fr.univnantes.termsuite.engines.contextualizer.LogLikelihood;
 import fr.univnantes.termsuite.engines.contextualizer.MutualInformation;
 import fr.univnantes.termsuite.framework.PipelineStats;
+import fr.univnantes.termsuite.metrics.Cosine;
+import fr.univnantes.termsuite.metrics.Jaccard;
+import fr.univnantes.termsuite.metrics.SimilarityDistance;
 import fr.univnantes.termsuite.model.IndexedCorpus;
 import fr.univnantes.termsuite.model.TermProperty;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
+import fr.univnantes.termsuite.ui.model.termsuiteui.EAssocMeasure;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ESimilarityMeasure;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.ExtractorService;
@@ -103,7 +112,7 @@ public class ExtractorServiceImpl implements ExtractorService {
 
 
 	public void runPipelineOnPreprocessedCorpus(EPipeline pipeline, ESingleLanguageCorpus corpus, IndexedCorpus preparedCorpus) {
-		String jobName = "Running pipeline " + pipeline.getFilename() + " on corpus " + preparedCorpus.getTerminology().getName() + "("+preparedCorpus.getTerminology().getLang()+")";
+		String jobName = "Running pipeline " + pipeline.getName() + " on corpus " + preparedCorpus.getTerminology().getName() + "("+preparedCorpus.getTerminology().getLang()+")";
 		final TerminoExtractor extractor = toExtractor(pipeline);
 
 		Job job = Job.create(jobName, (ICoreRunnable) monitor -> {
@@ -118,9 +127,9 @@ public class ExtractorServiceImpl implements ExtractorService {
 				CorpusService corpusService = context.get(CorpusService.class);
 				ETerminology terminology = terminoService.createTerminology(
 						corpus, 
-						pipeline.getTargetTerminologyName(), 
+						pipeline.getName(), 
 						corpusService.getTerminoJsonFile(corpus, pipeline),
-						pipeline.isSpotWithOccurrences(),
+						pipeline.getOccurrenceMode(),
 						pipeline.isContextualizerEnabled());
 				try {
 					context.get(CorpusService.class).saveCorpus(corpus.getCorpus());
@@ -150,24 +159,55 @@ public class ExtractorServiceImpl implements ExtractorService {
 
 	private ExtractorOptions toExtractorOptions(EPipeline pipeline) {
 		ExtractorOptions options = new ExtractorOptions();
-		options.getMorphologicalConfig().setEnabled(pipeline.isMorphosyntacticAnalysisEnabled());
-		options.getGathererConfig().setEnabled(pipeline.isSyntacticVariationEnabled());
-		options.getPostFilterConfig().setEnabled(pipeline.isFilteringEnabled());
-		options.getPostFilterConfig().setProperty(TermProperty.forName(pipeline.getFilteringProperty()));
-		options.getPostFilterConfig().setKeepVariants(true);
-		switch(pipeline.getFilteringMode()) {
-		case THRESHOLD: 
-			options.getPostFilterConfig().keepOverTh(pipeline.getFilteringThreshold());
-			break;
-		case TOP_N: 
-			options.getPostFilterConfig().keepTopN(pipeline.getFilteringTopN());
-		}
+		if(pipeline.getFilter() != null) 
+			options.setPostFilterConfig(toTerminoFilterOptions(pipeline.getFilter()));
+		else
+			options.getPostFilterConfig().setEnabled(false);
+		
 
 		options.getContextualizerOptions().setEnabled(pipeline.isContextualizerEnabled());
 		options.getContextualizerOptions().setMinimumCooccFrequencyThreshold(2);
 		options.getContextualizerOptions().setScope(pipeline.getContextScope());
-		options.getContextualizerOptions().setAssociationRate(MutualInformation.class);
+		options.getContextualizerOptions().setAssociationRate(toAssocRate(pipeline.getContextAssocMeasure()));
 
+		options.getGathererConfig().setSemanticEnabled(pipeline.isSemEnabled());
+		options.getGathererConfig().setSemanticDicoOnly(pipeline.isSemDicoOnly());
+		options.getGathererConfig().setSemanticSimilarityDistance(toSimilarityDistance(pipeline.getSemMeasure()));
+		options.getGathererConfig().setSemanticNbCandidates(pipeline.getSemNumCandidates());
+
+		return options;
+	}
+
+	public Class<? extends SimilarityDistance> toSimilarityDistance(ESimilarityMeasure measure) {
+		switch(measure){
+		case COSINE: return Cosine.class;
+		case JACCARD: return Jaccard.class;
+		}
+		throw new IllegalStateException("Unkown similarity measure: " + measure);
+		
+	}
+
+
+	public Class<? extends AssociationRate> toAssocRate(EAssocMeasure measure) {
+		switch(measure){
+		case LOG_LIKELYHOOD: return LogLikelihood.class;
+		case MUTUAL_INFORMATION: return MutualInformation.class;
+		}
+		throw new IllegalStateException("Unkown association measure: " + measure);
+		
+	}
+	public TerminoFilterOptions toTerminoFilterOptions(ETerminoFilter filter) {
+		TerminoFilterOptions options = new TerminoFilterOptions();
+		options.setProperty(TermProperty.forName(filter.getPropertyName()));
+		options.setKeepVariants(filter.isKeepVariants());
+		switch(filter.getMode()) {
+		case THRESHOLD: 
+			options.keepOverTh(filter.getThreshold());
+			break;
+		case TOP_N: 
+			options.keepTopN(filter.getTopN());
+		}
+		options.setEnabled(true);
 		return options;
 	}
 

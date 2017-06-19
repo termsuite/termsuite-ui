@@ -14,8 +14,6 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
-
-import fr.univnantes.termsuite.ui.model.termsuiteui.ECollectionType;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
@@ -34,7 +32,6 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ESingleLanguageCorpusImpl#getLanguage <em>Language</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ESingleLanguageCorpusImpl#getCorpus <em>Corpus</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ESingleLanguageCorpusImpl#getDocuments <em>Documents</em>}</li>
- *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ESingleLanguageCorpusImpl#getCollectionType <em>Collection Type</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ESingleLanguageCorpusImpl#getTerminologies <em>Terminologies</em>}</li>
  * </ul>
  *
@@ -70,26 +67,6 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 	 * @ordered
 	 */
 	protected EList<EDocument> documents;
-
-	/**
-	 * The default value of the '{@link #getCollectionType() <em>Collection Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCollectionType()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final ECollectionType COLLECTION_TYPE_EDEFAULT = ECollectionType.TXT;
-
-	/**
-	 * The cached value of the '{@link #getCollectionType() <em>Collection Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCollectionType()
-	 * @generated
-	 * @ordered
-	 */
-	protected ECollectionType collectionType = COLLECTION_TYPE_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getTerminologies() <em>Terminologies</em>}' containment reference list.
@@ -199,27 +176,6 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ECollectionType getCollectionType() {
-		return collectionType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setCollectionType(ECollectionType newCollectionType) {
-		ECollectionType oldCollectionType = collectionType;
-		collectionType = newCollectionType == null ? COLLECTION_TYPE_EDEFAULT : newCollectionType;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__COLLECTION_TYPE, oldCollectionType, collectionType));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EList<ETerminology> getTerminologies() {
 		if (terminologies == null) {
 			terminologies = new EObjectContainmentWithInverseEList<ETerminology>(ETerminology.class, this, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES, TermsuiteuiPackage.ETERMINOLOGY__CORPUS);
@@ -294,8 +250,6 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 				return getCorpus();
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__DOCUMENTS:
 				return getDocuments();
-			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__COLLECTION_TYPE:
-				return getCollectionType();
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES:
 				return getTerminologies();
 		}
@@ -320,9 +274,6 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__DOCUMENTS:
 				getDocuments().clear();
 				getDocuments().addAll((Collection<? extends EDocument>)newValue);
-				return;
-			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__COLLECTION_TYPE:
-				setCollectionType((ECollectionType)newValue);
 				return;
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES:
 				getTerminologies().clear();
@@ -349,9 +300,6 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__DOCUMENTS:
 				getDocuments().clear();
 				return;
-			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__COLLECTION_TYPE:
-				setCollectionType(COLLECTION_TYPE_EDEFAULT);
-				return;
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES:
 				getTerminologies().clear();
 				return;
@@ -373,8 +321,6 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 				return getCorpus() != null;
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__DOCUMENTS:
 				return documents != null && !documents.isEmpty();
-			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__COLLECTION_TYPE:
-				return collectionType != COLLECTION_TYPE_EDEFAULT;
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES:
 				return terminologies != null && !terminologies.isEmpty();
 		}
@@ -393,8 +339,6 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (language: ");
 		result.append(language);
-		result.append(", collectionType: ");
-		result.append(collectionType);
 		result.append(')');
 		return result.toString();
 	}

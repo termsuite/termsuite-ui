@@ -2,33 +2,13 @@
  */
 package fr.univnantes.termsuite.ui.model.termsuiteui.impl;
 
+import fr.univnantes.termsuite.ui.model.termsuiteui.*;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
-import fr.univnantes.termsuite.ui.model.termsuiteui.EBilingualDictionary;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ECollectionType;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ECorporaList;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
-import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
-import fr.univnantes.termsuite.ui.model.termsuiteui.EFilteringMode;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet;
-import fr.univnantes.termsuite.ui.model.termsuiteui.EPeriodicCleaningMode;
-import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
-import fr.univnantes.termsuite.ui.model.termsuiteui.EPipelineList;
-import fr.univnantes.termsuite.ui.model.termsuiteui.EResource;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ETagger;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ETaggerConfig;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
-import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
-import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -87,6 +67,7 @@ public class TermsuiteuiFactoryImpl extends EFactoryImpl implements TermsuiteuiF
 			case TermsuiteuiPackage.EBILINGUAL_DICTIONARY: return createEBilingualDictionary();
 			case TermsuiteuiPackage.ELINGUISTIC_RESOURCE: return createELinguisticResource();
 			case TermsuiteuiPackage.ELINGUISTIC_RESOURCE_SET: return createELinguisticResourceSet();
+			case TermsuiteuiPackage.ETERMINO_FILTER: return createETerminoFilter();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -102,14 +83,16 @@ public class TermsuiteuiFactoryImpl extends EFactoryImpl implements TermsuiteuiF
 		switch (eDataType.getClassifierID()) {
 			case TermsuiteuiPackage.ELANG:
 				return createELangFromString(eDataType, initialValue);
-			case TermsuiteuiPackage.ECOLLECTION_TYPE:
-				return createECollectionTypeFromString(eDataType, initialValue);
 			case TermsuiteuiPackage.ETAGGER:
 				return createETaggerFromString(eDataType, initialValue);
-			case TermsuiteuiPackage.EPERIODIC_CLEANING_MODE:
-				return createEPeriodicCleaningModeFromString(eDataType, initialValue);
 			case TermsuiteuiPackage.EFILTERING_MODE:
 				return createEFilteringModeFromString(eDataType, initialValue);
+			case TermsuiteuiPackage.EOCCURRENCE_MODE:
+				return createEOccurrenceModeFromString(eDataType, initialValue);
+			case TermsuiteuiPackage.EASSOC_MEASURE:
+				return createEAssocMeasureFromString(eDataType, initialValue);
+			case TermsuiteuiPackage.ESIMILARITY_MEASURE:
+				return createESimilarityMeasureFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -125,14 +108,16 @@ public class TermsuiteuiFactoryImpl extends EFactoryImpl implements TermsuiteuiF
 		switch (eDataType.getClassifierID()) {
 			case TermsuiteuiPackage.ELANG:
 				return convertELangToString(eDataType, instanceValue);
-			case TermsuiteuiPackage.ECOLLECTION_TYPE:
-				return convertECollectionTypeToString(eDataType, instanceValue);
 			case TermsuiteuiPackage.ETAGGER:
 				return convertETaggerToString(eDataType, instanceValue);
-			case TermsuiteuiPackage.EPERIODIC_CLEANING_MODE:
-				return convertEPeriodicCleaningModeToString(eDataType, instanceValue);
 			case TermsuiteuiPackage.EFILTERING_MODE:
 				return convertEFilteringModeToString(eDataType, instanceValue);
+			case TermsuiteuiPackage.EOCCURRENCE_MODE:
+				return convertEOccurrenceModeToString(eDataType, instanceValue);
+			case TermsuiteuiPackage.EASSOC_MEASURE:
+				return convertEAssocMeasureToString(eDataType, instanceValue);
+			case TermsuiteuiPackage.ESIMILARITY_MEASURE:
+				return convertESimilarityMeasureToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -273,6 +258,16 @@ public class TermsuiteuiFactoryImpl extends EFactoryImpl implements TermsuiteuiF
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public ETerminoFilter createETerminoFilter() {
+		ETerminoFilterImpl eTerminoFilter = new ETerminoFilterImpl();
+		return eTerminoFilter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ELang createELangFromString(EDataType eDataType, String initialValue) {
 		ELang result = ELang.get(initialValue);
 		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
@@ -285,26 +280,6 @@ public class TermsuiteuiFactoryImpl extends EFactoryImpl implements TermsuiteuiF
 	 * @generated
 	 */
 	public String convertELangToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ECollectionType createECollectionTypeFromString(EDataType eDataType, String initialValue) {
-		ECollectionType result = ECollectionType.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertECollectionTypeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 
@@ -333,26 +308,6 @@ public class TermsuiteuiFactoryImpl extends EFactoryImpl implements TermsuiteuiF
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EPeriodicCleaningMode createEPeriodicCleaningModeFromString(EDataType eDataType, String initialValue) {
-		EPeriodicCleaningMode result = EPeriodicCleaningMode.get(initialValue);
-		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertEPeriodicCleaningModeToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EFilteringMode createEFilteringModeFromString(EDataType eDataType, String initialValue) {
 		EFilteringMode result = EFilteringMode.get(initialValue);
 		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
@@ -365,6 +320,66 @@ public class TermsuiteuiFactoryImpl extends EFactoryImpl implements TermsuiteuiF
 	 * @generated
 	 */
 	public String convertEFilteringModeToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOccurrenceMode createEOccurrenceModeFromString(EDataType eDataType, String initialValue) {
+		EOccurrenceMode result = EOccurrenceMode.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertEOccurrenceModeToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAssocMeasure createEAssocMeasureFromString(EDataType eDataType, String initialValue) {
+		EAssocMeasure result = EAssocMeasure.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertEAssocMeasureToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ESimilarityMeasure createESimilarityMeasureFromString(EDataType eDataType, String initialValue) {
+		ESimilarityMeasure result = ESimilarityMeasure.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertESimilarityMeasureToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

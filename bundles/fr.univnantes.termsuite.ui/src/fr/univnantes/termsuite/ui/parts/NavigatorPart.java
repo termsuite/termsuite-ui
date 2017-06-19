@@ -430,7 +430,7 @@ public class NavigatorPart implements TreePart {
 				cell.setImage(img.get(TermsuiteImg.TERMINOLOGY));
 			} else if (element instanceof EPipeline) {
 				EPipeline p = (EPipeline) cell.getElement();
-				text.append(Files.getNameWithoutExtension(p.getTargetTerminologyName()));
+				text.append(Files.getNameWithoutExtension(p.getName()));
 				cell.setImage(img.get(TermsuiteImg.PIPELINE));
 			} else if (cell.getElement() instanceof ECorpus) {
 				ECorpus c = (ECorpus) cell.getElement();

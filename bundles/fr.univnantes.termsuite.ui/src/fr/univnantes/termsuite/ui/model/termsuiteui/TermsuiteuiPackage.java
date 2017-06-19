@@ -187,22 +187,13 @@ public interface TermsuiteuiPackage extends EPackage {
 	int ESINGLE_LANGUAGE_CORPUS__DOCUMENTS = 2;
 
 	/**
-	 * The feature id for the '<em><b>Collection Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ESINGLE_LANGUAGE_CORPUS__COLLECTION_TYPE = 3;
-
-	/**
 	 * The feature id for the '<em><b>Terminologies</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES = 4;
+	int ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES = 3;
 
 	/**
 	 * The number of structural features of the '<em>ESingle Language Corpus</em>' class.
@@ -211,7 +202,7 @@ public interface TermsuiteuiPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ESINGLE_LANGUAGE_CORPUS_FEATURE_COUNT = 5;
+	int ESINGLE_LANGUAGE_CORPUS_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>ESingle Language Corpus</em>' class.
@@ -334,346 +325,22 @@ public interface TermsuiteuiPackage extends EPackage {
 	int EPIPELINE__ID = ERESOURCE__ID;
 
 	/**
-	 * The feature id for the '<em><b>Morphosyntactic Analysis Enabled</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__MORPHOSYNTACTIC_ANALYSIS_ENABLED = ERESOURCE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Syntactic Variation Enabled</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__SYNTACTIC_VARIATION_ENABLED = ERESOURCE_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Graphical Variation Analysis Enabled</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__GRAPHICAL_VARIATION_ANALYSIS_ENABLED = ERESOURCE_FEATURE_COUNT + 2;
-
-	/**
 	 * The feature id for the '<em><b>Contextualizer Enabled</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EPIPELINE__CONTEXTUALIZER_ENABLED = ERESOURCE_FEATURE_COUNT + 3;
+	int EPIPELINE__CONTEXTUALIZER_ENABLED = ERESOURCE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Graphical Similarity Threshhold</b></em>' attribute.
+	 * The feature id for the '<em><b>Occurrence Mode</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EPIPELINE__GRAPHICAL_SIMILARITY_THRESHHOLD = ERESOURCE_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>Compost Max Component Size</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__COMPOST_MAX_COMPONENT_SIZE = ERESOURCE_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>Compost Min Component Num</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__COMPOST_MIN_COMPONENT_NUM = ERESOURCE_FEATURE_COUNT + 6;
-
-	/**
-	 * The feature id for the '<em><b>Compost Score Threshhold</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__COMPOST_SCORE_THRESHHOLD = ERESOURCE_FEATURE_COUNT + 7;
-
-	/**
-	 * The feature id for the '<em><b>Compost Segment Similarity Threshhold</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__COMPOST_SEGMENT_SIMILARITY_THRESHHOLD = ERESOURCE_FEATURE_COUNT + 8;
-
-	/**
-	 * The feature id for the '<em><b>Compost Use Language Default Coeffs</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__COMPOST_USE_LANGUAGE_DEFAULT_COEFFS = ERESOURCE_FEATURE_COUNT + 9;
-
-	/**
-	 * The feature id for the '<em><b>Compost Alpha</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__COMPOST_ALPHA = ERESOURCE_FEATURE_COUNT + 10;
-
-	/**
-	 * The feature id for the '<em><b>Compost Beta</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__COMPOST_BETA = ERESOURCE_FEATURE_COUNT + 11;
-
-	/**
-	 * The feature id for the '<em><b>Compost Gamma</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__COMPOST_GAMMA = ERESOURCE_FEATURE_COUNT + 12;
-
-	/**
-	 * The feature id for the '<em><b>Compost Delta</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__COMPOST_DELTA = ERESOURCE_FEATURE_COUNT + 13;
-
-	/**
-	 * The feature id for the '<em><b>Spot With Occurrences</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__SPOT_WITH_OCCURRENCES = ERESOURCE_FEATURE_COUNT + 14;
-
-	/**
-	 * The feature id for the '<em><b>Filtering Enabled</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__FILTERING_ENABLED = ERESOURCE_FEATURE_COUNT + 15;
-
-	/**
-	 * The feature id for the '<em><b>Export Cas To Xmi Enabled</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__EXPORT_CAS_TO_XMI_ENABLED = ERESOURCE_FEATURE_COUNT + 16;
-
-	/**
-	 * The feature id for the '<em><b>Export Cas To Tsv Enabled</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__EXPORT_CAS_TO_TSV_ENABLED = ERESOURCE_FEATURE_COUNT + 17;
-
-	/**
-	 * The feature id for the '<em><b>Export Cas To Json Enabled</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__EXPORT_CAS_TO_JSON_ENABLED = ERESOURCE_FEATURE_COUNT + 18;
-
-	/**
-	 * The feature id for the '<em><b>Export Termino To Json Enabled</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__EXPORT_TERMINO_TO_JSON_ENABLED = ERESOURCE_FEATURE_COUNT + 19;
-
-	/**
-	 * The feature id for the '<em><b>Export Termino To Tbx Enabled</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__EXPORT_TERMINO_TO_TBX_ENABLED = ERESOURCE_FEATURE_COUNT + 20;
-
-	/**
-	 * The feature id for the '<em><b>Export Termino To Tsv Enabled</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__EXPORT_TERMINO_TO_TSV_ENABLED = ERESOURCE_FEATURE_COUNT + 21;
-
-	/**
-	 * The feature id for the '<em><b>Big Corpora Handling Enabled</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__BIG_CORPORA_HANDLING_ENABLED = ERESOURCE_FEATURE_COUNT + 22;
-
-	/**
-	 * The feature id for the '<em><b>Big Corpora Cleaning Mode</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__BIG_CORPORA_CLEANING_MODE = ERESOURCE_FEATURE_COUNT + 23;
-
-	/**
-	 * The feature id for the '<em><b>Context Scope</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__CONTEXT_SCOPE = ERESOURCE_FEATURE_COUNT + 24;
-
-	/**
-	 * The feature id for the '<em><b>Contextualize On SWT Only</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__CONTEXTUALIZE_ON_SWT_ONLY = ERESOURCE_FEATURE_COUNT + 25;
-
-	/**
-	 * The feature id for the '<em><b>Context Allow MWT As Cooc</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__CONTEXT_ALLOW_MWT_AS_COOC = ERESOURCE_FEATURE_COUNT + 26;
-
-	/**
-	 * The feature id for the '<em><b>Filtering Mode</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__FILTERING_MODE = ERESOURCE_FEATURE_COUNT + 27;
-
-	/**
-	 * The feature id for the '<em><b>Filtering Threshold</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__FILTERING_THRESHOLD = ERESOURCE_FEATURE_COUNT + 28;
-
-	/**
-	 * The feature id for the '<em><b>Filtering Top N</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__FILTERING_TOP_N = ERESOURCE_FEATURE_COUNT + 29;
-
-	/**
-	 * The feature id for the '<em><b>Filtering Property</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__FILTERING_PROPERTY = ERESOURCE_FEATURE_COUNT + 30;
-
-	/**
-	 * The feature id for the '<em><b>Big Corpora Filtering Property</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__BIG_CORPORA_FILTERING_PROPERTY = ERESOURCE_FEATURE_COUNT + 31;
-
-	/**
-	 * The feature id for the '<em><b>Big Corpora Document Period</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__BIG_CORPORA_DOCUMENT_PERIOD = ERESOURCE_FEATURE_COUNT + 32;
-
-	/**
-	 * The feature id for the '<em><b>Big Corpora Filtering Property Threshold</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__BIG_CORPORA_FILTERING_PROPERTY_THRESHOLD = ERESOURCE_FEATURE_COUNT + 33;
-
-	/**
-	 * The feature id for the '<em><b>Big Corpora Max Number Of Terms</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__BIG_CORPORA_MAX_NUMBER_OF_TERMS = ERESOURCE_FEATURE_COUNT + 34;
-
-	/**
-	 * The feature id for the '<em><b>Target Terminology Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__TARGET_TERMINOLOGY_NAME = ERESOURCE_FEATURE_COUNT + 35;
-
-	/**
-	 * The feature id for the '<em><b>Output Dir</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__OUTPUT_DIR = ERESOURCE_FEATURE_COUNT + 36;
-
-	/**
-	 * The feature id for the '<em><b>Filename</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EPIPELINE__FILENAME = ERESOURCE_FEATURE_COUNT + 37;
+	int EPIPELINE__OCCURRENCE_MODE = ERESOURCE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Tagger Config Name</b></em>' attribute.
@@ -682,7 +349,88 @@ public interface TermsuiteuiPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EPIPELINE__TAGGER_CONFIG_NAME = ERESOURCE_FEATURE_COUNT + 38;
+	int EPIPELINE__TAGGER_CONFIG_NAME = ERESOURCE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Filter</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EPIPELINE__FILTER = ERESOURCE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Max Num Terms Memory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EPIPELINE__MAX_NUM_TERMS_MEMORY = ERESOURCE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Context Scope</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EPIPELINE__CONTEXT_SCOPE = ERESOURCE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Context Assoc Measure</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EPIPELINE__CONTEXT_ASSOC_MEASURE = ERESOURCE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Sem Enabled</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EPIPELINE__SEM_ENABLED = ERESOURCE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Sem Measure</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EPIPELINE__SEM_MEASURE = ERESOURCE_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>Sem Dico Only</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EPIPELINE__SEM_DICO_ONLY = ERESOURCE_FEATURE_COUNT + 9;
+
+	/**
+	 * The feature id for the '<em><b>Sem Num Candidates</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EPIPELINE__SEM_NUM_CANDIDATES = ERESOURCE_FEATURE_COUNT + 10;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EPIPELINE__NAME = ERESOURCE_FEATURE_COUNT + 11;
 
 	/**
 	 * The number of structural features of the '<em>EPipeline</em>' class.
@@ -691,7 +439,7 @@ public interface TermsuiteuiPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EPIPELINE_FEATURE_COUNT = ERESOURCE_FEATURE_COUNT + 39;
+	int EPIPELINE_FEATURE_COUNT = ERESOURCE_FEATURE_COUNT + 12;
 
 	/**
 	 * The number of operations of the '<em>EPipeline</em>' class.
@@ -1088,6 +836,79 @@ public interface TermsuiteuiPackage extends EPackage {
 	int ELINGUISTIC_RESOURCE_SET_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminoFilterImpl <em>ETermino Filter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminoFilterImpl
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getETerminoFilter()
+	 * @generated
+	 */
+	int ETERMINO_FILTER = 13;
+
+	/**
+	 * The feature id for the '<em><b>Property Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ETERMINO_FILTER__PROPERTY_NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Top N</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ETERMINO_FILTER__TOP_N = 1;
+
+	/**
+	 * The feature id for the '<em><b>Threshold</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ETERMINO_FILTER__THRESHOLD = 2;
+
+	/**
+	 * The feature id for the '<em><b>Keep Variants</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ETERMINO_FILTER__KEEP_VARIANTS = 3;
+
+	/**
+	 * The feature id for the '<em><b>Mode</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ETERMINO_FILTER__MODE = 4;
+
+	/**
+	 * The number of structural features of the '<em>ETermino Filter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ETERMINO_FILTER_FEATURE_COUNT = 5;
+
+	/**
+	 * The number of operations of the '<em>ETermino Filter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ETERMINO_FILTER_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ELang <em>ELang</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1095,17 +916,7 @@ public interface TermsuiteuiPackage extends EPackage {
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getELang()
 	 * @generated
 	 */
-	int ELANG = 13;
-
-	/**
-	 * The meta object id for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ECollectionType <em>ECollection Type</em>}' enum.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ECollectionType
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getECollectionType()
-	 * @generated
-	 */
-	int ECOLLECTION_TYPE = 14;
+	int ELANG = 14;
 
 	/**
 	 * The meta object id for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETagger <em>ETagger</em>}' enum.
@@ -1118,16 +929,6 @@ public interface TermsuiteuiPackage extends EPackage {
 	int ETAGGER = 15;
 
 	/**
-	 * The meta object id for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPeriodicCleaningMode <em>EPeriodic Cleaning Mode</em>}' enum.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPeriodicCleaningMode
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getEPeriodicCleaningMode()
-	 * @generated
-	 */
-	int EPERIODIC_CLEANING_MODE = 16;
-
-	/**
 	 * The meta object id for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EFilteringMode <em>EFiltering Mode</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1135,7 +936,38 @@ public interface TermsuiteuiPackage extends EPackage {
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getEFilteringMode()
 	 * @generated
 	 */
-	int EFILTERING_MODE = 17;
+	int EFILTERING_MODE = 16;
+
+
+	/**
+	 * The meta object id for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode <em>EOccurrence Mode</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getEOccurrenceMode()
+	 * @generated
+	 */
+	int EOCCURRENCE_MODE = 17;
+
+	/**
+	 * The meta object id for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EAssocMeasure <em>EAssoc Measure</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EAssocMeasure
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getEAssocMeasure()
+	 * @generated
+	 */
+	int EASSOC_MEASURE = 18;
+
+	/**
+	 * The meta object id for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESimilarityMeasure <em>ESimilarity Measure</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ESimilarityMeasure
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getESimilarityMeasure()
+	 * @generated
+	 */
+	int ESIMILARITY_MEASURE = 19;
 
 
 	/**
@@ -1246,17 +1078,6 @@ public interface TermsuiteuiPackage extends EPackage {
 	EReference getESingleLanguageCorpus_Documents();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getCollectionType <em>Collection Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Collection Type</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getCollectionType()
-	 * @see #getESingleLanguageCorpus()
-	 * @generated
-	 */
-	EAttribute getESingleLanguageCorpus_CollectionType();
-
-	/**
 	 * Returns the meta object for the containment reference list '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getTerminologies <em>Terminologies</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1310,39 +1131,6 @@ public interface TermsuiteuiPackage extends EPackage {
 	EClass getEPipeline();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isMorphosyntacticAnalysisEnabled <em>Morphosyntactic Analysis Enabled</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Morphosyntactic Analysis Enabled</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isMorphosyntacticAnalysisEnabled()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_MorphosyntacticAnalysisEnabled();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isSyntacticVariationEnabled <em>Syntactic Variation Enabled</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Syntactic Variation Enabled</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isSyntacticVariationEnabled()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_SyntacticVariationEnabled();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isGraphicalVariationAnalysisEnabled <em>Graphical Variation Analysis Enabled</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Graphical Variation Analysis Enabled</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isGraphicalVariationAnalysisEnabled()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_GraphicalVariationAnalysisEnabled();
-
-	/**
 	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isContextualizerEnabled <em>Contextualizer Enabled</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1354,224 +1142,15 @@ public interface TermsuiteuiPackage extends EPackage {
 	EAttribute getEPipeline_ContextualizerEnabled();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getGraphicalSimilarityThreshhold <em>Graphical Similarity Threshhold</em>}'.
+	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getOccurrenceMode <em>Occurrence Mode</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Graphical Similarity Threshhold</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getGraphicalSimilarityThreshhold()
+	 * @return the meta object for the attribute '<em>Occurrence Mode</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getOccurrenceMode()
 	 * @see #getEPipeline()
 	 * @generated
 	 */
-	EAttribute getEPipeline_GraphicalSimilarityThreshhold();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getCompostMaxComponentSize <em>Compost Max Component Size</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Compost Max Component Size</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getCompostMaxComponentSize()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_CompostMaxComponentSize();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getCompostMinComponentNum <em>Compost Min Component Num</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Compost Min Component Num</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getCompostMinComponentNum()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_CompostMinComponentNum();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getCompostScoreThreshhold <em>Compost Score Threshhold</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Compost Score Threshhold</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getCompostScoreThreshhold()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_CompostScoreThreshhold();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getCompostSegmentSimilarityThreshhold <em>Compost Segment Similarity Threshhold</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Compost Segment Similarity Threshhold</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getCompostSegmentSimilarityThreshhold()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_CompostSegmentSimilarityThreshhold();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isCompostUseLanguageDefaultCoeffs <em>Compost Use Language Default Coeffs</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Compost Use Language Default Coeffs</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isCompostUseLanguageDefaultCoeffs()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_CompostUseLanguageDefaultCoeffs();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getCompostAlpha <em>Compost Alpha</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Compost Alpha</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getCompostAlpha()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_CompostAlpha();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getCompostBeta <em>Compost Beta</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Compost Beta</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getCompostBeta()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_CompostBeta();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getCompostGamma <em>Compost Gamma</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Compost Gamma</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getCompostGamma()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_CompostGamma();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getCompostDelta <em>Compost Delta</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Compost Delta</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getCompostDelta()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_CompostDelta();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isSpotWithOccurrences <em>Spot With Occurrences</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Spot With Occurrences</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isSpotWithOccurrences()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_SpotWithOccurrences();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isFilteringEnabled <em>Filtering Enabled</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Filtering Enabled</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isFilteringEnabled()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_FilteringEnabled();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isExportCasToXmiEnabled <em>Export Cas To Xmi Enabled</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Export Cas To Xmi Enabled</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isExportCasToXmiEnabled()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_ExportCasToXmiEnabled();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isExportCasToTsvEnabled <em>Export Cas To Tsv Enabled</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Export Cas To Tsv Enabled</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isExportCasToTsvEnabled()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_ExportCasToTsvEnabled();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isExportCasToJsonEnabled <em>Export Cas To Json Enabled</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Export Cas To Json Enabled</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isExportCasToJsonEnabled()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_ExportCasToJsonEnabled();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isExportTerminoToJsonEnabled <em>Export Termino To Json Enabled</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Export Termino To Json Enabled</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isExportTerminoToJsonEnabled()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_ExportTerminoToJsonEnabled();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isExportTerminoToTbxEnabled <em>Export Termino To Tbx Enabled</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Export Termino To Tbx Enabled</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isExportTerminoToTbxEnabled()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_ExportTerminoToTbxEnabled();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isExportTerminoToTsvEnabled <em>Export Termino To Tsv Enabled</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Export Termino To Tsv Enabled</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isExportTerminoToTsvEnabled()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_ExportTerminoToTsvEnabled();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isBigCorporaHandlingEnabled <em>Big Corpora Handling Enabled</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Big Corpora Handling Enabled</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isBigCorporaHandlingEnabled()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_BigCorporaHandlingEnabled();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getBigCorporaCleaningMode <em>Big Corpora Cleaning Mode</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Big Corpora Cleaning Mode</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getBigCorporaCleaningMode()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_BigCorporaCleaningMode();
+	EAttribute getEPipeline_OccurrenceMode();
 
 	/**
 	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getContextScope <em>Context Scope</em>}'.
@@ -1585,147 +1164,70 @@ public interface TermsuiteuiPackage extends EPackage {
 	EAttribute getEPipeline_ContextScope();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isContextualizeOnSWTOnly <em>Contextualize On SWT Only</em>}'.
+	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getContextAssocMeasure <em>Context Assoc Measure</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Contextualize On SWT Only</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isContextualizeOnSWTOnly()
+	 * @return the meta object for the attribute '<em>Context Assoc Measure</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getContextAssocMeasure()
 	 * @see #getEPipeline()
 	 * @generated
 	 */
-	EAttribute getEPipeline_ContextualizeOnSWTOnly();
+	EAttribute getEPipeline_ContextAssocMeasure();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isContextAllowMWTAsCooc <em>Context Allow MWT As Cooc</em>}'.
+	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isSemEnabled <em>Sem Enabled</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Context Allow MWT As Cooc</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isContextAllowMWTAsCooc()
+	 * @return the meta object for the attribute '<em>Sem Enabled</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isSemEnabled()
 	 * @see #getEPipeline()
 	 * @generated
 	 */
-	EAttribute getEPipeline_ContextAllowMWTAsCooc();
+	EAttribute getEPipeline_SemEnabled();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getFilteringMode <em>Filtering Mode</em>}'.
+	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getSemMeasure <em>Sem Measure</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Filtering Mode</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getFilteringMode()
+	 * @return the meta object for the attribute '<em>Sem Measure</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getSemMeasure()
 	 * @see #getEPipeline()
 	 * @generated
 	 */
-	EAttribute getEPipeline_FilteringMode();
+	EAttribute getEPipeline_SemMeasure();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getFilteringThreshold <em>Filtering Threshold</em>}'.
+	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isSemDicoOnly <em>Sem Dico Only</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Filtering Threshold</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getFilteringThreshold()
+	 * @return the meta object for the attribute '<em>Sem Dico Only</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#isSemDicoOnly()
 	 * @see #getEPipeline()
 	 * @generated
 	 */
-	EAttribute getEPipeline_FilteringThreshold();
+	EAttribute getEPipeline_SemDicoOnly();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getFilteringTopN <em>Filtering Top N</em>}'.
+	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getSemNumCandidates <em>Sem Num Candidates</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Filtering Top N</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getFilteringTopN()
+	 * @return the meta object for the attribute '<em>Sem Num Candidates</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getSemNumCandidates()
 	 * @see #getEPipeline()
 	 * @generated
 	 */
-	EAttribute getEPipeline_FilteringTopN();
+	EAttribute getEPipeline_SemNumCandidates();
 
 	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getFilteringProperty <em>Filtering Property</em>}'.
+	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Filtering Property</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getFilteringProperty()
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getName()
 	 * @see #getEPipeline()
 	 * @generated
 	 */
-	EAttribute getEPipeline_FilteringProperty();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getBigCorporaFilteringProperty <em>Big Corpora Filtering Property</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Big Corpora Filtering Property</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getBigCorporaFilteringProperty()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_BigCorporaFilteringProperty();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getBigCorporaDocumentPeriod <em>Big Corpora Document Period</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Big Corpora Document Period</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getBigCorporaDocumentPeriod()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_BigCorporaDocumentPeriod();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getBigCorporaFilteringPropertyThreshold <em>Big Corpora Filtering Property Threshold</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Big Corpora Filtering Property Threshold</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getBigCorporaFilteringPropertyThreshold()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_BigCorporaFilteringPropertyThreshold();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getBigCorporaMaxNumberOfTerms <em>Big Corpora Max Number Of Terms</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Big Corpora Max Number Of Terms</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getBigCorporaMaxNumberOfTerms()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_BigCorporaMaxNumberOfTerms();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getTargetTerminologyName <em>Target Terminology Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Target Terminology Name</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getTargetTerminologyName()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_TargetTerminologyName();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getOutputDir <em>Output Dir</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Output Dir</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getOutputDir()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_OutputDir();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getFilename <em>Filename</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Filename</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getFilename()
-	 * @see #getEPipeline()
-	 * @generated
-	 */
-	EAttribute getEPipeline_Filename();
+	EAttribute getEPipeline_Name();
 
 	/**
 	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getTaggerConfigName <em>Tagger Config Name</em>}'.
@@ -1737,6 +1239,28 @@ public interface TermsuiteuiPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getEPipeline_TaggerConfigName();
+
+	/**
+	 * Returns the meta object for the reference '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getFilter <em>Filter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Filter</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getFilter()
+	 * @see #getEPipeline()
+	 * @generated
+	 */
+	EReference getEPipeline_Filter();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getMaxNumTermsMemory <em>Max Num Terms Memory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Max Num Terms Memory</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline#getMaxNumTermsMemory()
+	 * @see #getEPipeline()
+	 * @generated
+	 */
+	EAttribute getEPipeline_MaxNumTermsMemory();
 
 	/**
 	 * Returns the meta object for class '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPipelineList <em>EPipeline List</em>}'.
@@ -2050,6 +1574,71 @@ public interface TermsuiteuiPackage extends EPackage {
 	EReference getELinguisticResourceSet_Resources();
 
 	/**
+	 * Returns the meta object for class '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter <em>ETermino Filter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>ETermino Filter</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter
+	 * @generated
+	 */
+	EClass getETerminoFilter();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter#getPropertyName <em>Property Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Property Name</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter#getPropertyName()
+	 * @see #getETerminoFilter()
+	 * @generated
+	 */
+	EAttribute getETerminoFilter_PropertyName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter#getTopN <em>Top N</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Top N</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter#getTopN()
+	 * @see #getETerminoFilter()
+	 * @generated
+	 */
+	EAttribute getETerminoFilter_TopN();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter#getThreshold <em>Threshold</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Threshold</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter#getThreshold()
+	 * @see #getETerminoFilter()
+	 * @generated
+	 */
+	EAttribute getETerminoFilter_Threshold();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter#isKeepVariants <em>Keep Variants</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Keep Variants</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter#isKeepVariants()
+	 * @see #getETerminoFilter()
+	 * @generated
+	 */
+	EAttribute getETerminoFilter_KeepVariants();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter#getMode <em>Mode</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Mode</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter#getMode()
+	 * @see #getETerminoFilter()
+	 * @generated
+	 */
+	EAttribute getETerminoFilter_Mode();
+
+	/**
 	 * Returns the meta object for enum '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ELang <em>ELang</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2058,16 +1647,6 @@ public interface TermsuiteuiPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getELang();
-
-	/**
-	 * Returns the meta object for enum '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ECollectionType <em>ECollection Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for enum '<em>ECollection Type</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ECollectionType
-	 * @generated
-	 */
-	EEnum getECollectionType();
 
 	/**
 	 * Returns the meta object for enum '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETagger <em>ETagger</em>}'.
@@ -2080,16 +1659,6 @@ public interface TermsuiteuiPackage extends EPackage {
 	EEnum getETagger();
 
 	/**
-	 * Returns the meta object for enum '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPeriodicCleaningMode <em>EPeriodic Cleaning Mode</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for enum '<em>EPeriodic Cleaning Mode</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPeriodicCleaningMode
-	 * @generated
-	 */
-	EEnum getEPeriodicCleaningMode();
-
-	/**
 	 * Returns the meta object for enum '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EFilteringMode <em>EFiltering Mode</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2098,6 +1667,36 @@ public interface TermsuiteuiPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getEFilteringMode();
+
+	/**
+	 * Returns the meta object for enum '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode <em>EOccurrence Mode</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>EOccurrence Mode</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode
+	 * @generated
+	 */
+	EEnum getEOccurrenceMode();
+
+	/**
+	 * Returns the meta object for enum '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EAssocMeasure <em>EAssoc Measure</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>EAssoc Measure</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EAssocMeasure
+	 * @generated
+	 */
+	EEnum getEAssocMeasure();
+
+	/**
+	 * Returns the meta object for enum '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESimilarityMeasure <em>ESimilarity Measure</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>ESimilarity Measure</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ESimilarityMeasure
+	 * @generated
+	 */
+	EEnum getESimilarityMeasure();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -2209,14 +1808,6 @@ public interface TermsuiteuiPackage extends EPackage {
 		EReference ESINGLE_LANGUAGE_CORPUS__DOCUMENTS = eINSTANCE.getESingleLanguageCorpus_Documents();
 
 		/**
-		 * The meta object literal for the '<em><b>Collection Type</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ESINGLE_LANGUAGE_CORPUS__COLLECTION_TYPE = eINSTANCE.getESingleLanguageCorpus_CollectionType();
-
-		/**
 		 * The meta object literal for the '<em><b>Terminologies</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2261,30 +1852,6 @@ public interface TermsuiteuiPackage extends EPackage {
 		EClass EPIPELINE = eINSTANCE.getEPipeline();
 
 		/**
-		 * The meta object literal for the '<em><b>Morphosyntactic Analysis Enabled</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__MORPHOSYNTACTIC_ANALYSIS_ENABLED = eINSTANCE.getEPipeline_MorphosyntacticAnalysisEnabled();
-
-		/**
-		 * The meta object literal for the '<em><b>Syntactic Variation Enabled</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__SYNTACTIC_VARIATION_ENABLED = eINSTANCE.getEPipeline_SyntacticVariationEnabled();
-
-		/**
-		 * The meta object literal for the '<em><b>Graphical Variation Analysis Enabled</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__GRAPHICAL_VARIATION_ANALYSIS_ENABLED = eINSTANCE.getEPipeline_GraphicalVariationAnalysisEnabled();
-
-		/**
 		 * The meta object literal for the '<em><b>Contextualizer Enabled</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2293,164 +1860,12 @@ public interface TermsuiteuiPackage extends EPackage {
 		EAttribute EPIPELINE__CONTEXTUALIZER_ENABLED = eINSTANCE.getEPipeline_ContextualizerEnabled();
 
 		/**
-		 * The meta object literal for the '<em><b>Graphical Similarity Threshhold</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Occurrence Mode</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute EPIPELINE__GRAPHICAL_SIMILARITY_THRESHHOLD = eINSTANCE.getEPipeline_GraphicalSimilarityThreshhold();
-
-		/**
-		 * The meta object literal for the '<em><b>Compost Max Component Size</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__COMPOST_MAX_COMPONENT_SIZE = eINSTANCE.getEPipeline_CompostMaxComponentSize();
-
-		/**
-		 * The meta object literal for the '<em><b>Compost Min Component Num</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__COMPOST_MIN_COMPONENT_NUM = eINSTANCE.getEPipeline_CompostMinComponentNum();
-
-		/**
-		 * The meta object literal for the '<em><b>Compost Score Threshhold</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__COMPOST_SCORE_THRESHHOLD = eINSTANCE.getEPipeline_CompostScoreThreshhold();
-
-		/**
-		 * The meta object literal for the '<em><b>Compost Segment Similarity Threshhold</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__COMPOST_SEGMENT_SIMILARITY_THRESHHOLD = eINSTANCE.getEPipeline_CompostSegmentSimilarityThreshhold();
-
-		/**
-		 * The meta object literal for the '<em><b>Compost Use Language Default Coeffs</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__COMPOST_USE_LANGUAGE_DEFAULT_COEFFS = eINSTANCE.getEPipeline_CompostUseLanguageDefaultCoeffs();
-
-		/**
-		 * The meta object literal for the '<em><b>Compost Alpha</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__COMPOST_ALPHA = eINSTANCE.getEPipeline_CompostAlpha();
-
-		/**
-		 * The meta object literal for the '<em><b>Compost Beta</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__COMPOST_BETA = eINSTANCE.getEPipeline_CompostBeta();
-
-		/**
-		 * The meta object literal for the '<em><b>Compost Gamma</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__COMPOST_GAMMA = eINSTANCE.getEPipeline_CompostGamma();
-
-		/**
-		 * The meta object literal for the '<em><b>Compost Delta</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__COMPOST_DELTA = eINSTANCE.getEPipeline_CompostDelta();
-
-		/**
-		 * The meta object literal for the '<em><b>Spot With Occurrences</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__SPOT_WITH_OCCURRENCES = eINSTANCE.getEPipeline_SpotWithOccurrences();
-
-		/**
-		 * The meta object literal for the '<em><b>Filtering Enabled</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__FILTERING_ENABLED = eINSTANCE.getEPipeline_FilteringEnabled();
-
-		/**
-		 * The meta object literal for the '<em><b>Export Cas To Xmi Enabled</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__EXPORT_CAS_TO_XMI_ENABLED = eINSTANCE.getEPipeline_ExportCasToXmiEnabled();
-
-		/**
-		 * The meta object literal for the '<em><b>Export Cas To Tsv Enabled</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__EXPORT_CAS_TO_TSV_ENABLED = eINSTANCE.getEPipeline_ExportCasToTsvEnabled();
-
-		/**
-		 * The meta object literal for the '<em><b>Export Cas To Json Enabled</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__EXPORT_CAS_TO_JSON_ENABLED = eINSTANCE.getEPipeline_ExportCasToJsonEnabled();
-
-		/**
-		 * The meta object literal for the '<em><b>Export Termino To Json Enabled</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__EXPORT_TERMINO_TO_JSON_ENABLED = eINSTANCE.getEPipeline_ExportTerminoToJsonEnabled();
-
-		/**
-		 * The meta object literal for the '<em><b>Export Termino To Tbx Enabled</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__EXPORT_TERMINO_TO_TBX_ENABLED = eINSTANCE.getEPipeline_ExportTerminoToTbxEnabled();
-
-		/**
-		 * The meta object literal for the '<em><b>Export Termino To Tsv Enabled</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__EXPORT_TERMINO_TO_TSV_ENABLED = eINSTANCE.getEPipeline_ExportTerminoToTsvEnabled();
-
-		/**
-		 * The meta object literal for the '<em><b>Big Corpora Handling Enabled</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__BIG_CORPORA_HANDLING_ENABLED = eINSTANCE.getEPipeline_BigCorporaHandlingEnabled();
-
-		/**
-		 * The meta object literal for the '<em><b>Big Corpora Cleaning Mode</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__BIG_CORPORA_CLEANING_MODE = eINSTANCE.getEPipeline_BigCorporaCleaningMode();
+		EAttribute EPIPELINE__OCCURRENCE_MODE = eINSTANCE.getEPipeline_OccurrenceMode();
 
 		/**
 		 * The meta object literal for the '<em><b>Context Scope</b></em>' attribute feature.
@@ -2461,108 +1876,52 @@ public interface TermsuiteuiPackage extends EPackage {
 		EAttribute EPIPELINE__CONTEXT_SCOPE = eINSTANCE.getEPipeline_ContextScope();
 
 		/**
-		 * The meta object literal for the '<em><b>Contextualize On SWT Only</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Context Assoc Measure</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute EPIPELINE__CONTEXTUALIZE_ON_SWT_ONLY = eINSTANCE.getEPipeline_ContextualizeOnSWTOnly();
+		EAttribute EPIPELINE__CONTEXT_ASSOC_MEASURE = eINSTANCE.getEPipeline_ContextAssocMeasure();
 
 		/**
-		 * The meta object literal for the '<em><b>Context Allow MWT As Cooc</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Sem Enabled</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute EPIPELINE__CONTEXT_ALLOW_MWT_AS_COOC = eINSTANCE.getEPipeline_ContextAllowMWTAsCooc();
+		EAttribute EPIPELINE__SEM_ENABLED = eINSTANCE.getEPipeline_SemEnabled();
 
 		/**
-		 * The meta object literal for the '<em><b>Filtering Mode</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Sem Measure</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute EPIPELINE__FILTERING_MODE = eINSTANCE.getEPipeline_FilteringMode();
+		EAttribute EPIPELINE__SEM_MEASURE = eINSTANCE.getEPipeline_SemMeasure();
 
 		/**
-		 * The meta object literal for the '<em><b>Filtering Threshold</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Sem Dico Only</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute EPIPELINE__FILTERING_THRESHOLD = eINSTANCE.getEPipeline_FilteringThreshold();
+		EAttribute EPIPELINE__SEM_DICO_ONLY = eINSTANCE.getEPipeline_SemDicoOnly();
 
 		/**
-		 * The meta object literal for the '<em><b>Filtering Top N</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Sem Num Candidates</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute EPIPELINE__FILTERING_TOP_N = eINSTANCE.getEPipeline_FilteringTopN();
+		EAttribute EPIPELINE__SEM_NUM_CANDIDATES = eINSTANCE.getEPipeline_SemNumCandidates();
 
 		/**
-		 * The meta object literal for the '<em><b>Filtering Property</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute EPIPELINE__FILTERING_PROPERTY = eINSTANCE.getEPipeline_FilteringProperty();
-
-		/**
-		 * The meta object literal for the '<em><b>Big Corpora Filtering Property</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__BIG_CORPORA_FILTERING_PROPERTY = eINSTANCE.getEPipeline_BigCorporaFilteringProperty();
-
-		/**
-		 * The meta object literal for the '<em><b>Big Corpora Document Period</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__BIG_CORPORA_DOCUMENT_PERIOD = eINSTANCE.getEPipeline_BigCorporaDocumentPeriod();
-
-		/**
-		 * The meta object literal for the '<em><b>Big Corpora Filtering Property Threshold</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__BIG_CORPORA_FILTERING_PROPERTY_THRESHOLD = eINSTANCE.getEPipeline_BigCorporaFilteringPropertyThreshold();
-
-		/**
-		 * The meta object literal for the '<em><b>Big Corpora Max Number Of Terms</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__BIG_CORPORA_MAX_NUMBER_OF_TERMS = eINSTANCE.getEPipeline_BigCorporaMaxNumberOfTerms();
-
-		/**
-		 * The meta object literal for the '<em><b>Target Terminology Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__TARGET_TERMINOLOGY_NAME = eINSTANCE.getEPipeline_TargetTerminologyName();
-
-		/**
-		 * The meta object literal for the '<em><b>Output Dir</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__OUTPUT_DIR = eINSTANCE.getEPipeline_OutputDir();
-
-		/**
-		 * The meta object literal for the '<em><b>Filename</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EPIPELINE__FILENAME = eINSTANCE.getEPipeline_Filename();
+		EAttribute EPIPELINE__NAME = eINSTANCE.getEPipeline_Name();
 
 		/**
 		 * The meta object literal for the '<em><b>Tagger Config Name</b></em>' attribute feature.
@@ -2571,6 +1930,22 @@ public interface TermsuiteuiPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute EPIPELINE__TAGGER_CONFIG_NAME = eINSTANCE.getEPipeline_TaggerConfigName();
+
+		/**
+		 * The meta object literal for the '<em><b>Filter</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EPIPELINE__FILTER = eINSTANCE.getEPipeline_Filter();
+
+		/**
+		 * The meta object literal for the '<em><b>Max Num Terms Memory</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EPIPELINE__MAX_NUM_TERMS_MEMORY = eINSTANCE.getEPipeline_MaxNumTermsMemory();
 
 		/**
 		 * The meta object literal for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.EPipelineListImpl <em>EPipeline List</em>}' class.
@@ -2821,6 +2196,56 @@ public interface TermsuiteuiPackage extends EPackage {
 		EReference ELINGUISTIC_RESOURCE_SET__RESOURCES = eINSTANCE.getELinguisticResourceSet_Resources();
 
 		/**
+		 * The meta object literal for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminoFilterImpl <em>ETermino Filter</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminoFilterImpl
+		 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getETerminoFilter()
+		 * @generated
+		 */
+		EClass ETERMINO_FILTER = eINSTANCE.getETerminoFilter();
+
+		/**
+		 * The meta object literal for the '<em><b>Property Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ETERMINO_FILTER__PROPERTY_NAME = eINSTANCE.getETerminoFilter_PropertyName();
+
+		/**
+		 * The meta object literal for the '<em><b>Top N</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ETERMINO_FILTER__TOP_N = eINSTANCE.getETerminoFilter_TopN();
+
+		/**
+		 * The meta object literal for the '<em><b>Threshold</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ETERMINO_FILTER__THRESHOLD = eINSTANCE.getETerminoFilter_Threshold();
+
+		/**
+		 * The meta object literal for the '<em><b>Keep Variants</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ETERMINO_FILTER__KEEP_VARIANTS = eINSTANCE.getETerminoFilter_KeepVariants();
+
+		/**
+		 * The meta object literal for the '<em><b>Mode</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ETERMINO_FILTER__MODE = eINSTANCE.getETerminoFilter_Mode();
+
+		/**
 		 * The meta object literal for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ELang <em>ELang</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2829,16 +2254,6 @@ public interface TermsuiteuiPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum ELANG = eINSTANCE.getELang();
-
-		/**
-		 * The meta object literal for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ECollectionType <em>ECollection Type</em>}' enum.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ECollectionType
-		 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getECollectionType()
-		 * @generated
-		 */
-		EEnum ECOLLECTION_TYPE = eINSTANCE.getECollectionType();
 
 		/**
 		 * The meta object literal for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETagger <em>ETagger</em>}' enum.
@@ -2851,16 +2266,6 @@ public interface TermsuiteuiPackage extends EPackage {
 		EEnum ETAGGER = eINSTANCE.getETagger();
 
 		/**
-		 * The meta object literal for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EPeriodicCleaningMode <em>EPeriodic Cleaning Mode</em>}' enum.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EPeriodicCleaningMode
-		 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getEPeriodicCleaningMode()
-		 * @generated
-		 */
-		EEnum EPERIODIC_CLEANING_MODE = eINSTANCE.getEPeriodicCleaningMode();
-
-		/**
 		 * The meta object literal for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EFilteringMode <em>EFiltering Mode</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2869,6 +2274,36 @@ public interface TermsuiteuiPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum EFILTERING_MODE = eINSTANCE.getEFilteringMode();
+
+		/**
+		 * The meta object literal for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode <em>EOccurrence Mode</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode
+		 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getEOccurrenceMode()
+		 * @generated
+		 */
+		EEnum EOCCURRENCE_MODE = eINSTANCE.getEOccurrenceMode();
+
+		/**
+		 * The meta object literal for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EAssocMeasure <em>EAssoc Measure</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EAssocMeasure
+		 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getEAssocMeasure()
+		 * @generated
+		 */
+		EEnum EASSOC_MEASURE = eINSTANCE.getEAssocMeasure();
+
+		/**
+		 * The meta object literal for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESimilarityMeasure <em>ESimilarity Measure</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ESimilarityMeasure
+		 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getESimilarityMeasure()
+		 * @generated
+		 */
+		EEnum ESIMILARITY_MEASURE = eINSTANCE.getESimilarityMeasure();
 
 	}
 

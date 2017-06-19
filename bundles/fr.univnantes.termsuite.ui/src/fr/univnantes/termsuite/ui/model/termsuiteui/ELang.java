@@ -26,7 +26,7 @@ public enum ELang implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	FR(0, "FR", ""),
+	FR(0, "FR", "fr"),
 
 	/**
 	 * The '<em><b>EN</b></em>' literal object.
@@ -36,7 +36,7 @@ public enum ELang implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	EN(1, "EN", "EN"),
+	EN(1, "EN", "en"),
 
 	/**
 	 * The '<em><b>ES</b></em>' literal object.
@@ -46,7 +46,7 @@ public enum ELang implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	ES(2, "ES", "ES"),
+	ES(2, "ES", "es"),
 
 	/**
 	 * The '<em><b>DE</b></em>' literal object.
@@ -56,7 +56,7 @@ public enum ELang implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	DE(3, "DE", "DE"),
+	DE(3, "DE", "de"),
 
 	/**
 	 * The '<em><b>RU</b></em>' literal object.
@@ -66,7 +66,7 @@ public enum ELang implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	RU(4, "RU", "RU"),
+	RU(4, "RU", "ru"),
 
 	/**
 	 * The '<em><b>DA</b></em>' literal object.
@@ -76,7 +76,7 @@ public enum ELang implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	DA(5, "DA", "DA"),
+	DA(5, "DA", "da"),
 
 	/**
 	 * The '<em><b>ZH</b></em>' literal object.
@@ -86,7 +86,7 @@ public enum ELang implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	ZH(6, "ZH", "ZH"),
+	ZH(6, "ZH", "zh"),
 
 	/**
 	 * The '<em><b>LV</b></em>' literal object.
@@ -96,7 +96,15 @@ public enum ELang implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	LV(7, "LV", "LV");
+	LV(7, "LV", "lv"), /**
+	 * The '<em><b>IT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #IT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	IT(8, "IT", "it");
 
 	/**
 	 * The '<em><b>FR</b></em>' literal value.
@@ -107,7 +115,7 @@ public enum ELang implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #FR
-	 * @model literal=""
+	 * @model literal="fr"
 	 * @generated
 	 * @ordered
 	 */
@@ -122,7 +130,7 @@ public enum ELang implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #EN
-	 * @model
+	 * @model literal="en"
 	 * @generated
 	 * @ordered
 	 */
@@ -137,7 +145,7 @@ public enum ELang implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #ES
-	 * @model
+	 * @model literal="es"
 	 * @generated
 	 * @ordered
 	 */
@@ -152,7 +160,7 @@ public enum ELang implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #DE
-	 * @model
+	 * @model literal="de"
 	 * @generated
 	 * @ordered
 	 */
@@ -167,7 +175,7 @@ public enum ELang implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #RU
-	 * @model
+	 * @model literal="ru"
 	 * @generated
 	 * @ordered
 	 */
@@ -182,7 +190,7 @@ public enum ELang implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #DA
-	 * @model
+	 * @model literal="da"
 	 * @generated
 	 * @ordered
 	 */
@@ -197,7 +205,7 @@ public enum ELang implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #ZH
-	 * @model
+	 * @model literal="zh"
 	 * @generated
 	 * @ordered
 	 */
@@ -212,11 +220,26 @@ public enum ELang implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #LV
-	 * @model
+	 * @model literal="lv"
 	 * @generated
 	 * @ordered
 	 */
 	public static final int LV_VALUE = 7;
+
+	/**
+	 * The '<em><b>IT</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>IT</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #IT
+	 * @model literal="it"
+	 * @generated
+	 * @ordered
+	 */
+	public static final int IT_VALUE = 8;
 
 	/**
 	 * An array of all the '<em><b>ELang</b></em>' enumerators.
@@ -234,6 +257,7 @@ public enum ELang implements Enumerator {
 			DA,
 			ZH,
 			LV,
+			IT,
 		};
 
 	/**
@@ -298,6 +322,7 @@ public enum ELang implements Enumerator {
 			case DA_VALUE: return DA;
 			case ZH_VALUE: return ZH;
 			case LV_VALUE: return LV;
+			case IT_VALUE: return IT;
 		}
 		return null;
 	}

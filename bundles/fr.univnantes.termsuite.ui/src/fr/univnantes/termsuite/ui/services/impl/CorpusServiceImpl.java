@@ -48,7 +48,6 @@ import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.dialogs.CorpusSelectionDialog;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ECollectionType;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorporaList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
@@ -129,7 +128,7 @@ public class CorpusServiceImpl implements CorpusService {
 	 */
 	@Override
 	public Path getDocumentPath(ESingleLanguageCorpus slc) {
-		Path path = Paths.get(getPath(slc).toString(), slc.getCollectionType().toString().toLowerCase());
+		Path path = Paths.get(getPath(slc).toString(), "txt");
 		return path;
 	}
 	
@@ -172,14 +171,9 @@ public class CorpusServiceImpl implements CorpusService {
 		corpus.setName(name);
 		corpus.setPath(Paths.get(corpusPath).toString());
 		for(File sl:candidateSLCChildrenForPath(corpus.getPath())) {
-			ECollectionType type = Files.exists(Paths.get(sl.getAbsolutePath(), "tei")) ?
-					ECollectionType.TEI:
-							ECollectionType.TXT;
-								
 			ESingleLanguageCorpus slc = TermsuiteuiFactory.eINSTANCE.createESingleLanguageCorpus();
 			slc.setCorpus(corpus);
 			slc.setLanguage(LangUtil.getLangByNameUC(sl.getName()));
-			slc.setCollectionType(type);
 			
 			for(File f:getDocumentPath(slc).toFile().listFiles()) {
 				EDocument doc = TermsuiteuiFactory.eINSTANCE.createEDocument();
@@ -259,12 +253,12 @@ public class CorpusServiceImpl implements CorpusService {
 	@Override
 	public String getOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline) {
 		return Paths.get(getOutputDirectory(corpus), 
-				pipeline.getTargetTerminologyName()).toString();
+				pipeline.getName()).toString();
 	}
 
 	@Override
 	public String getTerminoOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline, String extension) {
-		Path path = Paths.get(getOutputDirectory(corpus, pipeline), pipeline.getTargetTerminologyName() + "." + extension);
+		Path path = Paths.get(getOutputDirectory(corpus, pipeline), pipeline.getName() + "." + extension);
 		FileUtil.mkdirs(path.toFile());
 		return path.toString();
 	}
@@ -464,7 +458,7 @@ public class CorpusServiceImpl implements CorpusService {
 	@Override
 	public TXTCorpus asTxtCorpus(ESingleLanguageCorpus corpus) {
 		return new TXTCorpus(
-				Lang.forName(corpus.getLanguage().getName()), 
+				Lang.forName(corpus.getLanguage().getName().toLowerCase()), 
 				getDocumentPath(corpus));
 	}
 

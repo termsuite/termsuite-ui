@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
-import fr.univnantes.termsuite.model.TermProperty;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipelineList;
@@ -48,7 +47,7 @@ public class PipelineServiceImpl implements PipelineService {
 	 */
 	@Override
 	public void savePipeline(EPipeline pipeline) throws IOException {
-		WorkspaceUtil.saveResource(pipeline, PIPELINE_DIR, pipeline.getFilename(), PIPELINE_EXTENSION);
+		WorkspaceUtil.saveResource(pipeline, PIPELINE_DIR, pipeline.getName(), PIPELINE_EXTENSION);
 	}
 
 
@@ -66,10 +65,9 @@ public class PipelineServiceImpl implements PipelineService {
 	 * @see fr.univnantes.termsuite.ui.services.PipelineService#createPipeline(java.lang.String)
 	 */
 	@Override
-	public EPipeline createPipeline(String filename) throws IOException {
+	public EPipeline createPipeline(String name) throws IOException {
 		EPipeline p = TermsuiteuiFactory.eINSTANCE.createEPipeline();
-		p.setFilename(filename);
-		p.setTargetTerminologyName(p.getFilename());
+		p.setName(name);
 		TaggerService taggerService = this.context.get(TaggerService.class);
 		if(taggerService.getTaggerConfigs().size() > 0) {
 			ETaggerConfig treeTagger = null;
@@ -79,11 +77,6 @@ public class PipelineServiceImpl implements PipelineService {
 			ETaggerConfig selectedConfig = treeTagger != null ? treeTagger : taggerService.getTaggerConfigs().iterator().next();
 			p.setTaggerConfigName(selectedConfig.getName());
 		}
-		p.setFilteringProperty(TermProperty.FREQUENCY.getPropertyName());
-		p.setBigCorporaFilteringProperty(TermProperty.FREQUENCY.getPropertyName());
-		p.setExportTerminoToJsonEnabled(true);
-		p.setExportTerminoToTsvEnabled(true);
-//		p.setExportTerminoToJsonFile(WorkspaceUtil.getLocation(DEFAULT_TERMINO_DIR));
 		pipelines.getPipelines().add(p);
 		savePipeline(p);
 		return p;
@@ -95,7 +88,7 @@ public class PipelineServiceImpl implements PipelineService {
 	@Override
 	public boolean canCreatePipeline(String string) {
 		for(EPipeline p:pipelines.getPipelines()) {
-			if(p.getFilename().equals(string))
+			if(p.getName().equals(string))
 				return false;
 		}
 		return true;
@@ -105,7 +98,7 @@ public class PipelineServiceImpl implements PipelineService {
 	@Override
 	public void remove(EPipeline s) {
 		pipelines.getPipelines().remove(s);
-		WorkspaceUtil.removeResource(PIPELINE_DIR, s.getFilename(), PIPELINE_EXTENSION);
+		WorkspaceUtil.removeResource(PIPELINE_DIR, s.getName(), PIPELINE_EXTENSION);
 		eventBroker.post(TermSuiteEvents.PIPELINE_REMOVED, s);
 	}
 }

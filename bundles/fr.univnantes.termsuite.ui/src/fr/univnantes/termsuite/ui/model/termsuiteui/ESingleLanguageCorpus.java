@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getLanguage <em>Language</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getCorpus <em>Corpus</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getDocuments <em>Documents</em>}</li>
- *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getCollectionType <em>Collection Type</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getTerminologies <em>Terminologies</em>}</li>
  * </ul>
  *
@@ -100,35 +99,6 @@ public interface ESingleLanguageCorpus extends EObject {
 	 * @generated
 	 */
 	EList<EDocument> getDocuments();
-
-	/**
-	 * Returns the value of the '<em><b>Collection Type</b></em>' attribute.
-	 * The literals are from the enumeration {@link fr.univnantes.termsuite.ui.model.termsuiteui.ECollectionType}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Collection Type</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Collection Type</em>' attribute.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ECollectionType
-	 * @see #setCollectionType(ECollectionType)
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getESingleLanguageCorpus_CollectionType()
-	 * @model
-	 * @generated
-	 */
-	ECollectionType getCollectionType();
-
-	/**
-	 * Sets the value of the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getCollectionType <em>Collection Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Collection Type</em>' attribute.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ECollectionType
-	 * @see #getCollectionType()
-	 * @generated
-	 */
-	void setCollectionType(ECollectionType value);
 
 	/**
 	 * Returns the value of the '<em><b>Terminologies</b></em>' containment reference list.
