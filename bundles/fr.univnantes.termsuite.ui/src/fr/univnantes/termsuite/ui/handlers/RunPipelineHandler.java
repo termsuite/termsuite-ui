@@ -15,7 +15,7 @@ import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETaggerConfig;
-import fr.univnantes.termsuite.ui.parts.PipelinePart2;
+import fr.univnantes.termsuite.ui.parts.PipelinePart;
 import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.ExtractorService;
 import fr.univnantes.termsuite.ui.services.TaggerService;
@@ -43,7 +43,7 @@ public class RunPipelineHandler {
 			ExtractorService extractorService) {
 		
 		EPipeline pipeline = (EPipeline) part.getContext().get(TermSuiteUI.INPUT_OBJECT);
-		boolean a = pipeline != null && part.getObject() instanceof PipelinePart2;
+		boolean a = pipeline != null && part.getObject() instanceof PipelinePart;
 		boolean b = extractorService.isPipelineValid(pipeline);
 		boolean c = !taggerService.getTaggerConfigNames().isEmpty();
 		return a && b && c;

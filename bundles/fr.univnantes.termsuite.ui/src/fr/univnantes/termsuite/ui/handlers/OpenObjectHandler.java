@@ -26,7 +26,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.parts.FileEditorPart;
 import fr.univnantes.termsuite.ui.parts.FileInput;
-import fr.univnantes.termsuite.ui.parts.PipelinePart2;
+import fr.univnantes.termsuite.ui.parts.PipelinePart;
 import fr.univnantes.termsuite.ui.parts.TerminologyPart;
 import fr.univnantes.termsuite.ui.parts.TermsuiteImg;
 import fr.univnantes.termsuite.ui.services.CorpusService;
@@ -101,7 +101,7 @@ public class OpenObjectHandler {
 					termino.getCorpus().getLanguage().getName().toLowerCase(), 
 					termino.getName());	
 		} else if(inputObject instanceof EPipeline) {
-			partId = PipelinePart2.ID;
+			partId = PipelinePart.ID;
 			label = ((EPipeline)inputObject).getName();
 		} else {
 			// do nothing

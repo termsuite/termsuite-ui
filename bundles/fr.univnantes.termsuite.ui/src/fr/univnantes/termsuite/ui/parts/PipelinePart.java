@@ -30,7 +30,6 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -61,9 +60,9 @@ import fr.univnantes.termsuite.ui.services.TaggerService;
 import fr.univnantes.termsuite.ui.util.jface.IntegerValidator;
 import fr.univnantes.termsuite.ui.util.jface.StringToIntegerConverter;
 
-public class PipelinePart2 {
+public class PipelinePart {
 
-	public static final String ID = "fr.univnantes.termsuite.ui.partdescriptor.PipelineEditor2";
+	public static final String ID = "fr.univnantes.termsuite.ui.partdescriptor.PipelineEditor";
 	
 	private static final String EDITOR_TITLE = "Terminology Extraction Pipeline";
 
