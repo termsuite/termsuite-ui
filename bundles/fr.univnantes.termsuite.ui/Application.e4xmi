@@ -134,11 +134,7 @@
       <children xsi:type="menu:HandledToolItem" xmi:id="_bl9NwOYGEeWuJP7LFnU52Q" elementId="fr.univnantes.termsuite.ui.handledtoolitem.WrapText" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/wordwrap.png" type="Check" command="_N3Eb4OYGEeWuJP7LFnU52Q"/>
     </toolbar>
   </descriptors>
-  <descriptors xmi:id="_g8PoEFE8EeWJlbJYl3DYnQ" elementId="fr.univnantes.termsuite.ui.partdescriptor.PipelineEditor" label="Pipeline Editor" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/debugtt_obj.gif" allowMultiple="true" closeable="true" dirtyable="true" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.PipelinePart">
-    <toolbar xmi:id="_bV1A8MWiEeWpIJ-KlFcYkg" elementId="fr.univnantes.termsuite.ui.toolbar.2">
-      <children xsi:type="menu:HandledToolItem" xmi:id="_JQZiIFIeEeWJrZq1Fp2XFA" elementId="fr.univnantes.termsuite.ui.handledtoolitem.RunPipeline" label="Run pipeline" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/run_exc.png" command="_zpB2oMUUEeWcSafn8uq1Yw"/>
-    </toolbar>
-  </descriptors>
+  <descriptors xmi:id="_g8PoEFE8EeWJlbJYl3DYnQ" elementId="fr.univnantes.termsuite.ui.partdescriptor.PipelineEditor" label="Pipeline Editor" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/debugtt_obj.gif" allowMultiple="true" closeable="true" dirtyable="true" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.PipelinePart"/>
   <descriptors xmi:id="_fu8PwKASEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.partdescriptor.terminology" label="Terminology" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/hierarchicalLayout.png" allowMultiple="true" closeable="true" dirtyable="true" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.TerminologyPart">
     <menus xsi:type="menu:PopupMenu" xmi:id="_RibDAO9sEeW_3q2PUR_c0Q" elementId="fr.univnantes.termsuite.ui.popupmenu.terminology" label="Terminology contextual menu">
       <children xsi:type="menu:Menu" xmi:id="_YviJ8O9sEeW_3q2PUR_c0Q" elementId="fr.univnantes.termsuite.ui.menu.terminology.align" label="Align">
