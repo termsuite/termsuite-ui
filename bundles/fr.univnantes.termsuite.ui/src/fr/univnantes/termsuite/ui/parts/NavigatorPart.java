@@ -69,7 +69,7 @@ public class NavigatorPart implements TreePart {
 
 	public static final String ID = "fr.univnantes.termsuite.ui.part.navigator";
 	public static final String POPUP_MENU_ID = "fr.univnantes.termsuite.ui.popupmenu.navigator";
-
+	
 	private static final int NODE_PIPELINES = 2;
 	private static final int NODE_CORPORA = 3;
 	private static final int NODE_FOLDER_TERMINO = 4;

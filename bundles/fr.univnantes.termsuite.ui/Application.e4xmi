@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_jupbsEwBEeWIWrXS0l4jxg" elementId="fr.univnantes.termsuite.ui.application">
+<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmlns:ui="http://www.eclipse.org/ui/2010/UIModel/application/ui" xmi:id="_jupbsEwBEeWIWrXS0l4jxg" elementId="fr.univnantes.termsuite.ui.application">
   <children xsi:type="basic:TrimmedWindow" xmi:id="_n3DbgEwBEeWIWrXS0l4jxg" elementId="fr.univnantes.termsuite.ui.trimmedwindow.termsuite" selectedElement="_VeZMsEwCEeWIWrXS0l4jxg" label="Term Suite" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/termsuite.png">
     <tags>shellMaximized</tags>
     <children xsi:type="advanced:PerspectiveStack" xmi:id="_VeZMsEwCEeWIWrXS0l4jxg" elementId="fr.univnantes.termsuite.ui.perspectivestack.0" selectedElement="_VzqSEEwCEeWIWrXS0l4jxg">
@@ -14,6 +14,9 @@
                 <children xsi:type="menu:HandledMenuItem" xmi:id="_t0OOwMmbEeWMTIcqIQJn_g" elementId="fr.univnantes.termsuite.ui.handledmenuitem.importcorpus" label="Import corpus..." tooltip="Imports a new corpus to TermSuite" command="_hzlTgE19EeWpcYFej9JPeQ"/>
                 <children xsi:type="menu:MenuSeparator" xmi:id="__ZomQMmbEeWMTIcqIQJn_g" elementId="fr.univnantes.termsuite.ui.menuseparator.6"/>
                 <children xsi:type="menu:HandledMenuItem" xmi:id="_KpHNgEy4EeWINr2AFtxMwQ" elementId="fr.univnantes.termsuite.ui.handledmenuitem.remove" label="Remove" command="_RUf-4EyhEeWINr2AFtxMwQ"/>
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_xNHI0FWvEeefSMCel-Yjlw" elementId="fr.univnantes.termsuite.ui.handledmenuitem.runpipeline" label="Run pipeline" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/run_exc.png" command="_zpB2oMUUEeWcSafn8uq1Yw">
+                  <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_ei2MoFWwEeefSMCel-Yjlw" coreExpressionId="fr.univnantes.termsuite.ui.pipelineselected"/>
+                </children>
               </menus>
               <menus xmi:id="_pWilwFE6EeWJlbJYl3DYnQ" elementId="fr.univnantes.termsuite.ui.menu.1">
                 <tags>ViewMenu</tags>

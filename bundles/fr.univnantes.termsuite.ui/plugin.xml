@@ -19,6 +19,15 @@
             </equals>
          </with>
       </definition>
+      <definition
+            id="fr.univnantes.termsuite.ui.pipelineselected">
+         <with
+               variable="org.eclipse.ui.selection">
+            <instanceof
+                  value="fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline">
+            </instanceof>
+         </with>
+      </definition>
    </extension>
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated termsuite-ui -->
