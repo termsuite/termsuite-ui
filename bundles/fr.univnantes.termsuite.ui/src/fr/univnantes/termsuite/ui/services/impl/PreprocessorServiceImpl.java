@@ -24,6 +24,8 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.PreprocessorService;
+import fr.univnantes.termsuite.ui.services.TaggerService;
+import fr.univnantes.termsuite.ui.util.Jobs;
 import fr.univnantes.termsuite.ui.util.WorkspaceUtil;
 import fr.univnantes.termsuite.uima.PipelineListener;
 
@@ -43,32 +45,32 @@ public class PreprocessorServiceImpl implements PreprocessorService {
 
 	@Override
 	public Job getPreparedCorpusJob(EPipeline pipeline, ESingleLanguageCorpus corpus) {
-		String jobName = String.format("Preprocessing corpus %s/%s (%d documents)", 
+		String jobName = String.format("Preprocessing corpus %s - %s (%d documents)", 
 				corpus.getCorpus().getName(), 
 				corpus.getLanguage().getName(), 
 				corpus.getDocuments().size());
 		Job job = Job.create(jobName, monitor -> {
-			final int totalWork = 10000;
+			final int totalWork = 100;
 			CorpusService corpusService = context.get(CorpusService.class);
 			final SubMonitor subMonitor = SubMonitor.convert(monitor, totalWork);
 			try {
-				Preprocessor preprocessor = TermSuite.preprocessor();
+				Preprocessor preprocessor = TermSuite.preprocessor()
+					.setTagger(context.get(TaggerService.class).getTermSuiteTagger(pipeline))
+					.setTaggerPath(context.get(TaggerService.class).getTaggerPath(pipeline));
+				
 				PipelineListener pipelineListener = new PipelineListener() {
 					private int lastProgress = 0;
 					@Override
 					public void statusUpdated(final double progress, final String status) {
-						if(subMonitor.isCanceled()) {
+						if(subMonitor.isCanceled()) 
 							throw new OperationCanceledException();
-						}
-						sync.asyncExec(new Runnable() {
-							@Override
-							public void run() {
+						sync.asyncExec(()-> {
 								int newProgress = (int)(progress * totalWork);
 								int worked = newProgress - lastProgress;
 								lastProgress = newProgress;
 								subMonitor.newChild(worked).setTaskName(status);
 							}
-						});
+						);
 					}
 				};
 				preprocessor.setListener(pipelineListener);
@@ -88,6 +90,8 @@ public class PreprocessorServiceImpl implements PreprocessorService {
 				subMonitor.done();
 			}
 		});
+		job.setRule(Jobs.MUTEX_RULE);
+		job.setPriority(Job.BUILD);
 		return job;
 	}
 

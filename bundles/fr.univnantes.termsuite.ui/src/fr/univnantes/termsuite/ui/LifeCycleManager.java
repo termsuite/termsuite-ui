@@ -2,14 +2,20 @@ package fr.univnantes.termsuite.ui;
 
 import java.nio.file.Paths;
 
+import javax.inject.Inject;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.core.services.log.ILoggerProvider;
 import org.eclipse.e4.core.services.log.Logger;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -64,6 +70,12 @@ public class LifeCycleManager {
 		logBundles();
 		addServicesToContext(cont);
 		WorkspaceUtil.deleteTermSuiteTempFiles();
+	}
+
+	@Inject @Optional
+	private void init(@UIEventTopic(TermSuiteEvents.JOB_STARTED) String jobName, 
+			EPartService partService) {
+		partService.showPart(TermSuiteUI.PROGRESS_VIEW_ID, PartState.ACTIVATE);
 	}
 
 

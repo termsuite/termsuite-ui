@@ -14,5 +14,11 @@ public class TermSuiteEvents {
 	public static final String ACTIVE_TERM_OCCURRENCE = "activeTermOccurrence";
 	public static final String ALIGNEMENT_RESULT = "alignmentResult";
 	public static final String CORPUS_PREPROCESSED = "corpusPreprocessed";
+	
+	/*
+	 * A job has started
+	 */
+	public static final String JOB_STARTED = "jobStarted";
+	
 
 }

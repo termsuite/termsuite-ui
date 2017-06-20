@@ -13,7 +13,10 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -50,6 +53,7 @@ import fr.univnantes.termsuite.ui.services.ExtractorService;
 import fr.univnantes.termsuite.ui.services.LinguisticResourcesService;
 import fr.univnantes.termsuite.ui.services.PreprocessorService;
 import fr.univnantes.termsuite.ui.services.TerminoService;
+import fr.univnantes.termsuite.ui.util.Jobs;
 
 public class ExtractorServiceImpl implements ExtractorService {
 	
@@ -63,7 +67,6 @@ public class ExtractorServiceImpl implements ExtractorService {
 
 	@Inject
 	IEclipseContext context;
-
 	
 	@Inject
 	IEventBroker eventBroker;
@@ -89,7 +92,9 @@ public class ExtractorServiceImpl implements ExtractorService {
 	/* (non-Javadoc)
 	 * @see fr.univnantes.termsuite.ui.services.CorpusService#runPipelineOnCorpus(fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline, fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus)
 	 */
-	private void runPipelineOnCorpus(final EPipeline pipeline, final Iterable<ESingleLanguageCorpus> corpusList) {
+	private void runPipelineOnCorpus(
+			final EPipeline pipeline, 
+			final Iterable<ESingleLanguageCorpus> corpusList) {
 
 		for(final ESingleLanguageCorpus corpus:corpusList) {
 			PreprocessorService preprocessorService = context.get(PreprocessorService.class);
@@ -106,20 +111,20 @@ public class ExtractorServiceImpl implements ExtractorService {
 					}
 				});
 				preprocessCorpusJob.schedule();
+				eventBroker.post(TermSuiteEvents.JOB_STARTED, preprocessCorpusJob.getName());
 			}
 		}
 	}
 
 
+
 	public void runPipelineOnPreprocessedCorpus(EPipeline pipeline, ESingleLanguageCorpus corpus, IndexedCorpus preparedCorpus) {
-		String jobName = "Running pipeline " + pipeline.getName() + " on corpus " + preparedCorpus.getTerminology().getName() + "("+preparedCorpus.getTerminology().getLang()+")";
+		String jobName = "Extracting terminology with pipeline " + pipeline.getName() + " on corpus " + preparedCorpus.getTerminology().getName() + "("+preparedCorpus.getTerminology().getLang()+")";
 		final TerminoExtractor extractor = toExtractor(pipeline);
 
 		Job job = Job.create(jobName, (ICoreRunnable) monitor -> {
 			PipelineStats stats = extractor.execute(preparedCorpus);
 		});
-		// Set a better priority than preprocess
-		job.setPriority(Job.LONG);
 		job.addJobChangeListener(new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
@@ -139,7 +144,12 @@ public class ExtractorServiceImpl implements ExtractorService {
 				}
 			}
 		});
+		job.setPriority(Job.LONG);
+		job.setRule(Jobs.MUTEX_RULE);
 		job.schedule();
+		eventBroker.post(TermSuiteEvents.JOB_STARTED, job.getName());
+
+		// Set a better priority than preprocess
 		sync.asyncExec(new Runnable() {
 			@Override
 			public void run() {
