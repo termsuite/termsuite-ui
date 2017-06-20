@@ -15,7 +15,6 @@ import org.eclipse.e4.ui.di.UISynchronize;
 import com.google.common.base.Optional;
 
 import fr.univnantes.termsuite.api.IndexedCorpusIO;
-import fr.univnantes.termsuite.api.Preprocessor;
 import fr.univnantes.termsuite.api.TermSuite;
 import fr.univnantes.termsuite.model.IndexedCorpus;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
@@ -27,7 +26,6 @@ import fr.univnantes.termsuite.ui.services.PreprocessorService;
 import fr.univnantes.termsuite.ui.services.TaggerService;
 import fr.univnantes.termsuite.ui.util.Jobs;
 import fr.univnantes.termsuite.ui.util.WorkspaceUtil;
-import fr.univnantes.termsuite.uima.PipelineListener;
 
 public class PreprocessorServiceImpl implements PreprocessorService {
 
@@ -50,31 +48,15 @@ public class PreprocessorServiceImpl implements PreprocessorService {
 				corpus.getLanguage().getName(), 
 				corpus.getDocuments().size());
 		Job job = Job.create(jobName, monitor -> {
-			final int totalWork = 100;
+			final int totalWork = 1000;
 			CorpusService corpusService = context.get(CorpusService.class);
 			final SubMonitor subMonitor = SubMonitor.convert(monitor, totalWork);
 			try {
-				Preprocessor preprocessor = TermSuite.preprocessor()
+				IndexedCorpus preparedCorpus = TermSuite.preprocessor()
 					.setTagger(context.get(TaggerService.class).getTermSuiteTagger(pipeline))
-					.setTaggerPath(context.get(TaggerService.class).getTaggerPath(pipeline));
-				
-				PipelineListener pipelineListener = new PipelineListener() {
-					private int lastProgress = 0;
-					@Override
-					public void statusUpdated(final double progress, final String status) {
-						if(subMonitor.isCanceled()) 
-							throw new OperationCanceledException();
-						sync.asyncExec(()-> {
-								int newProgress = (int)(progress * totalWork);
-								int worked = newProgress - lastProgress;
-								lastProgress = newProgress;
-								subMonitor.newChild(worked).setTaskName(status);
-							}
-						);
-					}
-				};
-				preprocessor.setListener(pipelineListener);
-				IndexedCorpus preparedCorpus = preprocessor.toIndexedCorpus(
+					.setTaggerPath(context.get(TaggerService.class).getTaggerPath(pipeline))
+					.setListener(new WorkbenchPipelineListener(subMonitor, sync, totalWork))
+				 	.toIndexedCorpus(
 						corpusService.asTxtCorpus(corpus), 
 						PreprocessorServiceImpl.MAX_SIZE);
 				eventBroker.post(TermSuiteEvents.CORPUS_PREPROCESSED, preparedCorpus);

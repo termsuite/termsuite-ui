@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.eclipse.core.runtime.ICoreRunnable;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
@@ -120,10 +121,15 @@ public class ExtractorServiceImpl implements ExtractorService {
 
 	public void runPipelineOnPreprocessedCorpus(EPipeline pipeline, ESingleLanguageCorpus corpus, IndexedCorpus preparedCorpus) {
 		String jobName = "Extracting terminology with pipeline " + pipeline.getName() + " on corpus " + preparedCorpus.getTerminology().getName() + "("+preparedCorpus.getTerminology().getLang()+")";
-		final TerminoExtractor extractor = toExtractor(pipeline);
 
 		Job job = Job.create(jobName, (ICoreRunnable) monitor -> {
-			PipelineStats stats = extractor.execute(preparedCorpus);
+			int totalWork = 10000;
+			SubMonitor subMonitor = SubMonitor.convert(monitor, totalWork);
+			PipelineStats stats = TermSuite.terminoExtractor()
+					.setOptions(toExtractorOptions(pipeline))
+					.setListener(new WorkbenchPipelineListener(subMonitor, sync, totalWork))
+					.setResourceConfig(resourceService.getResourceConfig())
+					.execute(preparedCorpus);
 		});
 		job.addJobChangeListener(new JobChangeAdapter() {
 			@Override
@@ -160,12 +166,6 @@ public class ExtractorServiceImpl implements ExtractorService {
 
 
 
-	private TerminoExtractor toExtractor(EPipeline pipeline) {
-		return TermSuite.terminoExtractor()
-			.setOptions(toExtractorOptions(pipeline))
-			.setResourceConfig(resourceService.getResourceConfig());
-
-	}
 
 	private ExtractorOptions toExtractorOptions(EPipeline pipeline) {
 		ExtractorOptions options = new ExtractorOptions();
