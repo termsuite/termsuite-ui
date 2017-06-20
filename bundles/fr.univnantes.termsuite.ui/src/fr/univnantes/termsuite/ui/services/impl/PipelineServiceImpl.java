@@ -2,6 +2,7 @@ package fr.univnantes.termsuite.ui.services.impl;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -100,5 +101,13 @@ public class PipelineServiceImpl implements PipelineService {
 		pipelines.getPipelines().remove(s);
 		WorkspaceUtil.removeResource(PIPELINE_DIR, s.getName(), PIPELINE_EXTENSION);
 		eventBroker.post(TermSuiteEvents.PIPELINE_REMOVED, s);
+	}
+
+
+	@Override
+	public Optional<EPipeline> getPipeline(String pipelineName) {
+		return pipelines.getPipelines().stream()
+				.filter(p -> p.getName().equals(pipelineName))
+				.findFirst();
 	}
 }

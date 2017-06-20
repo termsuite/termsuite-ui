@@ -97,13 +97,6 @@ public interface CorpusService {
 	 */
 	public int getLineNumber(EDocument doc, TermOccurrence occ);
 	
-	
-	/**
-	 * Opens a corpus selection dialog.
-	 * 
-	 * @return
-	 */
-	public ESingleLanguageCorpus[] selectCorpus(Shell activeShell);
 
 	/**
 	 * The output root directory for the given corpus.

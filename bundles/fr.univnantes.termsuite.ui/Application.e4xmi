@@ -158,7 +158,9 @@
   <commands xmi:id="_paaRwFE9EeWJlbJYl3DYnQ" elementId="fr.univnantes.termsuite.ui.command.newpipeline" commandName="New Pipeline" description="Creates a new pipeline"/>
   <commands xmi:id="_U1zxIFJBEeWNjZ8iJmBR2A" elementId="fr.univnantes.termsuite.ui.command.runpipelineselectedcorpus" commandName="Run pipeline on selected corpus" description="Run the current pipeline on selected corpus"/>
   <commands xmi:id="_RIfJ0MULEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.command.saveall" commandName="Save all" description="Save all opened editors"/>
-  <commands xmi:id="_zpB2oMUUEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.command.RunPipeline" commandName="Run Pipeline"/>
+  <commands xmi:id="_zpB2oMUUEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.command.RunPipeline" commandName="Run Pipeline">
+    <parameters xmi:id="_54UncFWZEeefSMCel-Yjlw" elementId="fr.univnantes.termsuite.ui.command.RunPipeline.commandparameter.pipelinename" name="Pipeline Name" optional="false"/>
+  </commands>
   <commands xmi:id="_XCv48MakEeWpYeBiwS_H7Q" elementId="fr.univnantes.termsuite.ui.command.preferences" commandName="Preferences" description="Show the preferences dialog"/>
   <commands xmi:id="_qzb08Mm0EeWMTIcqIQJn_g" elementId="fr.univnantes.termsuite.ui.command.update" commandName="Update" description="Checks for updates and installs them"/>
   <commands xmi:id="_cgtKcMwKEeWh7K416TAaxg" elementId="fr.univnantes.termsuite.ui.command.About" commandName="About" description="Shows information about TermSuite"/>

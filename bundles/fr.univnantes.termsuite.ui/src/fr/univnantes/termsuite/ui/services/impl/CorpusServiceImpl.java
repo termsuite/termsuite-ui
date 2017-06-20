@@ -408,22 +408,6 @@ public class CorpusServiceImpl implements CorpusService {
 	}
 
 
-	@Override
-	public ESingleLanguageCorpus[] selectCorpus(Shell shell) {
-		
-		CorpusSelectionDialog dialog = new CorpusSelectionDialog(shell, getCorporaList().getCorpora());
-		if(dialog.open() == org.eclipse.jface.window.Window.OK) {
-			List<ESingleLanguageCorpus> selectedCorpus = Lists.newArrayList();
-			for(Object o:dialog.getResult()) {
-				if(o instanceof ESingleLanguageCorpus)
-					selectedCorpus.add(((ESingleLanguageCorpus)o));
-			}
-			return selectedCorpus.toArray(new ESingleLanguageCorpus[selectedCorpus.size()]);
-		} else
-			return new ESingleLanguageCorpus[0];
-		
-	}
-
 
 	@Override
 	public String getDocumentExcerpt(EDocument document, int begin, int end) {

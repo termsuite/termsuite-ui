@@ -69,4 +69,10 @@ public class TermSuiteUI {
         return desc;
 	}
 	
+	/*
+	 * Command ID
+	 */
+	public static final String COMMAND_RUN_PIPELINE_ID = "fr.univnantes.termsuite.ui.command.RunPipeline";
+	public static final String COMMAND_RUN_PIPELINE_PARAMETER_PIPELINE_ID = "fr.univnantes.termsuite.ui.command.RunPipeline.commandparameter.pipelinename";
+
 }
