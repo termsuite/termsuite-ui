@@ -12,31 +12,31 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.eclipse.e4.core.commands.ECommandService;
-import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Persist;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.MDirtyable;
 import org.eclipse.e4.ui.services.IServiceConstants;
-import org.eclipse.e4.ui.workbench.modeling.EPartService;
-import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ColumnLayout;
@@ -55,13 +55,12 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESimilarityMeasure;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
-import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.ExtractorService;
 import fr.univnantes.termsuite.ui.services.PipelineService;
 import fr.univnantes.termsuite.ui.services.TaggerService;
 import fr.univnantes.termsuite.ui.util.jface.IntegerValidator;
 import fr.univnantes.termsuite.ui.util.jface.StringToIntegerConverter;
 
-@SuppressWarnings("restriction") 
 public class PipelinePart2 {
 
 	public static final String ID = "fr.univnantes.termsuite.ui.partdescriptor.PipelineEditor2";
@@ -70,20 +69,29 @@ public class PipelinePart2 {
 
 	@Inject
 	MDirtyable dirty;
-
-	Shell parentShell;
 	
-	private WritableValue<EPipeline> pipelineValue = new WritableValue<EPipeline>();
+	/*
+	 * An observable value for the current pipeline
+	 */
+	private WritableValue<EPipeline> pipelineValue = new WritableValue<>();
+	
+	/*
+	 * An observable value containing the validation status message
+	 */
+	private WritableValue<String> pipelineStatusValue = new WritableValue<>();
+	
+	/*
+	 * An observable value telling if the pipeline is valid
+	 */
+	private WritableValue<Boolean> pipelineValidValue = new WritableValue<>();
+
 	private DataBindingContext dbc = new DataBindingContext();
 
 	// Widgets
 
-	EPartService partService;
 	IEclipseContext context;
-	
-	@Inject
-	TaggerService taggerService;
-	
+	ScrolledForm form;
+
 	@Inject @Optional
 	private void init(@UIEventTopic(TermSuiteEvents.EDITOR_INITIATED) Object part) {
 		if(this == part) {
@@ -94,43 +102,53 @@ public class PipelinePart2 {
 				public void notifyChanged(Notification notification) {
 					super.notifyChanged(notification);
 					dirty.setDirty(true);
+					validatePipeline();
 				}
 			});
+			validatePipeline();
 		}
 	}
 
+	
 	@PostConstruct
-	public void createControls(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell, Composite parent,
-			final ECommandService commandService, 
-			CorpusService corpusService,
-			final EHandlerService handlerService,
-			EPartService partService, final ESelectionService selectionService,
+	public void createControls(Composite parent,
 			IEclipseContext context) {
 		
+		this.pipelineValidValue.setValue(false);
 		this.context = context;
-		this.parentShell = shell;
-		this.partService = partService;	
-		
 		
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-	    ScrolledForm form = toolkit.createScrolledForm(parent);
+	    form = toolkit.createScrolledForm(parent);
 		form.setText(EDITOR_TITLE);
 		Composite body = form.getBody();
 		body.setLayout(new ColumnLayout());
-//		toolkit.decorateFormHeading(form.getForm());
-//		toolkit.paintBordersFor(body);
 
-		// create Preprocess section
-		createPreprocessSection(toolkit, form);
-		
-		// Configure Tagger
-		createExtractTerminoSection(toolkit, form);
 
+		/*
+		 * Create the content
+		 */
+		createPipelineContent(toolkit, form);
 	}
 
+	private void validatePipeline() {
+		EPipeline pipeline = pipelineValue.getValue();
+		if(pipelineValue.getValue() == null) {
+			this.pipelineValidValue.setValue(false);
+			this.pipelineStatusValue.setValue("No pipeline value");
+			form.setMessage("No pipeline value", IMessageProvider.ERROR);
+		} else {
+			String msg = context.get(ExtractorService.class).validatePipeline(pipeline);
+			this.pipelineStatusValue.setValue(msg);
+			this.pipelineValidValue.setValue(msg == null);
+			if(this.pipelineStatusValue.getValue() == null)
+				form.setMessage("Ok", IMessageProvider.NONE);
+			else
+				form.setMessage(this.pipelineStatusValue.getValue(), IMessageProvider.ERROR);
+		}
+	}
 
 	
-	private void createPreprocessSection(FormToolkit toolkit, final ScrolledForm form) {
+	private void createPipelineContent(FormToolkit toolkit, final ScrolledForm form) {
 		
 		/*
 		 * POS tagger
@@ -143,11 +161,11 @@ public class PipelinePart2 {
 		setTableWrapLayout(taggerClient, 1);
 		
 
+		// The pos tagger
 		ComboViewer taggerComboViewer = createComboEntry(
 				taggerClient, 
 				"Tagger: ", 
-				taggerService.getTaggerConfigNames().toArray());
-
+				context.get(TaggerService.class).getTaggerConfigNames().toArray());
 		dbc.bindValue(
 				ViewerProperties.singleSelection().observe(taggerComboViewer), 
 				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__TAGGER_CONFIG_NAME).observeDetail(this.pipelineValue));
@@ -163,11 +181,12 @@ public class PipelinePart2 {
 				"The maximum number of terms in memory during document preprocessing. If the number of terms exceeds the limit, the innner spotted terminology will filter terms by frequency.");		
 		setTableWrapLayout(memoryClient, 2);
 
-
+		
+		// Text: Maximum number of terms in memory
 		Text memoryText = createTextEntry(
 				toolkit, 
 				memoryClient, 
-				"Limit: ");
+				"Maximum number of terms in memory: ");
 		Binding memoryBinding = dbc.bindValue(
 				WidgetProperties.text(SWT.Modify).observe(memoryText), 
 				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__MAX_NUM_TERMS_MEMORY).observeDetail(this.pipelineValue),
@@ -188,6 +207,7 @@ public class PipelinePart2 {
 		setTableWrapLayout(occurrenceClient, 1);
 
 		
+		// Radio: the occurrence mode
 		SelectObservableValue<EOccurrenceMode> buttonMode = createRadioEntry(
 				toolkit, 
 				occurrenceClient,
@@ -220,32 +240,42 @@ public class PipelinePart2 {
 				"TermSuite is able to detect semantic variants of a term (synonyms, antonyms, and hyperonyms). The algorithm is based on a inner synonym dictionary and a distributional alignment, i.e. on the similarity of terms' context vectors. Activating distributional alignment detects more candidates but also impact the precision and detection time. Note that you can improve drastically the performances by using your own synonym dictionary instead of the embedded one.");		
 		setTableWrapLayout(semanticClient, 2);
 
+		// Checkbox: enabled semantic variant detection
 		Button enableSemanticButton = createCheckbox(
 				toolkit, 
 				semanticClient, 
 				"Enable semantic variant detection");
 		applyTableWrapLayout(enableSemanticButton, 1, 2);
+		dbc.bindValue(
+				WidgetProperties.selection().observe(enableSemanticButton),
+				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__SEM_ENABLED).observeDetail(this.pipelineValue)
+				);
 
+		// Checkbox: the dico only method
 		Button semDicoOnlyButton = createCheckbox(
 				toolkit, 
 				semanticClient, 
 				"Dictionary only (deactivate distributional alignement)");
 		applyTableWrapLayout(semDicoOnlyButton, 1, 2);
+		dbc.bindValue(
+				WidgetProperties.selection().observe(semDicoOnlyButton),
+				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__SEM_DICO_ONLY).observeDetail(this.pipelineValue)
+				);
 
+		// Combo: the similarity measure
 		ComboViewer semanticSimMeasureViewer = createComboEntry(
 				semanticClient, 
 				"Semantic similary measure", 
 				ESimilarityMeasure.values());
-		
 		dbc.bindValue(
 				ViewerProperties.singleSelection().observe(semanticSimMeasureViewer), 
 				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__SEM_MEASURE).observeDetail(this.pipelineValue));
 
+		// Text: max number of candidates
 		Text maxCandidatesText = createTextEntry(
 				toolkit, 
 				semanticClient, 
 				"Max number of candidates per term: ");
-	
 		Binding maxBind = dbc.bindValue(
 				WidgetProperties.text(SWT.Modify).observe(maxCandidatesText), 
 				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__SEM_NUM_CANDIDATES).observeDetail(this.pipelineValue),
@@ -254,13 +284,14 @@ public class PipelinePart2 {
 				);
 		ControlDecorationSupport.create(maxBind, SWT.TOP | SWT.RIGHT);
 
+		
 		bindEnable(enableSemanticButton, 
 				maxCandidatesText, 
 				semanticSimMeasureViewer.getCombo(),
 				semDicoOnlyButton);
 
 		/*
-		 * Conextualizer
+		 * Contextualizer
 		 */
 		Composite contextualizerClient = createSection(
 				toolkit, 
@@ -274,6 +305,10 @@ public class PipelinePart2 {
 				contextualizerClient, 
 				"Enable contextualizer");
 		applyTableWrapLayout(enableContexualizerButton, 1, 2);
+		dbc.bindValue(
+				WidgetProperties.selection().observe(enableContexualizerButton),
+				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__CONTEXTUALIZER_ENABLED).observeDetail(this.pipelineValue)
+				);
 
 		ComboViewer assocMeasureViewer = createComboEntry(
 				contextualizerClient, 
@@ -300,6 +335,41 @@ public class PipelinePart2 {
 		bindEnable(enableContexualizerButton, 
 				scopeText, 
 				assocMeasureViewer.getCombo());
+		
+		
+		
+		/*
+		 * Run
+		 */
+		Composite runClient = createSection(
+				toolkit, 
+				form, 
+				"Run pipeline", 
+				null);
+		setTableWrapLayout(runClient, 1);
+
+
+		// The ok status message
+		Label okStatus = toolkit.createLabel(runClient, "The pipeline is valid", SWT.NONE);
+		okStatus.setForeground(TermSuiteUI.COLOR_GREEN);
+		dbc.bindValue(
+				WidgetProperties.visible().observe(okStatus),
+				pipelineValidValue
+			);
+
+		
+		
+		// The run link
+	    Composite composite = new Composite(runClient, SWT.NONE);
+	    composite.setLayout(new RowLayout(SWT.HORIZONTAL));
+	    Label imageLabel = new Label(composite, SWT.NONE);
+	    imageLabel.setImage(TermSuiteUI.getImg("icons/run_exc.png").createImage());
+	    Link runLink = new Link(composite, SWT.BORDER);
+		runLink.setText("<a>Run</a> this pipeline...");
+		dbc.bindValue(
+				pipelineValidValue, 
+				WidgetProperties.enabled().observe(runLink));
+		
 	}
 
 	private UpdateValueStrategy integerUpdateStrategy(int min, int max) {
@@ -345,9 +415,10 @@ public class PipelinePart2 {
 	private Composite createSection(FormToolkit toolkit, final ScrolledForm form, String sectionTitle,
 			String sectionDescription) {
 		Section section = toolkit.createSection(form.getBody(),
-				Section.DESCRIPTION | Section.TITLE_BAR);
+				 sectionDescription == null ? Section.TITLE_BAR : Section.TITLE_BAR | Section.DESCRIPTION);
 		section.setText(sectionTitle);
-		section.setDescription(sectionDescription);
+		if(sectionDescription != null)
+			section.setDescription(sectionDescription);
 		section.setExpanded(true);
 		Composite sectionClient = toolkit.createComposite(section);
 		section.setClient(sectionClient);
@@ -371,10 +442,6 @@ public class PipelinePart2 {
 		applyTableWrapLayout(l);
 	}
 
-	private void createExtractTerminoSection(FormToolkit toolkit, final ScrolledForm form) {
-		
-	}
-
 	private void setTableWrapLayout(Composite control, int numColumns) {
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = numColumns;
@@ -396,7 +463,7 @@ public class PipelinePart2 {
 		// save changes via ITodoService for example
 		try {
 			pipelineService.savePipeline(pipeline);
-
+			
 			// save was successful
 			dirty.setDirty(false);
 		} catch (IOException e) {

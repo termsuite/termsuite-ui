@@ -2,7 +2,6 @@
  */
 package fr.univnantes.termsuite.ui.model.termsuiteui.util;
 
-import fr.univnantes.termsuite.ui.model.termsuiteui.*;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
@@ -19,6 +18,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.EPipelineList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETaggerConfig;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;

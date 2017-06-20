@@ -110,7 +110,6 @@
   <handlers xmi:id="_fx9aAE19EeWpcYFej9JPeQ" elementId="fr.univnantes.termsuite.ui.handler.ImportCorpus" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.ImportCorpusHandler" command="_hzlTgE19EeWpcYFej9JPeQ"/>
   <handlers xmi:id="_OzodME_ZEeWST6jINIj7qQ" elementId="fr.univnantes.termsuite.ui.handler.OpenObject" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.OpenObjectHandler" command="_BSxgQE_ZEeWST6jINIj7qQ"/>
   <handlers xmi:id="_wJyT0FE9EeWJlbJYl3DYnQ" elementId="fr.univnantes.termsuite.ui.handler.NewPipeline" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.NewPipelineHandler" command="_paaRwFE9EeWJlbJYl3DYnQ"/>
-  <handlers xmi:id="_RsR0YFJBEeWNjZ8iJmBR2A" elementId="fr.univnantes.termsuite.ui.handler.RunPipelineOnSelectedCorpus" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.RunPipelineOnSelectedCorpusHandler" command="_U1zxIFJBEeWNjZ8iJmBR2A"/>
   <handlers xmi:id="_tsikIJ_zEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.handler.Save" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.SaveHandler" command="_GQqeAEyhEeWINr2AFtxMwQ"/>
   <handlers xmi:id="_Vo7PIMULEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.handler.SaveAll" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.SaveAllHandler" command="_RIfJ0MULEeWcSafn8uq1Yw"/>
   <handlers xmi:id="_wlcJ0MUUEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.handler.RunPipeline" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.RunPipelineHandler" command="_zpB2oMUUEeWcSafn8uq1Yw"/>
@@ -137,11 +136,7 @@
   </descriptors>
   <descriptors xmi:id="_g8PoEFE8EeWJlbJYl3DYnQ" elementId="fr.univnantes.termsuite.ui.partdescriptor.PipelineEditor2" label="Pipeline Editor" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/debugtt_obj.gif" allowMultiple="true" closeable="true" dirtyable="true" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.PipelinePart2">
     <toolbar xmi:id="_bV1A8MWiEeWpIJ-KlFcYkg" elementId="fr.univnantes.termsuite.ui.toolbar.2">
-      <children xsi:type="menu:HandledToolItem" xmi:id="_JQZiIFIeEeWJrZq1Fp2XFA" elementId="fr.univnantes.termsuite.ui.handledtoolitem.RunPipeline" label="Run pipeline" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/run_exc.png" command="_zpB2oMUUEeWcSafn8uq1Yw">
-        <menu xmi:id="_RiX3MMUQEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.menu.0">
-          <children xsi:type="menu:HandledMenuItem" xmi:id="_UStQ0MUQEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.handledmenuitem.runonselectedcorpus" label="Run on selected corpus" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/run_exc.png" command="_U1zxIFJBEeWNjZ8iJmBR2A"/>
-        </menu>
-      </children>
+      <children xsi:type="menu:HandledToolItem" xmi:id="_JQZiIFIeEeWJrZq1Fp2XFA" elementId="fr.univnantes.termsuite.ui.handledtoolitem.RunPipeline" label="Run pipeline" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/run_exc.png" command="_zpB2oMUUEeWcSafn8uq1Yw"/>
     </toolbar>
   </descriptors>
   <descriptors xmi:id="_fu8PwKASEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.partdescriptor.terminology" label="Terminology" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/hierarchicalLayout.png" allowMultiple="true" closeable="true" dirtyable="true" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.TerminologyPart">

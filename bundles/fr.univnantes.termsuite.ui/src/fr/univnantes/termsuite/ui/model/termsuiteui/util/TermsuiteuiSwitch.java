@@ -2,7 +2,6 @@
  */
 package fr.univnantes.termsuite.ui.model.termsuiteui.util;
 
-import fr.univnantes.termsuite.ui.model.termsuiteui.*;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
@@ -18,6 +17,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.EPipelineList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETaggerConfig;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;

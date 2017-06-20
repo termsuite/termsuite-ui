@@ -11,6 +11,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.Bundle;
 
 import com.google.common.collect.Maps;
@@ -55,6 +57,8 @@ public class TermSuiteUI {
 	public static final String SOURCE_TERMINOLOGY = "SourceTerminology";
 	public static final String TARGET_TERMINOLOGY = "TargetTerminology";
 	public static final String EDITABLE = "editable";
+	public static final Color COLOR_RED = Display.getDefault().getSystemColor(SWT.COLOR_RED);
+	public static final Color COLOR_GREEN = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GREEN);
 
 	public static ImageDescriptor getImg(String path) {
         Bundle bundle = Platform.getBundle(PLUGIN_ID);

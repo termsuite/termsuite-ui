@@ -2,7 +2,6 @@
  */
 package fr.univnantes.termsuite.ui.model.termsuiteui.impl;
 
-import fr.univnantes.termsuite.ui.model.termsuiteui.EAssocMeasure;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
@@ -10,6 +9,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
+import fr.univnantes.termsuite.ui.model.termsuiteui.EAssocMeasure;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EBilingualDictionary;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorporaList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;

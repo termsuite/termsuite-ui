@@ -211,4 +211,22 @@ public class ExtractorServiceImpl implements ExtractorService {
 		return options;
 	}
 
+
+
+	@Override
+	public String validatePipeline(EPipeline pipeline) {
+		if(!pipeline.isContextualizerEnabled() && pipeline.isSemEnabled() && !pipeline.isSemDicoOnly())
+				return "The contextualizer must be enabled when semantic variant detection is enabled.";
+		if(pipeline.getTaggerConfigName() == null)
+			return "A POS tagger must be selected.";			
+		return null;
+	}
+
+
+
+	@Override
+	public boolean isPipelineValid(EPipeline pipeline) {
+		return validatePipeline(pipeline) == null;
+	}
+
 }
