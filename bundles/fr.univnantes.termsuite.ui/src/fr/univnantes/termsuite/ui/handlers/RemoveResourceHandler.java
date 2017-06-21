@@ -18,7 +18,6 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.PipelineService;
-import fr.univnantes.termsuite.ui.services.TerminoService;
 
 public class RemoveResourceHandler {
 
@@ -27,7 +26,6 @@ public class RemoveResourceHandler {
 
 	@Execute
 	public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell, CorpusService corpusService,
-			TerminoService terminoService,
 			PipelineService pipelineService, ESelectionService selectionService, EPartService partService) {
 		Object s = selectionService.getSelection();
 
@@ -40,7 +38,7 @@ public class RemoveResourceHandler {
 			} else if (s instanceof ECorpus) {
 				corpusService.removeCorpus((ECorpus) s);
 			} else if (s instanceof ETerminology) {
-				terminoService.removeTerminology((ETerminology) s);
+				corpusService.removeTerminology((ETerminology) s);
 			}
 
 			for (MPart p : partService.getParts()) {

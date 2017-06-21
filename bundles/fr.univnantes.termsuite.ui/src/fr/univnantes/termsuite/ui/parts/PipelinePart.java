@@ -21,6 +21,7 @@ import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Persist;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.MDirtyable;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.databinding.EMFProperties;
@@ -67,6 +68,7 @@ import fr.univnantes.termsuite.ui.services.TaggerService;
 import fr.univnantes.termsuite.ui.util.jface.IntegerValidator;
 import fr.univnantes.termsuite.ui.util.jface.StringToIntegerConverter;
 
+@SuppressWarnings("restriction") 
 public class PipelinePart {
 
 	public static final String ID = "fr.univnantes.termsuite.ui.partdescriptor.PipelineEditor";
@@ -99,7 +101,7 @@ public class PipelinePart {
 	ScrolledForm form;
 
 	@Inject @Optional
-	private void init(@UIEventTopic(TermSuiteEvents.EDITOR_INITIATED) Object part) {
+	private void init(@UIEventTopic(TermSuiteEvents.EDITOR_INITIATED) Object part, MPart mPart) {
 		if(this == part) {
 			EPipeline pipeline = (EPipeline) context.get(TermSuiteUI.INPUT_OBJECT);
 			this.pipelineValue.setValue(pipeline);
@@ -107,8 +109,13 @@ public class PipelinePart {
 			pipeline.eAdapters().add(new EContentAdapter() {
 				public void notifyChanged(Notification notification) {
 					super.notifyChanged(notification);
-					dirty.setDirty(true);
-					validatePipeline();
+					if(notification.getFeature().equals(TermsuiteuiPackage.eINSTANCE.getEPipeline_Name())) {
+						mPart.setLabel(notification.getNewStringValue());
+					} else {
+						// set dirty, unless this is a pipeline rename
+						dirty.setDirty(true);
+						validatePipeline();
+					}
 				}
 			});
 			validatePipeline();
@@ -154,6 +161,7 @@ public class PipelinePart {
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	private void createPipelineContent(FormToolkit toolkit, final ScrolledForm form) {
 		
 		/*

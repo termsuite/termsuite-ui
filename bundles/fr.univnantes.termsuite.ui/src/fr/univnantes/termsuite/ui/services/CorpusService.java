@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
@@ -15,6 +16,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ECorporaList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
+import fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
@@ -34,12 +36,6 @@ public interface CorpusService {
 	 */
 	public Collection<ETerminology> getTerminologies();
 
-	public Path getDocumentPath(ESingleLanguageCorpus slc);
-
-	public Path getPath(ESingleLanguageCorpus slc);
-
-	public Path getPath(EDocument d);
-
 	public File asFile(EDocument d);
 
 	public ECorpus createCorpus(String name, String corpusPath);
@@ -53,6 +49,11 @@ public interface CorpusService {
 	 * @return
 	 */
 	public String getOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline);
+
+	
+	
+	public List<EDocument> getDocuments(ESingleLanguageCorpus corpus);
+	public List<ETerminology> getTerminologies(ESingleLanguageCorpus corpus);
 
 
 	public String getTerminoOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline, String extension);
@@ -70,9 +71,10 @@ public interface CorpusService {
 
 	
 	public void saveCorpus(ECorpus corpus) throws IOException;
-
-
 	public void removeCorpus(ECorpus s);
+	public ETerminology createTerminology(ESingleLanguageCorpus corpus, String terminologyName, EOccurrenceMode occMode,
+			boolean hasContexts);
+	public void removeTerminology(ETerminology s);
 
 	/**
 	 * Return the workspace {@link EDocument} object associated with a TermSuite {@link Document} object.
@@ -123,5 +125,29 @@ public interface CorpusService {
 	public File[] candidateSLCChildrenForPath(String path);
 
 	public TXTCorpus asTxtCorpus(ESingleLanguageCorpus corpus);
+
+	
+	
+	public Path getWorkspacePath(ECorpus resource);
+
+	public Path getWorkspacePath(ETerminology resource);
+
+	/**
+	 * The root path of the comparable corpus, where the document files actually are, in the filesystem.
+	 * 
+	 * @param corpus
+	 * @return
+	 * 
+	 */
+	public Path getSourcePath(ECorpus corpus);
+	
+	public Path getSourcePath(ESingleLanguageCorpus slc);
+
+	public Path getSourceTxtPath(ESingleLanguageCorpus slc);
+
+	public Path getSourcePath(EDocument d);
+
+	public Path getWorkspacePath(ESingleLanguageCorpus slc);
+
 
 }

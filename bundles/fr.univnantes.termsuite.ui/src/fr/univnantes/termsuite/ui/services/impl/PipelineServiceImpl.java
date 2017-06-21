@@ -1,6 +1,7 @@
 package fr.univnantes.termsuite.ui.services.impl;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,5 +110,11 @@ public class PipelineServiceImpl implements PipelineService {
 		return pipelines.getPipelines().stream()
 				.filter(p -> p.getName().equals(pipelineName))
 				.findFirst();
+	}
+
+
+	@Override
+	public Path getPath(EPipeline pipeline) {
+		return WorkspaceUtil.getWorkspacePath(PIPELINE_DIR, pipeline.getName() + "." + PIPELINE_EXTENSION);
 	}
 }

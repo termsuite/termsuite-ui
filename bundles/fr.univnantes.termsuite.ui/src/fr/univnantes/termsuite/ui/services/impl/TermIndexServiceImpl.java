@@ -1,12 +1,12 @@
 package fr.univnantes.termsuite.ui.services.impl;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Path;
 import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
@@ -27,11 +27,13 @@ import fr.univnantes.termsuite.ui.util.IOUtil;
 
 public class TermIndexServiceImpl implements TermIndexService {
 
+	@Inject
+	private IEclipseContext context;
 
 	private LoadingCache<ETerminology, IndexedCorpus> terminoCache = CacheBuilder.newBuilder().maximumSize(1).recordStats()
 			.build(new CacheLoader<ETerminology, IndexedCorpus>() {
 				public IndexedCorpus load(ETerminology terminology) throws IOException {
-					FileInputStream fis = new FileInputStream(terminology.getFilepath());
+					FileInputStream fis = new FileInputStream(getPath(terminology).toFile());
 					InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
 					IndexedCorpus termino = JsonTerminologyIO.load(
 							isr, 
@@ -48,7 +50,7 @@ public class TermIndexServiceImpl implements TermIndexService {
 
 	@Override
 	public void saveTermIndex(ETerminology terminology, IndexedCorpus termIndex, boolean withOccurrences, boolean withContexts) throws IOException {
-		FileOutputStream fos = new FileOutputStream(terminology.getFilepath());
+		FileOutputStream fos = new FileOutputStream(getPath(terminology).toFile());
 		Writer writer2 = new OutputStreamWriter(fos, "UTF-8");
 		JsonTerminologyIO.save(
 				writer2, 
@@ -58,8 +60,10 @@ public class TermIndexServiceImpl implements TermIndexService {
 		IOUtil.closeSilently(fos, writer2);
 	}
 
-	@Inject
-	private IEclipseContext context;
+	private Path getPath(ETerminology terminology) {
+		return context.get(CorpusService.class).getWorkspacePath(terminology);
+	}
+
 
 	@Override
 	public boolean removeTerminology(ETerminology terminology) {
@@ -67,7 +71,7 @@ public class TermIndexServiceImpl implements TermIndexService {
 		try {
 			context.get(CorpusService.class).saveCorpus(terminology.getCorpus().getCorpus());
 			terminoCache.invalidate(terminology);
-			return new File(terminology.getFilepath()).delete();
+			return getPath(terminology).toFile().delete();
 		} catch (IOException e) {
 			return false;
 		}
@@ -75,7 +79,7 @@ public class TermIndexServiceImpl implements TermIndexService {
 
 	@Override
 	public IndexedCorpus getTermIndexMetadata(ETerminology terminology) throws IOException {
-		FileInputStream fis = new FileInputStream(terminology.getFilepath());
+		FileInputStream fis = new FileInputStream(getPath(terminology).toFile());
 		InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
 		IndexedCorpus termino = JsonTerminologyIO.load(
 				isr, 

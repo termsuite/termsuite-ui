@@ -137,7 +137,7 @@ public class EPipelineImpl extends EResourceImpl implements EPipeline {
 	 * @generated
 	 * @ordered
 	 */
-	protected static final int CONTEXT_SCOPE_EDEFAULT = 0;
+	protected static final int CONTEXT_SCOPE_EDEFAULT = 3;
 
 	/**
 	 * The cached value of the '{@link #getContextScope() <em>Context Scope</em>}' attribute.

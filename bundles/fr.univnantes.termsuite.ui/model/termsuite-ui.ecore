@@ -18,18 +18,14 @@
         eType="#//ELang"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="corpus" lowerBound="1"
         eType="#//ECorpus" eOpposite="#//ECorpus/singleLanguageCorpora"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="documents" upperBound="-1"
-        eType="#//EDocument" containment="true" eOpposite="#//EDocument/singleLanguageCorpus"
-        eKeys="#//EDocument/filename"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="terminologies" upperBound="-1"
-        eType="#//ETerminology" containment="true" eOpposite="#//ETerminology/corpus"
-        eKeys="#//ETerminology/name"/>
+        eType="#//ETerminology" eOpposite="#//ETerminology/corpus"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EDocument" eSuperTypes="#//EResource">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="singleLanguageCorpus" lowerBound="1"
-        eType="#//ESingleLanguageCorpus" eOpposite="#//ESingleLanguageCorpus/documents"/>
+        eType="#//ESingleLanguageCorpus"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EPipeline" eSuperTypes="#//EResource">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="contextualizerEnabled"
@@ -59,8 +55,6 @@
         eType="#//EPipeline"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ETerminology" eSuperTypes="#//EResource">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filepath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        defaultValueLiteral=""/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral=""/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasOccurrences" lowerBound="1"
@@ -100,7 +94,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ELinguisticResourceSet">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="language" eType="#//ELang"
-        defaultValueLiteral=""/>
+        defaultValueLiteral="en"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="resources" upperBound="-1"
         eType="#//ELinguisticResource" containment="true" eOpposite="#//ELinguisticResource/resourceSet"/>
   </eClassifiers>

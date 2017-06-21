@@ -3,11 +3,9 @@
 package fr.univnantes.termsuite.ui.model.termsuiteui.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
@@ -47,6 +45,16 @@ public class EDocumentImpl extends EResourceImpl implements EDocument {
 	 * @ordered
 	 */
 	protected String filename = FILENAME_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getSingleLanguageCorpus() <em>Single Language Corpus</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSingleLanguageCorpus()
+	 * @generated
+	 * @ordered
+	 */
+	protected ESingleLanguageCorpus singleLanguageCorpus;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -94,8 +102,15 @@ public class EDocumentImpl extends EResourceImpl implements EDocument {
 	 * @generated
 	 */
 	public ESingleLanguageCorpus getSingleLanguageCorpus() {
-		if (eContainerFeatureID() != TermsuiteuiPackage.EDOCUMENT__SINGLE_LANGUAGE_CORPUS) return null;
-		return (ESingleLanguageCorpus)eInternalContainer();
+		if (singleLanguageCorpus != null && singleLanguageCorpus.eIsProxy()) {
+			InternalEObject oldSingleLanguageCorpus = (InternalEObject)singleLanguageCorpus;
+			singleLanguageCorpus = (ESingleLanguageCorpus)eResolveProxy(oldSingleLanguageCorpus);
+			if (singleLanguageCorpus != oldSingleLanguageCorpus) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TermsuiteuiPackage.EDOCUMENT__SINGLE_LANGUAGE_CORPUS, oldSingleLanguageCorpus, singleLanguageCorpus));
+			}
+		}
+		return singleLanguageCorpus;
 	}
 
 	/**
@@ -103,9 +118,8 @@ public class EDocumentImpl extends EResourceImpl implements EDocument {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetSingleLanguageCorpus(ESingleLanguageCorpus newSingleLanguageCorpus, NotificationChain msgs) {
-		msgs = eBasicSetContainer((InternalEObject)newSingleLanguageCorpus, TermsuiteuiPackage.EDOCUMENT__SINGLE_LANGUAGE_CORPUS, msgs);
-		return msgs;
+	public ESingleLanguageCorpus basicGetSingleLanguageCorpus() {
+		return singleLanguageCorpus;
 	}
 
 	/**
@@ -114,63 +128,10 @@ public class EDocumentImpl extends EResourceImpl implements EDocument {
 	 * @generated
 	 */
 	public void setSingleLanguageCorpus(ESingleLanguageCorpus newSingleLanguageCorpus) {
-		if (newSingleLanguageCorpus != eInternalContainer() || (eContainerFeatureID() != TermsuiteuiPackage.EDOCUMENT__SINGLE_LANGUAGE_CORPUS && newSingleLanguageCorpus != null)) {
-			if (EcoreUtil.isAncestor(this, newSingleLanguageCorpus))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
-			NotificationChain msgs = null;
-			if (eInternalContainer() != null)
-				msgs = eBasicRemoveFromContainer(msgs);
-			if (newSingleLanguageCorpus != null)
-				msgs = ((InternalEObject)newSingleLanguageCorpus).eInverseAdd(this, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__DOCUMENTS, ESingleLanguageCorpus.class, msgs);
-			msgs = basicSetSingleLanguageCorpus(newSingleLanguageCorpus, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TermsuiteuiPackage.EDOCUMENT__SINGLE_LANGUAGE_CORPUS, newSingleLanguageCorpus, newSingleLanguageCorpus));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case TermsuiteuiPackage.EDOCUMENT__SINGLE_LANGUAGE_CORPUS:
-				if (eInternalContainer() != null)
-					msgs = eBasicRemoveFromContainer(msgs);
-				return basicSetSingleLanguageCorpus((ESingleLanguageCorpus)otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case TermsuiteuiPackage.EDOCUMENT__SINGLE_LANGUAGE_CORPUS:
-				return basicSetSingleLanguageCorpus(null, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-		switch (eContainerFeatureID()) {
-			case TermsuiteuiPackage.EDOCUMENT__SINGLE_LANGUAGE_CORPUS:
-				return eInternalContainer().eInverseRemove(this, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__DOCUMENTS, ESingleLanguageCorpus.class, msgs);
-		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
+		ESingleLanguageCorpus oldSingleLanguageCorpus = singleLanguageCorpus;
+		singleLanguageCorpus = newSingleLanguageCorpus;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TermsuiteuiPackage.EDOCUMENT__SINGLE_LANGUAGE_CORPUS, oldSingleLanguageCorpus, singleLanguageCorpus));
 	}
 
 	/**
@@ -184,7 +145,8 @@ public class EDocumentImpl extends EResourceImpl implements EDocument {
 			case TermsuiteuiPackage.EDOCUMENT__FILENAME:
 				return getFilename();
 			case TermsuiteuiPackage.EDOCUMENT__SINGLE_LANGUAGE_CORPUS:
-				return getSingleLanguageCorpus();
+				if (resolve) return getSingleLanguageCorpus();
+				return basicGetSingleLanguageCorpus();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -236,7 +198,7 @@ public class EDocumentImpl extends EResourceImpl implements EDocument {
 			case TermsuiteuiPackage.EDOCUMENT__FILENAME:
 				return FILENAME_EDEFAULT == null ? filename != null : !FILENAME_EDEFAULT.equals(filename);
 			case TermsuiteuiPackage.EDOCUMENT__SINGLE_LANGUAGE_CORPUS:
-				return getSingleLanguageCorpus() != null;
+				return singleLanguageCorpus != null;
 		}
 		return super.eIsSet(featureID);
 	}

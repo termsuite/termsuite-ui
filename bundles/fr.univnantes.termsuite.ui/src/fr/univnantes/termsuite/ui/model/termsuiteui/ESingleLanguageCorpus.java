@@ -16,7 +16,6 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getLanguage <em>Language</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getCorpus <em>Corpus</em>}</li>
- *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getDocuments <em>Documents</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getTerminologies <em>Terminologies</em>}</li>
  * </ul>
  *
@@ -83,37 +82,19 @@ public interface ESingleLanguageCorpus extends EObject {
 	void setCorpus(ECorpus value);
 
 	/**
-	 * Returns the value of the '<em><b>Documents</b></em>' containment reference list.
-	 * The list contents are of type {@link fr.univnantes.termsuite.ui.model.termsuiteui.EDocument}.
-	 * It is bidirectional and its opposite is '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EDocument#getSingleLanguageCorpus <em>Single Language Corpus</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Documents</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Documents</em>' containment reference list.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getESingleLanguageCorpus_Documents()
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.EDocument#getSingleLanguageCorpus
-	 * @model opposite="singleLanguageCorpus" containment="true" keys="filename"
-	 * @generated
-	 */
-	EList<EDocument> getDocuments();
-
-	/**
-	 * Returns the value of the '<em><b>Terminologies</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Terminologies</b></em>' reference list.
 	 * The list contents are of type {@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology}.
 	 * It is bidirectional and its opposite is '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology#getCorpus <em>Corpus</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Terminologies</em>' containment reference list isn't clear,
+	 * If the meaning of the '<em>Terminologies</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Terminologies</em>' containment reference list.
+	 * @return the value of the '<em>Terminologies</em>' reference list.
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getESingleLanguageCorpus_Terminologies()
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology#getCorpus
-	 * @model opposite="corpus" containment="true" keys="name"
+	 * @model opposite="corpus"
 	 * @generated
 	 */
 	EList<ETerminology> getTerminologies();

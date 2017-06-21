@@ -1,6 +1,9 @@
 package fr.univnantes.termsuite.ui.services;
 
+import java.nio.file.Path;
 import java.util.List;
+
+import org.eclipse.emf.ecore.EObject;
 
 import fr.univnantes.termsuite.ui.model.termsuiteui.EResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
@@ -29,4 +32,13 @@ public interface ResourceService {
 	 */
 	public EResource fromModelTag(List<String> modelTags);
 	
+	
+	public boolean isRenameable(Class<? extends EObject> cls);
+
+	public void rename(EObject object, String newName);
+	public String getResourceName(EObject object);
+	public String canRename(EObject object, String newName);
+	public Path asFilePath(EObject object);
+	public void save(EResource resource);
+
 }

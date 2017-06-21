@@ -7,7 +7,6 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
@@ -21,7 +20,6 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminologyImpl#getFilepath <em>Filepath</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminologyImpl#getName <em>Name</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminologyImpl#isHasOccurrences <em>Has Occurrences</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminologyImpl#isHasContexts <em>Has Contexts</em>}</li>
@@ -31,26 +29,6 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
  * @generated
  */
 public class ETerminologyImpl extends EResourceImpl implements ETerminology {
-	/**
-	 * The default value of the '{@link #getFilepath() <em>Filepath</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getFilepath()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String FILEPATH_EDEFAULT = "";
-
-	/**
-	 * The cached value of the '{@link #getFilepath() <em>Filepath</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getFilepath()
-	 * @generated
-	 * @ordered
-	 */
-	protected String filepath = FILEPATH_EDEFAULT;
-
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -112,6 +90,16 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 	protected boolean hasContexts = HAS_CONTEXTS_EDEFAULT;
 
 	/**
+	 * The cached value of the '{@link #getCorpus() <em>Corpus</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getCorpus()
+	 * @generated
+	 * @ordered
+	 */
+	protected ESingleLanguageCorpus corpus;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -128,27 +116,6 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 	@Override
 	protected EClass eStaticClass() {
 		return TermsuiteuiPackage.Literals.ETERMINOLOGY;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getFilepath() {
-		return filepath;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setFilepath(String newFilepath) {
-		String oldFilepath = filepath;
-		filepath = newFilepath;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TermsuiteuiPackage.ETERMINOLOGY__FILEPATH, oldFilepath, filepath));
 	}
 
 	/**
@@ -220,8 +187,24 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 	 * @generated
 	 */
 	public ESingleLanguageCorpus getCorpus() {
-		if (eContainerFeatureID() != TermsuiteuiPackage.ETERMINOLOGY__CORPUS) return null;
-		return (ESingleLanguageCorpus)eInternalContainer();
+		if (corpus != null && corpus.eIsProxy()) {
+			InternalEObject oldCorpus = (InternalEObject)corpus;
+			corpus = (ESingleLanguageCorpus)eResolveProxy(oldCorpus);
+			if (corpus != oldCorpus) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TermsuiteuiPackage.ETERMINOLOGY__CORPUS, oldCorpus, corpus));
+			}
+		}
+		return corpus;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ESingleLanguageCorpus basicGetCorpus() {
+		return corpus;
 	}
 
 	/**
@@ -230,7 +213,12 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 	 * @generated
 	 */
 	public NotificationChain basicSetCorpus(ESingleLanguageCorpus newCorpus, NotificationChain msgs) {
-		msgs = eBasicSetContainer((InternalEObject)newCorpus, TermsuiteuiPackage.ETERMINOLOGY__CORPUS, msgs);
+		ESingleLanguageCorpus oldCorpus = corpus;
+		corpus = newCorpus;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TermsuiteuiPackage.ETERMINOLOGY__CORPUS, oldCorpus, newCorpus);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
 		return msgs;
 	}
 
@@ -240,12 +228,10 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 	 * @generated
 	 */
 	public void setCorpus(ESingleLanguageCorpus newCorpus) {
-		if (newCorpus != eInternalContainer() || (eContainerFeatureID() != TermsuiteuiPackage.ETERMINOLOGY__CORPUS && newCorpus != null)) {
-			if (EcoreUtil.isAncestor(this, newCorpus))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+		if (newCorpus != corpus) {
 			NotificationChain msgs = null;
-			if (eInternalContainer() != null)
-				msgs = eBasicRemoveFromContainer(msgs);
+			if (corpus != null)
+				msgs = ((InternalEObject)corpus).eInverseRemove(this, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES, ESingleLanguageCorpus.class, msgs);
 			if (newCorpus != null)
 				msgs = ((InternalEObject)newCorpus).eInverseAdd(this, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES, ESingleLanguageCorpus.class, msgs);
 			msgs = basicSetCorpus(newCorpus, msgs);
@@ -264,8 +250,8 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TermsuiteuiPackage.ETERMINOLOGY__CORPUS:
-				if (eInternalContainer() != null)
-					msgs = eBasicRemoveFromContainer(msgs);
+				if (corpus != null)
+					msgs = ((InternalEObject)corpus).eInverseRemove(this, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES, ESingleLanguageCorpus.class, msgs);
 				return basicSetCorpus((ESingleLanguageCorpus)otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
@@ -291,24 +277,8 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-		switch (eContainerFeatureID()) {
-			case TermsuiteuiPackage.ETERMINOLOGY__CORPUS:
-				return eInternalContainer().eInverseRemove(this, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES, ESingleLanguageCorpus.class, msgs);
-		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TermsuiteuiPackage.ETERMINOLOGY__FILEPATH:
-				return getFilepath();
 			case TermsuiteuiPackage.ETERMINOLOGY__NAME:
 				return getName();
 			case TermsuiteuiPackage.ETERMINOLOGY__HAS_OCCURRENCES:
@@ -316,7 +286,8 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 			case TermsuiteuiPackage.ETERMINOLOGY__HAS_CONTEXTS:
 				return isHasContexts();
 			case TermsuiteuiPackage.ETERMINOLOGY__CORPUS:
-				return getCorpus();
+				if (resolve) return getCorpus();
+				return basicGetCorpus();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -329,9 +300,6 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TermsuiteuiPackage.ETERMINOLOGY__FILEPATH:
-				setFilepath((String)newValue);
-				return;
 			case TermsuiteuiPackage.ETERMINOLOGY__NAME:
 				setName((String)newValue);
 				return;
@@ -356,9 +324,6 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TermsuiteuiPackage.ETERMINOLOGY__FILEPATH:
-				setFilepath(FILEPATH_EDEFAULT);
-				return;
 			case TermsuiteuiPackage.ETERMINOLOGY__NAME:
 				setName(NAME_EDEFAULT);
 				return;
@@ -383,8 +348,6 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TermsuiteuiPackage.ETERMINOLOGY__FILEPATH:
-				return FILEPATH_EDEFAULT == null ? filepath != null : !FILEPATH_EDEFAULT.equals(filepath);
 			case TermsuiteuiPackage.ETERMINOLOGY__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case TermsuiteuiPackage.ETERMINOLOGY__HAS_OCCURRENCES:
@@ -392,7 +355,7 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 			case TermsuiteuiPackage.ETERMINOLOGY__HAS_CONTEXTS:
 				return hasContexts != HAS_CONTEXTS_EDEFAULT;
 			case TermsuiteuiPackage.ETERMINOLOGY__CORPUS:
-				return getCorpus() != null;
+				return corpus != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -407,9 +370,7 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (filepath: ");
-		result.append(filepath);
-		result.append(", name: ");
+		result.append(" (name: ");
 		result.append(name);
 		result.append(", hasOccurrences: ");
 		result.append(hasOccurrences);

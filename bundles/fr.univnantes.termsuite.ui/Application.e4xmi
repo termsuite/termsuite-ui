@@ -13,7 +13,11 @@
                 <children xsi:type="menu:HandledMenuItem" xmi:id="_0kr18MmbEeWMTIcqIQJn_g" elementId="fr.univnantes.termsuite.ui.handledmenuitem.newpipeline" label="New pipeline..." tooltip="Creates a new pipeline" command="_paaRwFE9EeWJlbJYl3DYnQ"/>
                 <children xsi:type="menu:HandledMenuItem" xmi:id="_t0OOwMmbEeWMTIcqIQJn_g" elementId="fr.univnantes.termsuite.ui.handledmenuitem.importcorpus" label="Import corpus..." tooltip="Imports a new corpus to TermSuite" command="_hzlTgE19EeWpcYFej9JPeQ"/>
                 <children xsi:type="menu:MenuSeparator" xmi:id="__ZomQMmbEeWMTIcqIQJn_g" elementId="fr.univnantes.termsuite.ui.menuseparator.6"/>
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_oHCGIFZUEeejQOQ2nExhjw" elementId="fr.univnantes.termsuite.ui.handledmenuitem.rename" label="Rename..." tooltip="Rename the selected resource" command="_VYHv8FZUEeejQOQ2nExhjw">
+                  <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_svNLIFZUEeejQOQ2nExhjw" coreExpressionId="fr.univnantes.termsuite.ui.renameableresource"/>
+                </children>
                 <children xsi:type="menu:HandledMenuItem" xmi:id="_KpHNgEy4EeWINr2AFtxMwQ" elementId="fr.univnantes.termsuite.ui.handledmenuitem.remove" label="Remove" command="_RUf-4EyhEeWINr2AFtxMwQ"/>
+                <children xsi:type="menu:MenuSeparator" xmi:id="_k2_RsFZUEeejQOQ2nExhjw" elementId="fr.univnantes.termsuite.ui.menuseparator.2"/>
                 <children xsi:type="menu:HandledMenuItem" xmi:id="_xNHI0FWvEeefSMCel-Yjlw" elementId="fr.univnantes.termsuite.ui.handledmenuitem.runpipeline" label="Run pipeline" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/run_exc.png" command="_zpB2oMUUEeWcSafn8uq1Yw">
                   <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_ei2MoFWwEeefSMCel-Yjlw" coreExpressionId="fr.univnantes.termsuite.ui.pipelineselected"/>
                 </children>
@@ -120,6 +124,7 @@
   <handlers xmi:id="_vV23QMm0EeWMTIcqIQJn_g" elementId="fr.univnantes.termsuite.ui.handler.0" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.UpdateHandler" command="_qzb08Mm0EeWMTIcqIQJn_g"/>
   <handlers xmi:id="_hmTyUMwKEeWh7K416TAaxg" elementId="fr.univnantes.termsuite.ui.handler.About" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.AboutHandler" command="_cgtKcMwKEeWh7K416TAaxg"/>
   <handlers xmi:id="_X6dicORQEeWfCbb369iF9g" elementId="fr.univnantes.termsuite.ui.handler.CollapaseAllHandler" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.CollapseAllHandler" command="_BXGjQOIsEeWihJy1yCPB5A"/>
+  <handlers xmi:id="_f9ikwFZ7EeeezpBRMTiXXw" elementId="fr.univnantes.termsuite.ui.handler.Rename" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.RenameHandler" command="_VYHv8FZUEeejQOQ2nExhjw"/>
   <bindingTables xmi:id="_ZZiw8FITEeWJrZq1Fp2XFA" elementId="fr.univnantes.termsuite.ui.bindingtable.0" bindingContext="_aq_KsFITEeWJrZq1Fp2XFA">
     <bindings xmi:id="_0uye4J_zEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.keybinding.save" keySequence="M1+S" command="_GQqeAEyhEeWINr2AFtxMwQ">
       <tags>type:user</tags>
@@ -171,6 +176,9 @@
   <commands xmi:id="_lkpP8ORPEeWfCbb369iF9g" elementId="fr.univnantes.termsuite.ui.command.NextOccurrence" commandName="Next occurrence" description="Browse to next occurrence"/>
   <commands xmi:id="_ptTHYORPEeWfCbb369iF9g" elementId="fr.univnantes.termsuite.ui.command.PreviousOccurrence" commandName="Previous occurrence" description="Browse to previous occurrence"/>
   <commands xmi:id="_N3Eb4OYGEeWuJP7LFnU52Q" elementId="fr.univnantes.termsuite.ui.command.WrapText" commandName="Wrap text"/>
+  <commands xmi:id="_VYHv8FZUEeejQOQ2nExhjw" elementId="fr.univnantes.termsuite.ui.command.rename" commandName="Rename" description="Rename selected resource">
+    <parameters xmi:id="_ZwUfQFZUEeejQOQ2nExhjw" elementId="fr.univnantes.termsuite.ui.command.Rename.commandparameter.resource" name="Resource" optional="false"/>
+  </commands>
   <addons xmi:id="_jupbsUwBEeWIWrXS0l4jxg" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_jupbskwBEeWIWrXS0l4jxg" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_jupbs0wBEeWIWrXS0l4jxg" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

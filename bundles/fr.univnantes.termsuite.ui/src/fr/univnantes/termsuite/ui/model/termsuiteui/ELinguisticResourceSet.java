@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.EObject;
 public interface ELinguisticResourceSet extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Language</b></em>' attribute.
-	 * The default value is <code>""</code>.
+	 * The default value is <code>"en"</code>.
 	 * The literals are from the enumeration {@link fr.univnantes.termsuite.ui.model.termsuiteui.ELang}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -37,7 +37,7 @@ public interface ELinguisticResourceSet extends EObject {
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ELang
 	 * @see #setLanguage(ELang)
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getELinguisticResourceSet_Language()
-	 * @model default=""
+	 * @model default="en"
 	 * @generated
 	 */
 	ELang getLanguage();

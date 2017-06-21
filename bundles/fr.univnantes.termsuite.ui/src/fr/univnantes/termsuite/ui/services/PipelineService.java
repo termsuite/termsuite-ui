@@ -1,6 +1,7 @@
 package fr.univnantes.termsuite.ui.services;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Optional;
 
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
@@ -11,7 +12,6 @@ public interface PipelineService {
 
 	public static final String PIPELINE_EXTENSION = "pipeline";
 	public static final String PIPELINE_DIR = "pipelines";
-	public static final String DEFAULT_TERMINO_DIR = "terminologies";
 
 	public void savePipeline(EPipeline pipeline) throws IOException;
 
@@ -32,5 +32,7 @@ public interface PipelineService {
 	 * 			The pipeline as an {@link Optional}
 	 */
 	public Optional<EPipeline> getPipeline(String pipelineName);
+
+	public Path getPath(EPipeline resource);
 
 }

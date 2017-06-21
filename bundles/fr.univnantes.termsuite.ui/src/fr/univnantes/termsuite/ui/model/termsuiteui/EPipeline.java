@@ -90,6 +90,7 @@ public interface EPipeline extends EResource {
 
 	/**
 	 * Returns the value of the '<em><b>Context Scope</b></em>' attribute.
+	 * The default value is <code>"3"</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Context Scope</em>' attribute isn't clear,
@@ -99,7 +100,7 @@ public interface EPipeline extends EResource {
 	 * @return the value of the '<em>Context Scope</em>' attribute.
 	 * @see #setContextScope(int)
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getEPipeline_ContextScope()
-	 * @model
+	 * @model default="3"
 	 * @generated
 	 */
 	int getContextScope();

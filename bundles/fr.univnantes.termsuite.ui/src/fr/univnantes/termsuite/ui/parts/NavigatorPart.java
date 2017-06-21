@@ -15,11 +15,12 @@ import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.Focus;
-import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -125,7 +126,6 @@ public class NavigatorPart implements TreePart {
 			final ESelectionService selectionService,
 			EMenuService menuService,
 			IEventBroker eventBroker,
-			MPart part,
 			final ResourceService resourceService,
 			final EHandlerService handlerService,
 			final ECommandService commandService) {
@@ -201,6 +201,13 @@ public class NavigatorPart implements TreePart {
 		
 		revealTerminologies();
 	}
+	
+	@Inject @Optional
+	private void init(@UIEventTopic(TermSuiteEvents.OBJECT_RENAMED) EObject object) {
+		viewer.refresh(object);
+	}
+
+
 
 	private Object[] getRootNodes() {
 		List<Object> nodes = Lists.newArrayList();
@@ -265,13 +272,13 @@ public class NavigatorPart implements TreePart {
 							.getTerminologies()
 							.stream()
 							.filter(t -> {
-								File f = new File(t.getFilepath());
+								File f = corpusService.getWorkspacePath(t).toFile();
 								return f.exists() && f.length() > 0;
 							})
 							.toArray();
 				} else if (node.getNodeType() == NODE_FOLDER_DOCUMENT) {
 					ESingleLanguageCorpus c = (ESingleLanguageCorpus)node.getParent();
-					List<EDocument> documents = Lists.newArrayList(c.getDocuments());
+					List<EDocument> documents = corpusService.getDocuments(c);
 					Collections.sort(documents, TermSuiteUI.DOCUMENT_COMPARATOR);
 					return documents.toArray();
 				} else if (node.getNodeType() == NODE_RESOURCES) {
@@ -298,7 +305,7 @@ public class NavigatorPart implements TreePart {
 				List<Object> children = Lists.newArrayList();
 				if(!c.getTerminologies().isEmpty())
 					children.add(nodeManager.get(c, NODE_FOLDER_TERMINO));
-				if(!c.getDocuments().isEmpty())
+				if(!corpusService.getDocuments(c).isEmpty())
 					children.add(nodeManager.get(c, NODE_FOLDER_DOCUMENT));
 				return children.toArray();
 			}
@@ -353,7 +360,7 @@ public class NavigatorPart implements TreePart {
 					return !c.getTerminologies().isEmpty();
 				} else if (node.getNodeType() == NODE_FOLDER_DOCUMENT) {
 						ESingleLanguageCorpus c = (ESingleLanguageCorpus)node.getParent();
-						return !c.getDocuments().isEmpty();
+						return !corpusService.getDocuments(c).isEmpty();
 				}
 			} else if(element instanceof ECorpus)
 				return true;
@@ -439,7 +446,7 @@ public class NavigatorPart implements TreePart {
 			} else if (cell.getElement() instanceof ESingleLanguageCorpus) {
 				ESingleLanguageCorpus c = (ESingleLanguageCorpus) cell.getElement();
 				text.append(LangUtil.getTermsuiteLang(c.getLanguage()).getNameUC());
-				text.append(" (" + c.getDocuments().size() + ") ", StyledString.COUNTER_STYLER);
+				text.append(" (" + corpusService.getDocuments(c).size() + ") ", StyledString.COUNTER_STYLER);
 				cell.setImage(img.getFlag(c.getLanguage()));
 			}
 			cell.setText(text.toString());

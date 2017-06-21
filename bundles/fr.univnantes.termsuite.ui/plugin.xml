@@ -28,6 +28,23 @@
             </instanceof>
          </with>
       </definition>
+      <definition
+            id="fr.univnantes.termsuite.ui.renameableresource">
+         <with
+               variable="org.eclipse.ui.selection">
+            <or>
+               <instanceof
+                     value="fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline">
+               </instanceof>
+               <instanceof
+                     value="fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology">
+               </instanceof>
+               <instanceof
+                     value="fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus">
+               </instanceof>
+            </or>
+         </with>
+      </definition>
    </extension>
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated termsuite-ui -->

@@ -46,7 +46,7 @@ public class PreprocessorServiceImpl implements PreprocessorService {
 		String jobName = String.format("Preprocessing corpus %s - %s (%d documents)", 
 				corpus.getCorpus().getName(), 
 				corpus.getLanguage().getName(), 
-				corpus.getDocuments().size());
+				context.get(CorpusService.class).getDocuments(corpus).size());
 		Job job = Job.create(jobName, monitor -> {
 			final int totalWork = 1000;
 			CorpusService corpusService = context.get(CorpusService.class);

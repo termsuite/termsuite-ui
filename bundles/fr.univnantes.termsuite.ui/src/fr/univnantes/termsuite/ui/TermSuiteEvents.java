@@ -19,6 +19,7 @@ public class TermSuiteEvents {
 	 * A job has started
 	 */
 	public static final String JOB_STARTED = "jobStarted";
+	public static final String OBJECT_RENAMED = "objectRenamed";
 	
 
 }

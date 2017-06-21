@@ -12,7 +12,6 @@ package fr.univnantes.termsuite.ui.model.termsuiteui;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology#getFilepath <em>Filepath</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology#getName <em>Name</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology#isHasOccurrences <em>Has Occurrences</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology#isHasContexts <em>Has Contexts</em>}</li>
@@ -24,33 +23,6 @@ package fr.univnantes.termsuite.ui.model.termsuiteui;
  * @generated
  */
 public interface ETerminology extends EResource {
-	/**
-	 * Returns the value of the '<em><b>Filepath</b></em>' attribute.
-	 * The default value is <code>""</code>.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Filepath</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Filepath</em>' attribute.
-	 * @see #setFilepath(String)
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getETerminology_Filepath()
-	 * @model default=""
-	 * @generated
-	 */
-	String getFilepath();
-
-	/**
-	 * Sets the value of the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology#getFilepath <em>Filepath</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Filepath</em>' attribute.
-	 * @see #getFilepath()
-	 * @generated
-	 */
-	void setFilepath(String value);
-
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * The default value is <code>""</code>.
@@ -133,7 +105,7 @@ public interface ETerminology extends EResource {
 	void setHasContexts(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Corpus</b></em>' container reference.
+	 * Returns the value of the '<em><b>Corpus</b></em>' reference.
 	 * It is bidirectional and its opposite is '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getTerminologies <em>Terminologies</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -141,20 +113,20 @@ public interface ETerminology extends EResource {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Corpus</em>' container reference.
+	 * @return the value of the '<em>Corpus</em>' reference.
 	 * @see #setCorpus(ESingleLanguageCorpus)
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getETerminology_Corpus()
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getTerminologies
-	 * @model opposite="terminologies" required="true" transient="false"
+	 * @model opposite="terminologies" required="true"
 	 * @generated
 	 */
 	ESingleLanguageCorpus getCorpus();
 
 	/**
-	 * Sets the value of the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology#getCorpus <em>Corpus</em>}' container reference.
+	 * Sets the value of the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology#getCorpus <em>Corpus</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Corpus</em>' container reference.
+	 * @param value the new value of the '<em>Corpus</em>' reference.
 	 * @see #getCorpus()
 	 * @generated
 	 */

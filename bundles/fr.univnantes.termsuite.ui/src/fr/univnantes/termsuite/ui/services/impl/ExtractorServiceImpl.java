@@ -49,7 +49,6 @@ import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.ExtractorService;
 import fr.univnantes.termsuite.ui.services.LinguisticResourcesService;
 import fr.univnantes.termsuite.ui.services.PreprocessorService;
-import fr.univnantes.termsuite.ui.services.TerminoService;
 import fr.univnantes.termsuite.ui.util.Jobs;
 
 public class ExtractorServiceImpl implements ExtractorService {
@@ -59,7 +58,6 @@ public class ExtractorServiceImpl implements ExtractorService {
 
 	@Inject UISynchronize sync;
 
-	
 	@Inject EPartService partService;
 
 	@Inject
@@ -130,19 +128,17 @@ public class ExtractorServiceImpl implements ExtractorService {
 		job.addJobChangeListener(new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
-				TerminoService terminoService = context.get(TerminoService.class);
 				CorpusService corpusService = context.get(CorpusService.class);
-				ETerminology terminology = terminoService.createTerminology(
+				ETerminology terminology = corpusService.createTerminology(
 						corpus, 
 						pipeline.getName(), 
-						corpusService.getTerminoJsonFile(corpus, pipeline),
 						pipeline.getOccurrenceMode(),
 						pipeline.isContextualizerEnabled());
 				try {
 					context.get(CorpusService.class).saveCorpus(corpus.getCorpus());
 					eventBroker.post(TermSuiteEvents.NEW_TERMINOLOGY, terminology);
 				} catch(IOException e) {
-					MessageDialog.openError(activeShell, "Error saving terminology", e.getMessage());
+					sync.asyncExec(()->MessageDialog.openError(activeShell, "Error saving terminology", e.getMessage()));
 				}
 			}
 		});
@@ -152,12 +148,7 @@ public class ExtractorServiceImpl implements ExtractorService {
 		eventBroker.post(TermSuiteEvents.JOB_STARTED, job.getName());
 
 		// Set a better priority than preprocess
-		sync.asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				partService.showPart(TermSuiteUI.PROGRESS_VIEW_ID, PartState.VISIBLE);
-			}
-		});
+		sync.asyncExec(()->partService.showPart(TermSuiteUI.PROGRESS_VIEW_ID, PartState.VISIBLE));
 	}
 
 
@@ -217,8 +208,6 @@ public class ExtractorServiceImpl implements ExtractorService {
 		return options;
 	}
 
-
-
 	@Override
 	public String validatePipeline(EPipeline pipeline) {
 		if(!pipeline.isContextualizerEnabled() && pipeline.isSemEnabled() && !pipeline.isSemDicoOnly())
@@ -228,11 +217,8 @@ public class ExtractorServiceImpl implements ExtractorService {
 		return null;
 	}
 
-
-
 	@Override
 	public boolean isPipelineValid(EPipeline pipeline) {
 		return validatePipeline(pipeline) == null;
 	}
-
 }

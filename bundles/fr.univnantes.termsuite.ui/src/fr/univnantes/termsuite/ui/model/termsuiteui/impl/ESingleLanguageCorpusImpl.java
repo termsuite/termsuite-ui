@@ -11,12 +11,11 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
-import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
@@ -32,7 +31,6 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
  * <ul>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ESingleLanguageCorpusImpl#getLanguage <em>Language</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ESingleLanguageCorpusImpl#getCorpus <em>Corpus</em>}</li>
- *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ESingleLanguageCorpusImpl#getDocuments <em>Documents</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ESingleLanguageCorpusImpl#getTerminologies <em>Terminologies</em>}</li>
  * </ul>
  *
@@ -60,17 +58,7 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 	protected ELang language = LANGUAGE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getDocuments() <em>Documents</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDocuments()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<EDocument> documents;
-
-	/**
-	 * The cached value of the '{@link #getTerminologies() <em>Terminologies</em>}' containment reference list.
+	 * The cached value of the '{@link #getTerminologies() <em>Terminologies</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getTerminologies()
@@ -165,21 +153,9 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<EDocument> getDocuments() {
-		if (documents == null) {
-			documents = new EObjectContainmentWithInverseEList<EDocument>(EDocument.class, this, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__DOCUMENTS, TermsuiteuiPackage.EDOCUMENT__SINGLE_LANGUAGE_CORPUS);
-		}
-		return documents;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EList<ETerminology> getTerminologies() {
 		if (terminologies == null) {
-			terminologies = new EObjectContainmentWithInverseEList<ETerminology>(ETerminology.class, this, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES, TermsuiteuiPackage.ETERMINOLOGY__CORPUS);
+			terminologies = new EObjectWithInverseResolvingEList<ETerminology>(ETerminology.class, this, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES, TermsuiteuiPackage.ETERMINOLOGY__CORPUS);
 		}
 		return terminologies;
 	}
@@ -197,8 +173,6 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 				if (eInternalContainer() != null)
 					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetCorpus((ECorpus)otherEnd, msgs);
-			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__DOCUMENTS:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getDocuments()).basicAdd(otherEnd, msgs);
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getTerminologies()).basicAdd(otherEnd, msgs);
 		}
@@ -215,8 +189,6 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 		switch (featureID) {
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__CORPUS:
 				return basicSetCorpus(null, msgs);
-			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__DOCUMENTS:
-				return ((InternalEList<?>)getDocuments()).basicRemove(otherEnd, msgs);
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES:
 				return ((InternalEList<?>)getTerminologies()).basicRemove(otherEnd, msgs);
 		}
@@ -249,8 +221,6 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 				return getLanguage();
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__CORPUS:
 				return getCorpus();
-			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__DOCUMENTS:
-				return getDocuments();
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES:
 				return getTerminologies();
 		}
@@ -271,10 +241,6 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 				return;
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__CORPUS:
 				setCorpus((ECorpus)newValue);
-				return;
-			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__DOCUMENTS:
-				getDocuments().clear();
-				getDocuments().addAll((Collection<? extends EDocument>)newValue);
 				return;
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES:
 				getTerminologies().clear();
@@ -298,9 +264,6 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__CORPUS:
 				setCorpus((ECorpus)null);
 				return;
-			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__DOCUMENTS:
-				getDocuments().clear();
-				return;
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES:
 				getTerminologies().clear();
 				return;
@@ -320,8 +283,6 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 				return language != LANGUAGE_EDEFAULT;
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__CORPUS:
 				return getCorpus() != null;
-			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__DOCUMENTS:
-				return documents != null && !documents.isEmpty();
 			case TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES:
 				return terminologies != null && !terminologies.isEmpty();
 		}

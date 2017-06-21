@@ -42,7 +42,7 @@ public class ELinguisticResourceSetImpl extends MinimalEObjectImpl.Container imp
 	 * @generated
 	 * @ordered
 	 */
-	protected static final ELang LANGUAGE_EDEFAULT = ELang.FR;
+	protected static final ELang LANGUAGE_EDEFAULT = ELang.EN;
 
 	/**
 	 * The cached value of the '{@link #getLanguage() <em>Language</em>}' attribute.

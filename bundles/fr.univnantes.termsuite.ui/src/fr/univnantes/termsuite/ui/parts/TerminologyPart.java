@@ -20,6 +20,8 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
@@ -49,6 +51,7 @@ import fr.univnantes.termsuite.ui.controls.DelayedModificationListener;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
+import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
 import fr.univnantes.termsuite.ui.services.TermIndexService;
 import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
 import fr.univnantes.termsuite.ui.util.treeviewer.TreePart;
@@ -228,9 +231,20 @@ public class TerminologyPart implements TreePart {
 	}
 
 	@Inject @Optional
-	private void init(@UIEventTopic(TermSuiteEvents.EDITOR_INITIATED) Object part) {
+	private void init(@UIEventTopic(TermSuiteEvents.EDITOR_INITIATED) Object part, MPart mPart) {
 		if(this == part) {
 			ETerminology terminology = (ETerminology)context.get(TermSuiteUI.INPUT_OBJECT);
+			terminology.eAdapters().add(new EContentAdapter() {
+				public void notifyChanged(Notification notification) {
+					super.notifyChanged(notification);
+					if(notification.getFeature().equals(TermsuiteuiPackage.eINSTANCE.getETerminology_Name())) {
+						mPart.setLabel(notification.getNewStringValue());
+					} else {
+						// set dirty
+//						dirty.setDirty(true);
+					}
+				}
+			});
 			try {
 				if(terminology != null) {
 					final IndexedCorpus termIndex = termIndexService.getTermIndex(terminology);
@@ -252,7 +266,6 @@ public class TerminologyPart implements TreePart {
 							"Could not open Terminology",
 							"No termino found in context.");
 			} catch (ExecutionException e) {
-				e.printStackTrace();
 				MessageDialog.openError(parent.getShell(), "Could not open Terminology", e.getMessage());
 			}
 		}

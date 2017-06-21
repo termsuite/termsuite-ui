@@ -8,7 +8,9 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -23,6 +25,7 @@ import javax.inject.Singleton;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.core.services.log.ILoggerProvider;
 import org.eclipse.e4.core.services.log.Logger;
@@ -31,8 +34,10 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
+import com.google.common.base.Preconditions;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -41,6 +46,7 @@ import com.google.common.collect.Maps;
 import com.google.common.primitives.Ints;
 
 import fr.univnantes.termsuite.api.TXTCorpus;
+import fr.univnantes.termsuite.api.TermSuiteException;
 import fr.univnantes.termsuite.model.Document;
 import fr.univnantes.termsuite.model.Lang;
 import fr.univnantes.termsuite.model.TermOccurrence;
@@ -51,6 +57,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ECorporaList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
+import fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
@@ -82,6 +89,9 @@ public class CorpusServiceImpl implements CorpusService {
 	@Named(IServiceConstants.ACTIVE_SHELL) 
 	private Shell parent;
 	
+	@Inject @Preference(nodePath=TermSuiteUIPreferences.NODE_GENERAL, value = TermSuiteUIPreferences.OUTPUT_DIRECTORY)
+	protected String outputDirectory;
+	
 	private Logger logger;
 	
 	private Map<URI, EDocument> documentCache = null;
@@ -94,6 +104,7 @@ public class CorpusServiceImpl implements CorpusService {
 	private static final String JSON_EXTENSION = "json";
 	private static final String TBX_EXTENSION = "tbx";
 	private static final String TSV_EXTENSION = "tsv";
+
 
 	
 	private ECorporaList corpora = TermsuiteuiFactory.eINSTANCE.createECorporaList();
@@ -123,41 +134,11 @@ public class CorpusServiceImpl implements CorpusService {
 	}
 
 	/* (non-Javadoc)
-	 * @see fr.univnantes.termsuite.ui.services.CorpusService#getDocumentPath(fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus)
-	 */
-	@Override
-	public Path getDocumentPath(ESingleLanguageCorpus slc) {
-		Path path = Paths.get(getPath(slc).toString(), "txt");
-		return path;
-	}
-	
-	/* (non-Javadoc)
-	 * @see fr.univnantes.termsuite.ui.services.CorpusService#getPath(fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus)
-	 */
-	@Override
-	public Path getPath(ESingleLanguageCorpus slc) {
-		Lang termsuiteLang = LangUtil.getTermsuiteLang(slc.getLanguage());
-		String corpusPath = slc.getCorpus().getPath();
-		Path path = Paths.get(corpusPath, termsuiteLang.getNameUC());
-		return path;
-	}
-	
-	/* (non-Javadoc)
-	 * @see fr.univnantes.termsuite.ui.services.CorpusService#getPath(fr.univnantes.termsuite.ui.model.termsuiteui.EDocument)
-	 */
-	@Override
-	public Path getPath(EDocument d) {
-		String string = getDocumentPath(d.getSingleLanguageCorpus()).toString();
-		Path path = Paths.get(string, d.getFilename());
-		return path;
-	}
-
-	/* (non-Javadoc)
 	 * @see fr.univnantes.termsuite.ui.services.CorpusService#asFile(fr.univnantes.termsuite.ui.model.termsuiteui.EDocument)
 	 */
 	@Override
 	public File asFile(EDocument d) {
-		Path path = getPath(d);
+		Path path = getSourcePath(d);
 		return path.toFile();
 	}
 
@@ -173,12 +154,6 @@ public class CorpusServiceImpl implements CorpusService {
 			ESingleLanguageCorpus slc = TermsuiteuiFactory.eINSTANCE.createESingleLanguageCorpus();
 			slc.setCorpus(corpus);
 			slc.setLanguage(LangUtil.getLangByNameUC(sl.getName()));
-			
-			for(File f:getDocumentPath(slc).toFile().listFiles()) {
-				EDocument doc = TermsuiteuiFactory.eINSTANCE.createEDocument();
-				doc.setFilename(f.getName());
-				slc.getDocuments().add(doc);
-			}
 			corpus.getSingleLanguageCorpora().add(slc);
 		}
 		corpora.getCorpora().add(corpus);
@@ -186,7 +161,7 @@ public class CorpusServiceImpl implements CorpusService {
 		try {
 			saveCorpus(corpus);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new TermSuiteException(e);
 		}
 		return corpus;
 	}
@@ -233,6 +208,40 @@ public class CorpusServiceImpl implements CorpusService {
 	public void saveCorpus(ECorpus corpus) throws IOException {
 		resetCache();
 		WorkspaceUtil.saveResource(corpus, CORPUS_DIR, corpus.getName(), CORPUS_EXTENSION);
+	}
+
+	@Override
+	public ETerminology createTerminology(ESingleLanguageCorpus corpus, String terminologyName, EOccurrenceMode occMode, boolean hasContexts) {
+		/*
+		 * Ensure that any termino with the same name is removed. 
+		 * (Override behaviour)
+		 */
+		
+		for(Iterator<ETerminology> it = corpus.getTerminologies().iterator(); it.hasNext(); )
+			if(it.next().getName().equals(terminologyName))
+				it.remove();
+		ETerminology terminology = TermsuiteuiFactory.eINSTANCE.createETerminology();
+		terminology.setName(terminologyName);
+		terminology.setHasOccurrences(occMode != EOccurrenceMode.DO_NOT_KEEP);
+		terminology.setHasContexts(hasContexts);
+		
+		corpus.getTerminologies().add(terminology);
+		
+		return terminology;
+	}
+	
+	
+	@Override
+	public void removeTerminology(ETerminology s) {
+		ECorpus corpus = s.getCorpus().getCorpus();
+		s.getCorpus().getTerminologies().remove(s);
+		try {
+			context.get(CorpusService.class).saveCorpus(corpus);
+			getWorkspacePath(s).toFile().delete();
+			eventBroker.post(TermSuiteEvents.TERMINOLOGY_REMOVED, s);
+		} catch (IOException e) {
+			MessageDialog.openError(parent, "Error", "Could not remove the terminology. Error: " + e.getMessage());
+		}
 	}
 
 
@@ -333,7 +342,7 @@ public class CorpusServiceImpl implements CorpusService {
 			documentCache = Maps.newHashMap();
 			for (ECorpus corpus : getCorporaList().getCorpora()) {
 				for (ESingleLanguageCorpus slc : corpus.getSingleLanguageCorpora()) {
-					for (EDocument d : slc.getDocuments()) {
+					for (EDocument d : getDocuments(slc)) {
 						File file = asFile(d);
 						documentCache.put(file.toURI(), d);
 						documentCache.put(file.toURI(), d);
@@ -401,8 +410,7 @@ public class CorpusServiceImpl implements CorpusService {
 			}
 			return line;
 		} catch (ExecutionException e) {
-			e.printStackTrace();
-			return 0;
+			throw new TermSuiteException(e);
 		}
 	}
 
@@ -442,7 +450,91 @@ public class CorpusServiceImpl implements CorpusService {
 	public TXTCorpus asTxtCorpus(ESingleLanguageCorpus corpus) {
 		return new TXTCorpus(
 				Lang.forName(corpus.getLanguage().getName().toLowerCase()), 
-				getDocumentPath(corpus));
+				getSourcePath(corpus));
 	}
 
+	private Path getOutputPath() {
+		checkOutput();
+		Path output = Paths.get(outputDirectory);
+		output.toFile().mkdirs();
+		return output;
+	}
+	@Override
+	public Path getWorkspacePath(ECorpus corpus) {
+		return getOutputPath().resolve(corpus.getName());
+	}
+
+	private void checkOutput() {
+		Preconditions.checkNotNull(outputDirectory, "Output path not defined");
+		Preconditions.checkState(Paths.get(outputDirectory).toFile().exists(), "Output path does not exist: %s", outputDirectory);
+		Preconditions.checkState(Paths.get(outputDirectory).toFile().isDirectory(), "Output path is not a valid directory: %s", outputDirectory);
+	}
+
+	@Override
+	public Path getWorkspacePath(ESingleLanguageCorpus slc) {
+		return getWorkspacePath(slc.getCorpus()).resolve(slc.getLanguage().toString());
+	}
+
+	@Override
+	public Path getWorkspacePath(ETerminology resource) {
+		return getWorkspacePath(resource.getCorpus()).resolve(resource.getName() + "." + JSON_EXTENSION);
+	}
+	
+	/* (non-Javadoc)
+	 * @see fr.univnantes.termsuite.ui.services.CorpusService#getPath(fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus)
+	 */
+	@Override
+	public Path getSourcePath(ESingleLanguageCorpus slc) {
+		Lang termsuiteLang = LangUtil.getTermsuiteLang(slc.getLanguage());
+		return getSourcePath(slc.getCorpus()).resolve(termsuiteLang.getNameUC());
+	}
+	
+	@Override
+	public Path getSourcePath(ECorpus corpus) {
+		return Paths.get(corpus.getPath());
+	}
+
+	
+	/* (non-Javadoc)
+	 * @see fr.univnantes.termsuite.ui.services.CorpusService#getPath(fr.univnantes.termsuite.ui.model.termsuiteui.EDocument)
+	 */
+	@Override
+	public Path getSourcePath(EDocument d) {
+		return getSourceTxtPath(d.getSingleLanguageCorpus()).resolve(d.getFilename());
+	}
+
+	@Override
+	public Path getSourceTxtPath(ESingleLanguageCorpus slc) {
+		return getSourcePath(slc).resolve("txt");	
+	}
+
+	LoadingCache<ESingleLanguageCorpus, List<EDocument>> corpusCache = CacheBuilder.newBuilder()
+			.build(new CacheLoader<ESingleLanguageCorpus, List<EDocument>>() {
+				@Override
+				public List<EDocument> load(ESingleLanguageCorpus slc) throws Exception {
+					List<EDocument> documents = new ArrayList<>();
+					for(File f:getSourceTxtPath(slc).toFile().listFiles()) {
+						EDocument doc = TermsuiteuiFactory.eINSTANCE.createEDocument();
+						doc.setFilename(f.getName());
+						doc.setSingleLanguageCorpus(slc);
+						documents.add(doc);
+					}
+					return documents;
+				}
+			});
+	
+	@Override
+	public List<EDocument> getDocuments(ESingleLanguageCorpus slc) {
+		return corpusCache.getUnchecked(slc);
+	}
+
+	@Override
+	public List<ETerminology> getTerminologies(ESingleLanguageCorpus slc) {
+		List<ETerminology> terminologies = new ArrayList<>();
+		for(File f:getWorkspacePath(slc).toFile().listFiles(f -> f.getName().endsWith("."+JSON_EXTENSION))) {
+			ETerminology termino = WorkspaceUtil.loadResource(f.getPath(), ETerminology.class);
+			terminologies.add(termino);	
+		}
+		return terminologies;
+	}
 }
