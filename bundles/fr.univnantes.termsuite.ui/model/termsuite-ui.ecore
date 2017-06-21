@@ -19,7 +19,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="corpus" lowerBound="1"
         eType="#//ECorpus" eOpposite="#//ECorpus/singleLanguageCorpora"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="terminologies" upperBound="-1"
-        eType="#//ETerminology" eOpposite="#//ETerminology/corpus"/>
+        eType="#//ETerminology" containment="true" eOpposite="#//ETerminology/corpus"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EDocument" eSuperTypes="#//EResource">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" lowerBound="1"

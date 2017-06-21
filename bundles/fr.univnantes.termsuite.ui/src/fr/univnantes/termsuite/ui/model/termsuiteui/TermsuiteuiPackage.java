@@ -178,7 +178,7 @@ public interface TermsuiteuiPackage extends EPackage {
 	int ESINGLE_LANGUAGE_CORPUS__CORPUS = 1;
 
 	/**
-	 * The feature id for the '<em><b>Terminologies</b></em>' reference list.
+	 * The feature id for the '<em><b>Terminologies</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -525,7 +525,7 @@ public interface TermsuiteuiPackage extends EPackage {
 	int ETERMINOLOGY__HAS_CONTEXTS = ERESOURCE_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Corpus</b></em>' reference.
+	 * The feature id for the '<em><b>Corpus</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1049,10 +1049,10 @@ public interface TermsuiteuiPackage extends EPackage {
 	EReference getESingleLanguageCorpus_Corpus();
 
 	/**
-	 * Returns the meta object for the reference list '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getTerminologies <em>Terminologies</em>}'.
+	 * Returns the meta object for the containment reference list '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getTerminologies <em>Terminologies</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Terminologies</em>'.
+	 * @return the meta object for the containment reference list '<em>Terminologies</em>'.
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getTerminologies()
 	 * @see #getESingleLanguageCorpus()
 	 * @generated
@@ -1298,10 +1298,10 @@ public interface TermsuiteuiPackage extends EPackage {
 	EAttribute getETerminology_HasContexts();
 
 	/**
-	 * Returns the meta object for the reference '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology#getCorpus <em>Corpus</em>}'.
+	 * Returns the meta object for the container reference '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology#getCorpus <em>Corpus</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Corpus</em>'.
+	 * @return the meta object for the container reference '<em>Corpus</em>'.
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology#getCorpus()
 	 * @see #getETerminology()
 	 * @generated
@@ -1760,7 +1760,7 @@ public interface TermsuiteuiPackage extends EPackage {
 		EReference ESINGLE_LANGUAGE_CORPUS__CORPUS = eINSTANCE.getESingleLanguageCorpus_Corpus();
 
 		/**
-		 * The meta object literal for the '<em><b>Terminologies</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Terminologies</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1952,7 +1952,7 @@ public interface TermsuiteuiPackage extends EPackage {
 		EAttribute ETERMINOLOGY__HAS_CONTEXTS = eINSTANCE.getETerminology_HasContexts();
 
 		/**
-		 * The meta object literal for the '<em><b>Corpus</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Corpus</b></em>' container reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated

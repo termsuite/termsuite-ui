@@ -1,6 +1,8 @@
 package fr.univnantes.termsuite.ui.services.impl;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -13,6 +15,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.core.services.log.ILoggerProvider;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
@@ -26,6 +29,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
 import fr.univnantes.termsuite.api.ExtractorOptions;
+import fr.univnantes.termsuite.api.IndexedCorpusIO;
 import fr.univnantes.termsuite.api.TermSuite;
 import fr.univnantes.termsuite.engines.cleaner.TerminoFilterOptions;
 import fr.univnantes.termsuite.engines.contextualizer.AssociationRate;
@@ -136,8 +140,13 @@ public class ExtractorServiceImpl implements ExtractorService {
 						pipeline.isContextualizerEnabled());
 				try {
 					context.get(CorpusService.class).saveCorpus(corpus.getCorpus());
+					Path terminoPath = context.get(CorpusService.class).getWorkspacePath(terminology);
+					try(FileWriter fileWriter = new FileWriter(terminoPath.toFile())) {
+						IndexedCorpusIO.toJson(preparedCorpus, fileWriter);
+					}
 					eventBroker.post(TermSuiteEvents.NEW_TERMINOLOGY, terminology);
 				} catch(IOException e) {
+					context.get(ILoggerProvider.class).getClassLogger(this.getClass()).error(e, "Could not save corpus after terminology creation: " + e.getMessage());
 					sync.asyncExec(()->MessageDialog.openError(activeShell, "Error saving terminology", e.getMessage()));
 				}
 			}

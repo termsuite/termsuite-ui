@@ -990,7 +990,7 @@ public class TermsuiteuiPackageImpl extends EPackageImpl implements TermsuiteuiP
 		initEClass(eSingleLanguageCorpusEClass, ESingleLanguageCorpus.class, "ESingleLanguageCorpus", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getESingleLanguageCorpus_Language(), this.getELang(), "language", null, 1, 1, ESingleLanguageCorpus.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getESingleLanguageCorpus_Corpus(), this.getECorpus(), this.getECorpus_SingleLanguageCorpora(), "corpus", null, 1, 1, ESingleLanguageCorpus.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getESingleLanguageCorpus_Terminologies(), this.getETerminology(), this.getETerminology_Corpus(), "terminologies", null, 0, -1, ESingleLanguageCorpus.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getESingleLanguageCorpus_Terminologies(), this.getETerminology(), this.getETerminology_Corpus(), "terminologies", null, 0, -1, ESingleLanguageCorpus.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(eDocumentEClass, EDocument.class, "EDocument", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getEDocument_Filename(), ecorePackage.getEString(), "filename", null, 1, 1, EDocument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1017,7 +1017,7 @@ public class TermsuiteuiPackageImpl extends EPackageImpl implements TermsuiteuiP
 		initEAttribute(getETerminology_Name(), ecorePackage.getEString(), "name", "", 0, 1, ETerminology.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getETerminology_HasOccurrences(), ecorePackage.getEBoolean(), "hasOccurrences", "false", 1, 1, ETerminology.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getETerminology_HasContexts(), ecorePackage.getEBoolean(), "hasContexts", "false", 1, 1, ETerminology.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getETerminology_Corpus(), this.getESingleLanguageCorpus(), this.getESingleLanguageCorpus_Terminologies(), "corpus", null, 1, 1, ETerminology.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getETerminology_Corpus(), this.getESingleLanguageCorpus(), this.getESingleLanguageCorpus_Terminologies(), "corpus", null, 1, 1, ETerminology.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(eTerminoViewerConfigEClass, ETerminoViewerConfig.class, "ETerminoViewerConfig", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getETerminoViewerConfig_NbDisplayedTerms(), ecorePackage.getEInt(), "nbDisplayedTerms", "500", 0, 1, ETerminoViewerConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

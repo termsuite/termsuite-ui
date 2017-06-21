@@ -82,7 +82,7 @@ public interface ESingleLanguageCorpus extends EObject {
 	void setCorpus(ECorpus value);
 
 	/**
-	 * Returns the value of the '<em><b>Terminologies</b></em>' reference list.
+	 * Returns the value of the '<em><b>Terminologies</b></em>' containment reference list.
 	 * The list contents are of type {@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology}.
 	 * It is bidirectional and its opposite is '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology#getCorpus <em>Corpus</em>}'.
 	 * <!-- begin-user-doc -->
@@ -91,10 +91,10 @@ public interface ESingleLanguageCorpus extends EObject {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Terminologies</em>' reference list.
+	 * @return the value of the '<em>Terminologies</em>' containment reference list.
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getESingleLanguageCorpus_Terminologies()
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology#getCorpus
-	 * @model opposite="corpus"
+	 * @model opposite="corpus" containment="true"
 	 * @generated
 	 */
 	EList<ETerminology> getTerminologies();

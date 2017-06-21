@@ -105,7 +105,7 @@ public interface ETerminology extends EResource {
 	void setHasContexts(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Corpus</b></em>' reference.
+	 * Returns the value of the '<em><b>Corpus</b></em>' container reference.
 	 * It is bidirectional and its opposite is '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getTerminologies <em>Terminologies</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -113,20 +113,20 @@ public interface ETerminology extends EResource {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Corpus</em>' reference.
+	 * @return the value of the '<em>Corpus</em>' container reference.
 	 * @see #setCorpus(ESingleLanguageCorpus)
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getETerminology_Corpus()
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus#getTerminologies
-	 * @model opposite="terminologies" required="true"
+	 * @model opposite="terminologies" required="true" transient="false"
 	 * @generated
 	 */
 	ESingleLanguageCorpus getCorpus();
 
 	/**
-	 * Sets the value of the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology#getCorpus <em>Corpus</em>}' reference.
+	 * Sets the value of the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology#getCorpus <em>Corpus</em>}' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Corpus</em>' reference.
+	 * @param value the new value of the '<em>Corpus</em>' container reference.
 	 * @see #getCorpus()
 	 * @generated
 	 */

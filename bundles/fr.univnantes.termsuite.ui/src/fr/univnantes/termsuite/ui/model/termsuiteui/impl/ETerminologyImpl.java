@@ -8,6 +8,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
@@ -88,16 +89,6 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 	 * @ordered
 	 */
 	protected boolean hasContexts = HAS_CONTEXTS_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getCorpus() <em>Corpus</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCorpus()
-	 * @generated
-	 * @ordered
-	 */
-	protected ESingleLanguageCorpus corpus;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -187,24 +178,8 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 	 * @generated
 	 */
 	public ESingleLanguageCorpus getCorpus() {
-		if (corpus != null && corpus.eIsProxy()) {
-			InternalEObject oldCorpus = (InternalEObject)corpus;
-			corpus = (ESingleLanguageCorpus)eResolveProxy(oldCorpus);
-			if (corpus != oldCorpus) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TermsuiteuiPackage.ETERMINOLOGY__CORPUS, oldCorpus, corpus));
-			}
-		}
-		return corpus;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ESingleLanguageCorpus basicGetCorpus() {
-		return corpus;
+		if (eContainerFeatureID() != TermsuiteuiPackage.ETERMINOLOGY__CORPUS) return null;
+		return (ESingleLanguageCorpus)eInternalContainer();
 	}
 
 	/**
@@ -213,12 +188,7 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 	 * @generated
 	 */
 	public NotificationChain basicSetCorpus(ESingleLanguageCorpus newCorpus, NotificationChain msgs) {
-		ESingleLanguageCorpus oldCorpus = corpus;
-		corpus = newCorpus;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TermsuiteuiPackage.ETERMINOLOGY__CORPUS, oldCorpus, newCorpus);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
+		msgs = eBasicSetContainer((InternalEObject)newCorpus, TermsuiteuiPackage.ETERMINOLOGY__CORPUS, msgs);
 		return msgs;
 	}
 
@@ -228,10 +198,12 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 	 * @generated
 	 */
 	public void setCorpus(ESingleLanguageCorpus newCorpus) {
-		if (newCorpus != corpus) {
+		if (newCorpus != eInternalContainer() || (eContainerFeatureID() != TermsuiteuiPackage.ETERMINOLOGY__CORPUS && newCorpus != null)) {
+			if (EcoreUtil.isAncestor(this, newCorpus))
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
 			NotificationChain msgs = null;
-			if (corpus != null)
-				msgs = ((InternalEObject)corpus).eInverseRemove(this, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES, ESingleLanguageCorpus.class, msgs);
+			if (eInternalContainer() != null)
+				msgs = eBasicRemoveFromContainer(msgs);
 			if (newCorpus != null)
 				msgs = ((InternalEObject)newCorpus).eInverseAdd(this, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES, ESingleLanguageCorpus.class, msgs);
 			msgs = basicSetCorpus(newCorpus, msgs);
@@ -250,8 +222,8 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TermsuiteuiPackage.ETERMINOLOGY__CORPUS:
-				if (corpus != null)
-					msgs = ((InternalEObject)corpus).eInverseRemove(this, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES, ESingleLanguageCorpus.class, msgs);
+				if (eInternalContainer() != null)
+					msgs = eBasicRemoveFromContainer(msgs);
 				return basicSetCorpus((ESingleLanguageCorpus)otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
@@ -277,6 +249,20 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 	 * @generated
 	 */
 	@Override
+	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
+		switch (eContainerFeatureID()) {
+			case TermsuiteuiPackage.ETERMINOLOGY__CORPUS:
+				return eInternalContainer().eInverseRemove(this, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES, ESingleLanguageCorpus.class, msgs);
+		}
+		return super.eBasicRemoveFromContainerFeature(msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TermsuiteuiPackage.ETERMINOLOGY__NAME:
@@ -286,8 +272,7 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 			case TermsuiteuiPackage.ETERMINOLOGY__HAS_CONTEXTS:
 				return isHasContexts();
 			case TermsuiteuiPackage.ETERMINOLOGY__CORPUS:
-				if (resolve) return getCorpus();
-				return basicGetCorpus();
+				return getCorpus();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -355,7 +340,7 @@ public class ETerminologyImpl extends EResourceImpl implements ETerminology {
 			case TermsuiteuiPackage.ETERMINOLOGY__HAS_CONTEXTS:
 				return hasContexts != HAS_CONTEXTS_EDEFAULT;
 			case TermsuiteuiPackage.ETERMINOLOGY__CORPUS:
-				return corpus != null;
+				return getCorpus() != null;
 		}
 		return super.eIsSet(featureID);
 	}

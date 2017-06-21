@@ -55,18 +55,6 @@ public interface CorpusService {
 	public List<EDocument> getDocuments(ESingleLanguageCorpus corpus);
 	public List<ETerminology> getTerminologies(ESingleLanguageCorpus corpus);
 
-
-	public String getTerminoOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline, String extension);
-	public String getTerminoJsonFile(ESingleLanguageCorpus corpus, EPipeline pipeline);
-	public String getTerminoTsvFile(ESingleLanguageCorpus corpus, EPipeline pipeline);
-	public String getTerminoTbxFile(ESingleLanguageCorpus corpus, EPipeline pipeline);
-
-	
-	public String getCasOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline, String casDirname);
-	public String getXmiCasOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline);
-	public String getTsvCasOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline);
-	public String getJsonCasOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline);
-	
 	public String getCollectionPath(ESingleLanguageCorpus corpus);
 
 	

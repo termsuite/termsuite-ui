@@ -11,7 +11,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -58,7 +58,7 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 	protected ELang language = LANGUAGE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getTerminologies() <em>Terminologies</em>}' reference list.
+	 * The cached value of the '{@link #getTerminologies() <em>Terminologies</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getTerminologies()
@@ -155,7 +155,7 @@ public class ESingleLanguageCorpusImpl extends MinimalEObjectImpl.Container impl
 	 */
 	public EList<ETerminology> getTerminologies() {
 		if (terminologies == null) {
-			terminologies = new EObjectWithInverseResolvingEList<ETerminology>(ETerminology.class, this, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES, TermsuiteuiPackage.ETERMINOLOGY__CORPUS);
+			terminologies = new EObjectContainmentWithInverseEList<ETerminology>(ETerminology.class, this, TermsuiteuiPackage.ESINGLE_LANGUAGE_CORPUS__TERMINOLOGIES, TermsuiteuiPackage.ETERMINOLOGY__CORPUS);
 		}
 		return terminologies;
 	}

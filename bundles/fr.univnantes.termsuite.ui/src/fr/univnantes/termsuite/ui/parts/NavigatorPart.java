@@ -20,6 +20,7 @@ import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -207,6 +208,11 @@ public class NavigatorPart implements TreePart {
 		viewer.refresh(object);
 	}
 
+	@Inject @Optional
+	private void init(@UIEventTopic(TermSuiteEvents.NEW_TERMINOLOGY) ETerminology terminology) {
+		viewer.reveal(terminology);
+	}
+
 
 
 	private Object[] getRootNodes() {
@@ -268,14 +274,16 @@ public class NavigatorPart implements TreePart {
 					return pipelineService.getPipelineList().getPipelines().toArray();
 				else if (node.getNodeType() == NODE_FOLDER_TERMINO) {
 					ESingleLanguageCorpus c = (ESingleLanguageCorpus)node.getParent();
-					return c
-							.getTerminologies()
+					EList<ETerminology> terminologies = c
+							.getTerminologies();
+					Object[] array = terminologies
 							.stream()
 							.filter(t -> {
 								File f = corpusService.getWorkspacePath(t).toFile();
 								return f.exists() && f.length() > 0;
 							})
 							.toArray();
+					return array;
 				} else if (node.getNodeType() == NODE_FOLDER_DOCUMENT) {
 					ESingleLanguageCorpus c = (ESingleLanguageCorpus)node.getParent();
 					List<EDocument> documents = corpusService.getDocuments(c);

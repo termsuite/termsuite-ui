@@ -96,17 +96,9 @@ public class CorpusServiceImpl implements CorpusService {
 	
 	private Map<URI, EDocument> documentCache = null;
 	
-	
-	private static final String CAS_JSON_DIR = "json";
-	private static final String CAS_XMI_DIR = "xmi";
-	private static final String CAS_TSV_DIR = "tsv";
-	
 	private static final String JSON_EXTENSION = "json";
-	private static final String TBX_EXTENSION = "tbx";
-	private static final String TSV_EXTENSION = "tsv";
 
 
-	
 	private ECorporaList corpora = TermsuiteuiFactory.eINSTANCE.createECorporaList();
 
 	public CorpusServiceImpl() {
@@ -264,61 +256,6 @@ public class CorpusServiceImpl implements CorpusService {
 				pipeline.getName()).toString();
 	}
 
-	@Override
-	public String getTerminoOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline, String extension) {
-		Path path = Paths.get(getOutputDirectory(corpus, pipeline), pipeline.getName() + "." + extension);
-		FileUtil.mkdirs(path.toFile());
-		return path.toString();
-	}
-	
-	@Override
-	public String getCasOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline, String casDirname) {
-		Path path = Paths.get(getOutputDirectory(corpus, pipeline), casDirname);
-		FileUtil.mkdirs(path.toFile());
-		return path.toString();		
-	}
-
-
-
-	@Override
-	public String getTerminoJsonFile(ESingleLanguageCorpus corpus, EPipeline pipeline) {
-		return getTerminoOutputDirectory(corpus, pipeline, JSON_EXTENSION);
-	}
-
-
-
-	@Override
-	public String getTerminoTsvFile(ESingleLanguageCorpus corpus, EPipeline pipeline) {
-		return getTerminoOutputDirectory(corpus, pipeline, TSV_EXTENSION);
-	}
-
-
-
-	@Override
-	public String getTerminoTbxFile(ESingleLanguageCorpus corpus, EPipeline pipeline) {
-		return getTerminoOutputDirectory(corpus, pipeline, TBX_EXTENSION);
-	}
-
-
-
-	@Override
-	public String getXmiCasOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline) {
-		return getCasOutputDirectory(corpus, pipeline, CAS_XMI_DIR);
-	}
-
-
-
-	@Override
-	public String getTsvCasOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline) {
-		return getCasOutputDirectory(corpus, pipeline, CAS_TSV_DIR);
-	}
-
-
-
-	@Override
-	public String getJsonCasOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline) {
-		return getCasOutputDirectory(corpus, pipeline, CAS_JSON_DIR);
-	}
 
 
 
@@ -461,7 +398,7 @@ public class CorpusServiceImpl implements CorpusService {
 	}
 	@Override
 	public Path getWorkspacePath(ECorpus corpus) {
-		return getOutputPath().resolve(corpus.getName());
+		return createParents(getOutputPath().resolve(corpus.getName()));
 	}
 
 	private void checkOutput() {
@@ -472,14 +409,20 @@ public class CorpusServiceImpl implements CorpusService {
 
 	@Override
 	public Path getWorkspacePath(ESingleLanguageCorpus slc) {
-		return getWorkspacePath(slc.getCorpus()).resolve(slc.getLanguage().toString());
+		return createParents(getWorkspacePath(slc.getCorpus()).resolve(slc.getLanguage().toString()));
 	}
 
 	@Override
 	public Path getWorkspacePath(ETerminology resource) {
-		return getWorkspacePath(resource.getCorpus()).resolve(resource.getName() + "." + JSON_EXTENSION);
+		Path path = getWorkspacePath(resource.getCorpus()).resolve(resource.getName() + "." + JSON_EXTENSION);
+		return createParents(path);
 	}
 	
+	private Path createParents(Path path) {
+		path.toFile().getParentFile().mkdirs();
+		return path;
+	}
+
 	/* (non-Javadoc)
 	 * @see fr.univnantes.termsuite.ui.services.CorpusService#getPath(fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus)
 	 */
