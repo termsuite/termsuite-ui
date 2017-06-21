@@ -3,6 +3,7 @@ package fr.univnantes.termsuite.ui.services.impl;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.e4.ui.di.UISynchronize;
+
 import fr.univnantes.termsuite.api.PipelineListener;
 
 public class WorkbenchPipelineListener implements PipelineListener {

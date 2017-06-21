@@ -6,8 +6,6 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Set;
 
-import org.eclipse.swt.widgets.Shell;
-
 import com.google.common.collect.ImmutableSet;
 
 import fr.univnantes.termsuite.api.TXTCorpus;
