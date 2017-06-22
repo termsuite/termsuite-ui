@@ -2,18 +2,22 @@
 package fr.univnantes.termsuite.ui.parts;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -57,6 +61,7 @@ import com.google.common.collect.ImmutableMap;
 
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
+import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EAssocMeasure;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
@@ -172,7 +177,7 @@ public class PipelinePart {
 				form, 
 				"POS tagger", 
 				"The tagger/lemmatizer is a 3rd-party program setting syntactic labels and lemmas to each word annotation.");		
-		setTableWrapLayout(taggerClient, 1);
+		setTableWrapLayout(taggerClient, 3);
 		
 
 		// The pos tagger
@@ -180,11 +185,44 @@ public class PipelinePart {
 				taggerClient, 
 				"Tagger: ", 
 				context.get(TaggerService.class).getTaggerConfigNames().toArray());
-		dbc.bindValue(
+		Binding binding = dbc.bindValue(
 				ViewerProperties.singleSelection().observe(taggerComboViewer), 
 				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__TAGGER_CONFIG_NAME).observeDetail(this.pipelineValue));
+
+		Link refresh = new Link(taggerClient, SWT.BORDER);
+		refresh.setText("<a>refresh</a>");
 		
+		Link installTagger = new Link(taggerClient, SWT.BORDER);
+		installTagger.setText("You must <a>install an  external tagger</a>");
+		installTagger.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Command command = context.get(ECommandService.class).getCommand("fr.univnantes.termsuite.ui.command.preferences");
+			    ParameterizedCommand pCmd = new ParameterizedCommand(command, null);
+			    if (context.get(EHandlerService.class).canExecute(pCmd)) 
+					context.get(EHandlerService.class).executeHandler(pCmd);
+			}
+		});
+		installTagger.setForeground(TermSuiteUI.COLOR_RED);
+		installTagger.setVisible(context.get(TaggerService.class).getTaggerConfigNames().isEmpty());
+		applyTableWrapLayout(installTagger, 1, 3);
+
+		refresh.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Collection<String> taggerConfigNames = context.get(TaggerService.class).getTaggerConfigNames();
+				taggerComboViewer.setInput(taggerConfigNames.toArray());
+				binding.updateModelToTarget();
+				installTagger.setVisible(taggerConfigNames.isEmpty());
+			}
+		});
+
+
 		
+		ConfigurationScope.INSTANCE
+			.getNode(TermSuiteUIPreferences.NODE_GENERAL)
+			.addPreferenceChangeListener(this::taggerConfigUpdated);
+
 		/*
 		 * Memory management
 		 */
@@ -396,6 +434,18 @@ public class PipelinePart {
 			}
 		});
 		
+	}
+
+	private void taggerConfigUpdated(PreferenceChangeEvent e) {
+		if(e.getKey().equals(TermSuiteUIPreferences.TAGGERS)) {
+			Collection<String> configNames = context.get(TaggerService.class).getTaggerConfigNames();
+			EPipeline pipeline = this.pipelineValue.getValue();
+			if(!configNames.isEmpty()
+					&& pipeline.getTaggerConfigName() == null) {
+				pipeline.setTaggerConfigName(configNames.iterator().next());
+				
+			}
+		}
 	}
 
 	private UpdateValueStrategy integerUpdateStrategy(int min, int max) {
