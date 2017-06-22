@@ -12,6 +12,8 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 
 public interface NLPService {
+	public static final int MAX_SIZE = 500000;
+
 	public static final Set<ELang> SUPPORTED_LANGUAGES = ImmutableSet.of(ELang.FR, ELang.EN, ELang.ES, ELang.DE, ELang.RU, ELang.IT);
 
 	public void runPipelineOnCorpus(EPipeline pipeline, ESingleLanguageCorpus corpus);

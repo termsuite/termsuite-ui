@@ -12,7 +12,7 @@ import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
 public class TermSuiteSelectionServiceImpl implements TermSuiteSelectionService {
 
 	@Inject
-	IEventBroker eventBroker;
+	private IEventBroker eventBroker;
 	
 	private TermService activeTerm = null;
 	private TermOccurrence activeTermOccurrence = null;

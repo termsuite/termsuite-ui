@@ -15,17 +15,11 @@ import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.core.services.log.ILoggerProvider;
 import org.eclipse.e4.core.services.log.Logger;
-import org.eclipse.e4.ui.di.UISynchronize;
-import org.eclipse.e4.ui.services.IServiceConstants;
-import org.eclipse.e4.ui.workbench.modeling.EPartService;
-import org.eclipse.swt.widgets.Shell;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -54,22 +48,8 @@ import fr.univnantes.termsuite.ui.util.LangUtil;
 @SuppressWarnings("restriction")
 public class CorpusServiceImpl implements CorpusService {
 
-	@Inject
-	@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell;
-
-	@Inject UISynchronize sync;
-
 	@Inject 
-	IEventBroker eventBroker;
-	
-	@Inject 
-	IEclipseContext context;
-	
-	@Inject EPartService partService;
-	
-	@Inject
-	@Named(IServiceConstants.ACTIVE_SHELL) 
-	private Shell parent;
+	private IEclipseContext context;
 	
 	private Map<Path, ESingleLanguageCorpus> singleLanguageCorpora;
 
@@ -112,8 +92,9 @@ public class CorpusServiceImpl implements CorpusService {
 					return documents;
 				}
 			});
-	private Logger logger;
 	
+	
+	private Logger logger;
 	
 	
 	@PostConstruct
@@ -126,26 +107,18 @@ public class CorpusServiceImpl implements CorpusService {
 	}
 
 
-
-
 	private void cacheSlc(ECorpus corpus) {
 		for(ESingleLanguageCorpus slc:corpus.getSingleLanguageCorpora())
 			singleLanguageCorpora.put(getSourcePath(slc).toAbsolutePath(), slc);
 	}
 	
 	
-	
-
-	/* (non-Javadoc)
-	 * @see fr.univnantes.termsuite.ui.services.CorpusService#asFile(fr.univnantes.termsuite.ui.model.termsuiteui.EDocument)
-	 */
 	@Override
 	public File asFile(EDocument d) {
 		Path path = getSourcePath(d);
 		return path.toFile();
 	}
 
-	
 
 	@Override
 	public File[] candidateSLCChildrenForPath(String path) {
@@ -163,7 +136,6 @@ public class CorpusServiceImpl implements CorpusService {
 				}
 			});
 	}
-
 
 	
 	@Override
@@ -186,9 +158,6 @@ public class CorpusServiceImpl implements CorpusService {
 	}
 
 
-
-	
-	
 	@Override
 	public int getLineNumber(EDocument doc, TermOccurrence occ) {
 		int line = 1;
@@ -228,10 +197,6 @@ public class CorpusServiceImpl implements CorpusService {
 				getSourcePath(corpus));
 	}
 
-
-	/* (non-Javadoc)
-	 * @see fr.univnantes.termsuite.ui.services.CorpusService#getPath(fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus)
-	 */
 	@Override
 	public Path getSourcePath(ESingleLanguageCorpus slc) {
 		Lang termsuiteLang = LangUtil.getTermsuiteLang(slc.getLanguage());
@@ -244,9 +209,6 @@ public class CorpusServiceImpl implements CorpusService {
 	}
 
 	
-	/* (non-Javadoc)
-	 * @see fr.univnantes.termsuite.ui.services.CorpusService#getPath(fr.univnantes.termsuite.ui.model.termsuiteui.EDocument)
-	 */
 	@Override
 	public Path getSourcePath(EDocument d) {
 		return getSourcePath(d.getSingleLanguageCorpus()).resolve(d.getFilename());
@@ -258,13 +220,6 @@ public class CorpusServiceImpl implements CorpusService {
 		return sldDocuments.getUnchecked(slc).values();
 	}
 	
-	
-
-
-	
-	/* (non-Javadoc)
-	 * @see fr.univnantes.termsuite.ui.services.CorpusService#createCorpus(java.lang.String)
-	 */
 	@Override
 	public ECorpus createCorpus(String name, String corpusPath) {
 		ECorpus corpus = TermsuiteuiFactory.eINSTANCE.createECorpus();
@@ -281,5 +236,4 @@ public class CorpusServiceImpl implements CorpusService {
 		cacheSlc(corpus);
 		return corpus;
 	}
-
 }

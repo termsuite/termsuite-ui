@@ -57,23 +57,18 @@ import fr.univnantes.termsuite.ui.services.TaggerService;
 import fr.univnantes.termsuite.ui.util.Jobs;
 
 public class NLPServiceImpl implements NLPService {
-	public static final int MAX_SIZE = 500000;
 
 	@Inject
-	@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell;
-
-	@Inject UISynchronize sync;
-
-	@Inject EPartService partService;
-
-	@Inject
-	IEclipseContext context;
+	private IEclipseContext context;
 	
 	@Inject
-	IEventBroker eventBroker;
+	private UISynchronize sync;
+	
+	@Inject
+	private IEventBroker eventBroker;
 
 	@Inject
-	LinguisticResourcesService resourceService;
+	private LinguisticResourcesService resourceService;
 	
 
 	@Override
@@ -155,7 +150,6 @@ public class NLPServiceImpl implements NLPService {
 					eventBroker.post(TermSuiteEvents.NEW_TERMINOLOGY, terminology);
 				} catch(IOException e) {
 					context.get(ILoggerProvider.class).getClassLogger(this.getClass()).error(e, "Could not save corpus after terminology creation: " + e.getMessage());
-					sync.asyncExec(()->MessageDialog.openError(activeShell, "Error saving terminology", e.getMessage()));
 				}
 			}
 		});
@@ -165,7 +159,7 @@ public class NLPServiceImpl implements NLPService {
 		eventBroker.post(TermSuiteEvents.JOB_STARTED, job.getName());
 
 		// Set a better priority than preprocess
-		sync.asyncExec(()->partService.showPart(TermSuiteUI.PROGRESS_VIEW_ID, PartState.VISIBLE));
+		sync.asyncExec(()->context.get(EPartService.class).showPart(TermSuiteUI.PROGRESS_VIEW_ID, PartState.VISIBLE));
 	}
 
 

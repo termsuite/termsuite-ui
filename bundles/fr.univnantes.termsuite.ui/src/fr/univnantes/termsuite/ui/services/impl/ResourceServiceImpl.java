@@ -51,24 +51,30 @@ import fr.univnantes.termsuite.ui.util.WorkspaceUtil;
 
 public class ResourceServiceImpl implements ResourceService {
 	@Inject
-	IEventBroker eventBroker;
+	private IEventBroker eventBroker;
 	
+	@Inject
+	private IEclipseContext context;
+
 	private ECorporaList corpora = TermsuiteuiFactory.eINSTANCE.createECorporaList();
 	private EPipelineList pipelines = TermsuiteuiFactory.eINSTANCE.createEPipelineList();
-	
+	private BiMap<String, EResource> resources = HashBiMap.create();
+
 	
 	public ResourceServiceImpl() {
 		// Register the XMI resource factory for the .pipeline extension
-		loadPipelines();
+		List<EPipeline> list = WorkspaceUtil.loadResources(PIPELINE_DIR, PIPELINE_EXTENSION, EPipeline.class);
+		pipelines.getPipelines().addAll(list);
+
 		Map<String, Object> m = Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap();
 		// Register the XMI resource factory for the .pipeline extension
 		m.put(CORPUS_EXTENSION, new XMIResourceFactoryImpl());
 	
-		loadCorpora();
+		List<ECorpus> list2 = WorkspaceUtil.loadResources(CORPUS_DIR, CORPUS_EXTENSION, ECorpus.class);
+		corpora.getCorpora().addAll(list2);
 
 	}
 	
-	BiMap<String, EResource> resources = HashBiMap.create();
 	
 	@Override
 	public String getResourceId(EResource termsuiteUIObject) {
@@ -128,11 +134,6 @@ public class ResourceServiceImpl implements ResourceService {
 		return false;
 	}
 
-	@Inject
-	IEventBroker broker;
-
-	@Inject
-	IEclipseContext context;
 
 	@Override
 	public String getResourceName(EObject resource) {
@@ -216,19 +217,8 @@ public class ResourceServiceImpl implements ResourceService {
 		} catch (IOException e) {
 			throw new TermSuiteException("Cloud not rename the resource file: " + e.getMessage(), e);
 		}
-		broker.post(TermSuiteEvents.OBJECT_RENAMED, object);
+		eventBroker.post(TermSuiteEvents.OBJECT_RENAMED, object);
 
-	}
-
-	private String getResourceExtension(EObject object) {
-		if(object instanceof ETerminology) {
-			throw new IllegalArgumentException("ETerminology is contained in corpus. No specific resource file for ETerminology.");
-		} else if(object instanceof ECorpus) {
-			return CORPUS_EXTENSION;
-		} else if(object instanceof EPipeline) {
-			return PIPELINE_EXTENSION;
-		} else
-			throw new IllegalStateException("No file serialization support for object of type " + object.getClass().getSimpleName());
 	}
 
 	@Override
@@ -240,13 +230,6 @@ public class ResourceServiceImpl implements ResourceService {
 		return eClass.getEAllAttributes().stream().filter(a -> a.getName().equals("name")).findFirst();
 	}
 	
-
-
-	private void loadPipelines() {
-		List<EPipeline> list = WorkspaceUtil.loadResources(PIPELINE_DIR, PIPELINE_EXTENSION, EPipeline.class);
-		pipelines.getPipelines().addAll(list);
-	}
-
 
 
 	/* (non-Javadoc)
@@ -324,11 +307,6 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 	
 	
-	private void loadCorpora() {
-		List<ECorpus> list = WorkspaceUtil.loadResources(CORPUS_DIR, CORPUS_EXTENSION, ECorpus.class);
-		corpora.getCorpora().addAll(list);
-	}
-
 
 	/* (non-Javadoc)
 	 * @see fr.univnantes.termsuite.ui.services.CorpusService#getCorporaList()
