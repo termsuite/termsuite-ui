@@ -36,7 +36,8 @@ public class TermSuiteUI {
 
 	public static final String INPUT_OBJECT = "InputObject";
 
-	public static final String RUN = "icons/run_exc.png";
+	public static final String IMG_RUN = "icons/run_exc.png";
+	public static final String IMG_CLEAR_CO = "icons/clear_co.png";
 
 	public static final Styler STYLE_BOLD = StylerBuilder.start().fontStyle(SWT.BOLD).create();
 	public static final Styler STYLE_GRAYED = StylerBuilder.start().color(120, 120, 120).fontStyle(SWT.ITALIC).create();
@@ -74,5 +75,6 @@ public class TermSuiteUI {
 	 */
 	public static final String COMMAND_RUN_PIPELINE_ID = "fr.univnantes.termsuite.ui.command.RunPipeline";
 	public static final String COMMAND_RUN_PIPELINE_PARAMETER_PIPELINE_ID = "fr.univnantes.termsuite.ui.command.RunPipeline.commandparameter.pipelinename";
+	public static final String COMMAND_CLEAR_CACHE_ID = "fr.univnantes.termsuite.ui.command.ClearPreprocessingCache";
 
 }

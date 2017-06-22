@@ -1,12 +1,12 @@
 package fr.univnantes.termsuite.ui.services.impl;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.eclipse.core.runtime.ICoreRunnable;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -19,11 +19,8 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.core.services.log.ILoggerProvider;
 import org.eclipse.e4.ui.di.UISynchronize;
-import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
 
 import com.google.common.collect.Lists;
 
@@ -64,6 +61,9 @@ public class NLPServiceImpl implements NLPService {
 	@Inject
 	private UISynchronize sync;
 	
+	@Inject
+	private ILoggerProvider loggerProvider;
+
 	@Inject
 	private IEventBroker eventBroker;
 
@@ -279,11 +279,7 @@ public class NLPServiceImpl implements NLPService {
 	
 	@Override
 	public Path getCachePath(ESingleLanguageCorpus corpus, String taggerConfigName, int maxSize) {
-		ResourceService resourceService = context.get(ResourceService.class);
-		Path dir = resourceService
-				.getOutputDirectory()
-				.resolve(PREPROCESS_CACHE_DIR_NAME);
-		dir.toFile().mkdirs();
+		Path dir = getNlpCachePath();
 		return dir.resolve(String.format("%s-%s-%s-%d.json", 
 				corpus.getCorpus().getName(),
 				corpus.getLanguage(),
@@ -291,6 +287,26 @@ public class NLPServiceImpl implements NLPService {
 				maxSize
 				))
 		;
+	}
+	
+	@Override
+	public Path getNlpCachePath() {
+		ResourceService resourceService = context.get(ResourceService.class);
+		Path dir = resourceService
+				.getOutputDirectory()
+				.resolve(PREPROCESS_CACHE_DIR_NAME);
+		dir.toFile().mkdirs();
+		return dir;
+	}
+
+
+	@Override
+	public boolean clearNlpCache() {
+		boolean delete = true;
+		for(File f:getNlpCachePath().toFile().listFiles()) 
+			delete = delete && f.delete();
+		eventBroker.post(TermSuiteEvents.CACHE_CLEARED, null);
+		return delete;
 	}
 
 }

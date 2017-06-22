@@ -37,4 +37,9 @@ public interface NLPService {
 	public Job getPrepareCorpusJob(EPipeline pipeline, ESingleLanguageCorpus corpus);
 
 	public Path getCachePath(ESingleLanguageCorpus corpus, String taggerConfigName, int maxSize);
+	
+	public boolean clearNlpCache();
+	
+	public Path getNlpCachePath();
+
 }
