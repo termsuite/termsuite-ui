@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -18,17 +21,22 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Lists;
 
 import fr.univnantes.termsuite.api.TermSuiteException;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ECorporaList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
+import fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipelineList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EResource;
@@ -37,7 +45,6 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ETagger;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETaggerConfig;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
-import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.services.TaggerService;
 import fr.univnantes.termsuite.ui.util.WorkspaceUtil;
@@ -46,11 +53,19 @@ public class ResourceServiceImpl implements ResourceService {
 	@Inject
 	IEventBroker eventBroker;
 	
+	private ECorporaList corpora = TermsuiteuiFactory.eINSTANCE.createECorporaList();
 	private EPipelineList pipelines = TermsuiteuiFactory.eINSTANCE.createEPipelineList();
+	
 	
 	public ResourceServiceImpl() {
 		// Register the XMI resource factory for the .pipeline extension
 		loadPipelines();
+		Map<String, Object> m = Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap();
+		// Register the XMI resource factory for the .pipeline extension
+		m.put(CORPUS_EXTENSION, new XMIResourceFactoryImpl());
+	
+		loadCorpora();
+
 	}
 	
 	BiMap<String, EResource> resources = HashBiMap.create();
@@ -138,7 +153,7 @@ public class ResourceServiceImpl implements ResourceService {
 			return "File or directory " + asFilePath(resource).resolve(newName).toAbsolutePath() + " already exists";
 		else {
 			if(resource instanceof ECorpus) {
-				List<String> corpusNames = context.get(CorpusService.class).getCorporaList().getCorpora().stream().map(ECorpus::getName).collect(toList());
+				List<String> corpusNames = getCorporaList().getCorpora().stream().map(ECorpus::getName).collect(toList());
 				if(corpusNames.contains(newName))
 					return "A corpus named " + newName + " already exists";
 			} else if(resource instanceof EPipeline) {
@@ -157,11 +172,11 @@ public class ResourceServiceImpl implements ResourceService {
 	@Override
 	public Path asFilePath(EObject object) {
 		if(object instanceof ECorpus)
-			return context.get(CorpusService.class).getWorkspacePath((ECorpus)object);
+			return getWorkspacePath((ECorpus)object);
 		else if(object instanceof ESingleLanguageCorpus)
-			return context.get(CorpusService.class).getWorkspacePath((ESingleLanguageCorpus)object);
+			return getWorkspacePath((ESingleLanguageCorpus)object);
 		if(object instanceof ETerminology)
-			return context.get(CorpusService.class).getWorkspacePath((ETerminology)object);
+			return getWorkspacePath((ETerminology)object);
 		if(object instanceof EPipeline)
 			return getPath((EPipeline)object);
 		else throw new IllegalArgumentException("A resource of type "+object.getClass().getSimpleName()+" cannot have a filepath.");
@@ -170,19 +185,15 @@ public class ResourceServiceImpl implements ResourceService {
 	@Override
 	public void rename(EObject object, String newName) {
 		Preconditions.checkArgument(isRenameable(object.getClass()), "Not allwed to rename a resource of class %s", object.getClass().getName());
-
-		
-		
 		
 		try {
 			if(object instanceof ETerminology) {
 				// terminology belongs to the corpus. The corpus must be saved instead of the terminology.
-				CorpusService corpusService = context.get(CorpusService.class);
 				ETerminology termino = (ETerminology)object;
-				Path oldPath = corpusService.getWorkspacePath(termino);
+				Path oldPath = getWorkspacePath(termino);
 				termino.setName(newName);
-				Path newPath = corpusService.getWorkspacePath(termino);
-				corpusService.saveCorpus(termino.getCorpus().getCorpus());
+				Path newPath = getWorkspacePath(termino);
+				saveCorpus(termino.getCorpus().getCorpus());
 				Files.move(oldPath, newPath);
 				
 			} else if(object instanceof EResource) {
@@ -213,7 +224,7 @@ public class ResourceServiceImpl implements ResourceService {
 		if(object instanceof ETerminology) {
 			throw new IllegalArgumentException("ETerminology is contained in corpus. No specific resource file for ETerminology.");
 		} else if(object instanceof ECorpus) {
-			return CorpusService.CORPUS_EXTENSION;
+			return CORPUS_EXTENSION;
 		} else if(object instanceof EPipeline) {
 			return PIPELINE_EXTENSION;
 		} else
@@ -311,5 +322,112 @@ public class ResourceServiceImpl implements ResourceService {
 	public Path getPath(EPipeline pipeline) {
 		return WorkspaceUtil.getWorkspacePath(PIPELINE_DIR, pipeline.getName() + "." + PIPELINE_EXTENSION);
 	}
+	
+	
+	private void loadCorpora() {
+		List<ECorpus> list = WorkspaceUtil.loadResources(CORPUS_DIR, CORPUS_EXTENSION, ECorpus.class);
+		corpora.getCorpora().addAll(list);
+	}
 
+
+	/* (non-Javadoc)
+	 * @see fr.univnantes.termsuite.ui.services.CorpusService#getCorporaList()
+	 */
+	@Override
+	public ECorporaList getCorporaList() {
+		return corpora;
+	}
+	
+	
+	@Override
+	public void saveCorpus(ECorpus corpus) {
+		WorkspaceUtil.saveResource(corpus, CORPUS_DIR, corpus.getName(), CORPUS_EXTENSION);
+	}
+
+	@Override
+	public ETerminology createTerminology(ESingleLanguageCorpus corpus, String terminologyName, EOccurrenceMode occMode, boolean hasContexts) {
+		/*
+		 * Ensure that any termino with the same name is removed. 
+		 * (Override behaviour)
+		 */
+		
+		for(Iterator<ETerminology> it = corpus.getTerminologies().iterator(); it.hasNext(); )
+			if(it.next().getName().equals(terminologyName))
+				it.remove();
+		ETerminology terminology = TermsuiteuiFactory.eINSTANCE.createETerminology();
+		terminology.setName(terminologyName);
+		terminology.setHasOccurrences(occMode != EOccurrenceMode.DO_NOT_KEEP);
+		terminology.setHasContexts(hasContexts);
+		
+		corpus.getTerminologies().add(terminology);
+		
+		return terminology;
+	}
+	
+	
+	@Override
+	public void removeTerminology(ETerminology terminology) {
+		ECorpus corpus = terminology.getCorpus().getCorpus();
+		getWorkspacePath(terminology).toFile().delete();
+		terminology.getCorpus().getTerminologies().remove(terminology);
+		saveCorpus(corpus);
+		eventBroker.post(TermSuiteEvents.TERMINOLOGY_REMOVED, terminology);
+	}
+
+	@Override
+	public Path getOutputDirectory(ESingleLanguageCorpus corpus) {
+		return context.get(ResourceService.class).getOutputDirectory()
+				.resolve(corpus.getCorpus().getName())
+				.resolve(corpus.getLanguage().getName());
+	}
+
+	@Override
+	public Path getOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline) {
+		return getOutputDirectory(corpus).resolve(pipeline.getName());
+	}
+
+
+
+
+	@Override
+	public void removeCorpus(ECorpus s) {
+		corpora.getCorpora().remove(s);
+		WorkspaceUtil.removeResource(CORPUS_DIR, s.getName(), CORPUS_EXTENSION);
+		eventBroker.post(TermSuiteEvents.CORPUS_REMOVED, s);
+
+	}
+
+	@Override
+	public Collection<ETerminology> getTerminologies() {
+		List<ETerminology> terminologies = Lists.newArrayList();
+		for(ECorpus corpus:getCorporaList().getCorpora()) {
+			for(ESingleLanguageCorpus slc:corpus.getSingleLanguageCorpora()) {
+				terminologies.addAll(slc.getTerminologies());
+			}
+		}
+		return terminologies;
+	}
+
+	@Override
+	public Path getWorkspacePath(ECorpus corpus) {
+		return createParents(getOutputDirectory().resolve(corpus.getName()));
+	}
+
+	@Override
+	public Path getWorkspacePath(ESingleLanguageCorpus slc) {
+		Path corpusPath = getWorkspacePath(slc.getCorpus());
+		Path slcPath = corpusPath.resolve(slc.getLanguage().toString());
+		return createParents(slcPath);
+	}
+
+	@Override
+	public Path getWorkspacePath(ETerminology resource) {
+		Path path = getWorkspacePath(resource.getCorpus()).resolve(resource.getName() + "." + JSON_EXTENSION);
+		return createParents(path);
+	}
+	
+	private Path createParents(Path path) {
+		path.toFile().getParentFile().mkdirs();
+		return path;
+	}
 }

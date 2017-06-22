@@ -21,11 +21,13 @@ import org.eclipse.swt.widgets.Text;
 
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.ResourceService;
 
 public class ImportCorpusWizard extends Wizard {
 	
+	@Inject ResourceService resourceService;
 	@Inject CorpusService corpusService;
-	
+
 	private SelectRootDirectoryPage page1 = new SelectRootDirectoryPage();
 
 	@Override
@@ -141,7 +143,7 @@ public class ImportCorpusWizard extends Wizard {
 				setErrorMessage(String.format("Corpus name cannot be empty"));
 				return;
 			}
-			for(ECorpus c:corpusService.getCorporaList().getCorpora()) {
+			for(ECorpus c:resourceService.getCorporaList().getCorpora()) {
 				if(c.getName().equals(textName.getText())) {
 					setPageComplete(false);
 					setErrorMessage(String.format("Corpus %s already exists in workspace", c.getName()));

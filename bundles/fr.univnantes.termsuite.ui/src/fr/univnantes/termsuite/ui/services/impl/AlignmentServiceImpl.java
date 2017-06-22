@@ -40,7 +40,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
 import fr.univnantes.termsuite.ui.services.AlignmentService;
-import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.services.TerminologyService;
 import fr.univnantes.termsuite.ui.util.LangUtil;
 
@@ -126,7 +126,7 @@ public class AlignmentServiceImpl implements AlignmentService {
 	public Collection<ETerminology> canAlignWith(ETerminology terminology) {
 		if(terminology.isHasContexts()) {
 			Set<ETerminology> alignableTermino = Sets.newHashSet();
-			for(ETerminology targetTermino:context.get(CorpusService.class).getTerminologies())  {
+			for(ETerminology targetTermino:context.get(ResourceService.class).getTerminologies())  {
 				if(!targetTermino.getCorpus().getCorpus().equals(terminology.getCorpus().getCorpus())) {
 					// 1- can only align on the same comparable corpus
 					continue;

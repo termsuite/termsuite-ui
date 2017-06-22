@@ -20,7 +20,6 @@ import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.dialogs.CorpusSelectionDialog;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
-import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.NLPService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 
@@ -33,25 +32,24 @@ public class RunPipelineHandler {
 			@Optional @Named(IServiceConstants.ACTIVE_SELECTION) EPipeline selectedPipeline,
 			@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
 			NLPService extractorService,
-			ResourceService resourceService,
-			CorpusService corpusService) {
+			ResourceService resourceService) {
 		Map<String, Object> parameterMap = command.getParameterMap();
 		if(!parameterMap.containsKey(TermSuiteUI.COMMAND_RUN_PIPELINE_PARAMETER_PIPELINE_ID)
 				&& selectedPipeline != null) {
 			// run handler from selected pipeline
-			runPipeline(shell, extractorService, corpusService, selectedPipeline);
+			runPipeline(shell, extractorService, resourceService, selectedPipeline);
 		} else {
 			// run handler from parameterized command
 			String pipelineName = parameterMap.get(TermSuiteUI.COMMAND_RUN_PIPELINE_PARAMETER_PIPELINE_ID).toString();
 			java.util.Optional<EPipeline> pipeline = resourceService.getPipeline(pipelineName);
 			if(pipeline.isPresent()) 
-				runPipeline(shell, extractorService, corpusService, pipeline.get());
+				runPipeline(shell, extractorService, resourceService, pipeline.get());
 		}
 	}
 
-	private void runPipeline(Shell shell, NLPService extractorService, CorpusService corpusService,
+	private void runPipeline(Shell shell, NLPService extractorService, ResourceService resourceService,
 			EPipeline pipeline) {
-		CorpusSelectionDialog dialog = new CorpusSelectionDialog(shell, corpusService.getCorporaList().getCorpora());
+		CorpusSelectionDialog dialog = new CorpusSelectionDialog(shell, resourceService.getCorporaList().getCorpora());
 		List<ESingleLanguageCorpus> selectedCorpora = new ArrayList<>();
 		if(dialog.open() == Window.OK) {
 			for(Object o:dialog.getResult()) {

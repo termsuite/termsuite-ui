@@ -21,11 +21,11 @@ import fr.univnantes.termsuite.io.json.JsonOptions;
 import fr.univnantes.termsuite.io.json.JsonTerminologyIO;
 import fr.univnantes.termsuite.model.IndexedCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
-import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.services.TerminologyService;
 import fr.univnantes.termsuite.ui.util.IOUtil;
 
-public class TermIndexServiceImpl implements TerminologyService {
+public class TerminologyServiceImpl implements TerminologyService {
 
 	@Inject
 	private IEclipseContext context;
@@ -61,14 +61,14 @@ public class TermIndexServiceImpl implements TerminologyService {
 	}
 
 	private Path getPath(ETerminology terminology) {
-		return context.get(CorpusService.class).getWorkspacePath(terminology);
+		return context.get(ResourceService.class).getWorkspacePath(terminology);
 	}
 
 
 	@Override
 	public boolean removeTerminologyJson(ETerminology terminology) {
 		terminology.getCorpus().getTerminologies().remove(terminology);
-		context.get(CorpusService.class).saveCorpus(terminology.getCorpus().getCorpus());
+		context.get(ResourceService.class).saveCorpus(terminology.getCorpus().getCorpus());
 		terminoCache.invalidate(terminology);
 		return getPath(terminology).toFile().delete();
 	}

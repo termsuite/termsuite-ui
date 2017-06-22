@@ -3,63 +3,20 @@ package fr.univnantes.termsuite.ui.services;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
-import com.google.common.collect.ImmutableSet;
 
 import fr.univnantes.termsuite.api.TXTCorpus;
 import fr.univnantes.termsuite.model.Document;
 import fr.univnantes.termsuite.model.TermOccurrence;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ECorporaList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
-import fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode;
-import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 
 public interface CorpusService {
-	public static final String CORPUS_EXTENSION = "corpus";
-	public static final String CORPUS_DIR = "corpora";
-
-
-	public ECorporaList getCorporaList();
-
-	/**
-	 * Iterates over all terminologies.
-	 * 
-	 * @return
-	 */
-	public Collection<ETerminology> getTerminologies();
 
 	public File asFile(EDocument d);
 
 	public ECorpus createCorpus(String name, String corpusPath);
 
-
-	/**
-	 * Gives the root output directory of a given pipeline 
-	 * for a corpus, based on the <code>outputDirectory</code> preference.
-	 * 
-	 * @param corpus
-	 * @return
-	 */
-	public Path getOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline);
-
-	
-	
-	public List<EDocument> getDocuments(ESingleLanguageCorpus corpus);
-
-	public String getCollectionPath(ESingleLanguageCorpus corpus);
-
-	
-	public void saveCorpus(ECorpus corpus);
-	public void removeCorpus(ECorpus s);
-	public ETerminology createTerminology(ESingleLanguageCorpus corpus, String terminologyName, EOccurrenceMode occMode,
-			boolean hasContexts);
-	public void removeTerminology(ETerminology s);
 
 	/**
 	 * Return the workspace {@link EDocument} object associated with a TermSuite {@link Document} object.
@@ -83,13 +40,6 @@ public interface CorpusService {
 	public int getLineNumber(EDocument doc, TermOccurrence occ);
 	
 
-	/**
-	 * The output root directory for the given corpus.
-	 * 
-	 * @param corpus
-	 * @return
-	 */
-	public Path getOutputDirectory(ESingleLanguageCorpus corpus);
 
 	/**
 	 * Return the covered text of two begin/end indexes in a {@link EDocument}.
@@ -110,9 +60,6 @@ public interface CorpusService {
 
 	public TXTCorpus asTxtCorpus(ESingleLanguageCorpus corpus);
 
-	public Path getWorkspacePath(ECorpus resource);
-
-	public Path getWorkspacePath(ETerminology resource);
 
 	/**
 	 * The root path of the comparable corpus, where the document files actually are, in the filesystem.
@@ -125,11 +72,9 @@ public interface CorpusService {
 	
 	public Path getSourcePath(ESingleLanguageCorpus slc);
 
-	public Path getSourceTxtPath(ESingleLanguageCorpus slc);
-
 	public Path getSourcePath(EDocument d);
 
-	public Path getWorkspacePath(ESingleLanguageCorpus slc);
+	public Collection<EDocument> getDocuments(ESingleLanguageCorpus corpus);
 
 
 }

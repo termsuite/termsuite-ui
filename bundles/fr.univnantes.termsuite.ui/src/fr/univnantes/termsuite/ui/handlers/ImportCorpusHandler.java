@@ -18,7 +18,9 @@ public class ImportCorpusHandler {
 	public static final String ID = "fr.univnantes.termsuite.ui.handler.ImportCorpus";
 
 	@Execute
-	public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell parentShell, IEclipseContext context, CorpusService corpusService) {
+	public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell parentShell, 
+			IEclipseContext context, 
+			CorpusService corpusService) {
 		ImportCorpusWizard wizard = ContextInjectionFactory.make(ImportCorpusWizard.class, context);
 		if(new WizardDialog(parentShell, wizard).open() == Window.OK)
 			corpusService.createCorpus(wizard.getCorpusName(), wizard.getCorpusPath());

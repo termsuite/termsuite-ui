@@ -44,7 +44,7 @@ import fr.univnantes.termsuite.ui.services.impl.LinguisticResourcesServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.NLPServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.ResourceServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.TaggerServiceImpl;
-import fr.univnantes.termsuite.ui.services.impl.TermIndexServiceImpl;
+import fr.univnantes.termsuite.ui.services.impl.TerminologyServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.TermSuiteSelectionServiceImpl;
 import fr.univnantes.termsuite.ui.util.WorkspaceUtil;
 
@@ -146,10 +146,10 @@ public class LifeCycleManager {
 
 	private void addServicesToContext(IEclipseContext cont) {
 		cont.set(LinguisticResourcesService.class, ContextInjectionFactory.make(LinguisticResourcesServiceImpl.class, cont));
-		cont.set(NLPService.class, ContextInjectionFactory.make(NLPServiceImpl.class, cont));
-		cont.set(TerminologyService.class, ContextInjectionFactory.make(TermIndexServiceImpl.class, cont));
-		cont.set(CorpusService.class, ContextInjectionFactory.make(CorpusServiceImpl.class, cont));
 		cont.set(ResourceService.class, ContextInjectionFactory.make(ResourceServiceImpl.class, cont));
+		cont.set(NLPService.class, ContextInjectionFactory.make(NLPServiceImpl.class, cont));
+		cont.set(TerminologyService.class, ContextInjectionFactory.make(TerminologyServiceImpl.class, cont));
+		cont.set(CorpusService.class, ContextInjectionFactory.make(CorpusServiceImpl.class, cont));
 		cont.set(TaggerService.class, ContextInjectionFactory.make(TaggerServiceImpl.class, cont));
 		cont.set(TermSuiteSelectionService.class, ContextInjectionFactory.make(TermSuiteSelectionServiceImpl.class, cont));
 		cont.set(AlignmentService.class, ContextInjectionFactory.make(AlignmentServiceImpl.class, cont));

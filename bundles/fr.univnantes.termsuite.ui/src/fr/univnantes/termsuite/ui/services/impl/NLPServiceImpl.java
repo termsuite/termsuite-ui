@@ -140,15 +140,15 @@ public class NLPServiceImpl implements NLPService {
 		job.addJobChangeListener(new JobChangeAdapter() {
 			@Override
 			public void done(IJobChangeEvent event) {
-				CorpusService corpusService = context.get(CorpusService.class);
-				ETerminology terminology = corpusService.createTerminology(
+				ResourceService resourceService = context.get(ResourceService.class);
+				ETerminology terminology = resourceService.createTerminology(
 						corpus, 
 						pipeline.getName(), 
 						pipeline.getOccurrenceMode(),
 						pipeline.isContextualizerEnabled());
 				try {
-					context.get(CorpusService.class).saveCorpus(corpus.getCorpus());
-					Path terminoPath = context.get(CorpusService.class).getWorkspacePath(terminology);
+					resourceService.saveCorpus(corpus.getCorpus());
+					Path terminoPath = resourceService.getWorkspacePath(terminology);
 					try(FileWriter fileWriter = new FileWriter(terminoPath.toFile())) {
 						IndexedCorpusIO.toJson(preparedCorpus, fileWriter);
 					}

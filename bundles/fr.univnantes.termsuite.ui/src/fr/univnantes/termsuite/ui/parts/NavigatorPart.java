@@ -141,7 +141,7 @@ public class NavigatorPart implements TreePart {
 					}
 				};
 		resourceService.getPipelineList().eAdapters().add(refresher);
-		corpusService.getCorporaList().eAdapters().add(refresher);
+		resourceService.getCorporaList().eAdapters().add(refresher);
 		
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new ViewContentProvider());
@@ -247,7 +247,7 @@ public class NavigatorPart implements TreePart {
 
 
 	public void revealTerminologies() {
-		for(ECorpus corpus:corpusService.getCorporaList().getCorpora())
+		for(ECorpus corpus:resourceService.getCorporaList().getCorpora())
 			for(ESingleLanguageCorpus slc:corpus.getSingleLanguageCorpora())
 				for(ETerminology termino:slc.getTerminologies())
 					viewer.reveal(termino);
@@ -271,7 +271,7 @@ public class NavigatorPart implements TreePart {
 			if(parentElement instanceof CustomTreeNode) {
 				CustomTreeNode node = (CustomTreeNode)parentElement;
 				if(node.getNodeType() == NODE_CORPORA)
-					return corpusService.getCorporaList().getCorpora().toArray();
+					return resourceService.getCorporaList().getCorpora().toArray();
 				else if (node.getNodeType() == NODE_PIPELINES)
 					return resourceService.getPipelineList().getPipelines().toArray();
 				else if (node.getNodeType() == NODE_FOLDER_TERMINO) {
@@ -281,14 +281,14 @@ public class NavigatorPart implements TreePart {
 					Object[] array = terminologies
 							.stream()
 							.filter(t -> {
-								File f = corpusService.getWorkspacePath(t).toFile();
+								File f = resourceService.getWorkspacePath(t).toFile();
 								return f.exists() && f.length() > 0;
 							})
 							.toArray();
 					return array;
 				} else if (node.getNodeType() == NODE_FOLDER_DOCUMENT) {
 					ESingleLanguageCorpus c = (ESingleLanguageCorpus)node.getParent();
-					List<EDocument> documents = corpusService.getDocuments(c);
+					List<EDocument> documents = Lists.newArrayList(corpusService.getDocuments(c));
 					Collections.sort(documents, TermSuiteUI.DOCUMENT_COMPARATOR);
 					return documents.toArray();
 				} else if (node.getNodeType() == NODE_RESOURCES) {
@@ -360,7 +360,7 @@ public class NavigatorPart implements TreePart {
 			if(element instanceof CustomTreeNode) {
 				CustomTreeNode node = (CustomTreeNode)element;
 				if(node.getNodeType() == NODE_CORPORA)
-					return !corpusService.getCorporaList().getCorpora().isEmpty();
+					return !resourceService.getCorporaList().getCorpora().isEmpty();
 				else if (node.getNodeType() == NODE_RESOURCES)
 					return true;
 				else if (node.getNodeType() == NODE_PIPELINES)
