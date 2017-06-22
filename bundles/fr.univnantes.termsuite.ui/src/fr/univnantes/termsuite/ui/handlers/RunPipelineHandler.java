@@ -22,7 +22,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.NLPService;
-import fr.univnantes.termsuite.ui.services.PipelineService;
+import fr.univnantes.termsuite.ui.services.ResourceService;
 
 public class RunPipelineHandler {
 
@@ -33,7 +33,7 @@ public class RunPipelineHandler {
 			@Optional @Named(IServiceConstants.ACTIVE_SELECTION) EPipeline selectedPipeline,
 			@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
 			NLPService extractorService,
-			PipelineService pipelineService,
+			ResourceService resourceService,
 			CorpusService corpusService) {
 		Map<String, Object> parameterMap = command.getParameterMap();
 		if(!parameterMap.containsKey(TermSuiteUI.COMMAND_RUN_PIPELINE_PARAMETER_PIPELINE_ID)
@@ -43,7 +43,7 @@ public class RunPipelineHandler {
 		} else {
 			// run handler from parameterized command
 			String pipelineName = parameterMap.get(TermSuiteUI.COMMAND_RUN_PIPELINE_PARAMETER_PIPELINE_ID).toString();
-			java.util.Optional<EPipeline> pipeline = pipelineService.getPipeline(pipelineName);
+			java.util.Optional<EPipeline> pipeline = resourceService.getPipeline(pipelineName);
 			if(pipeline.isPresent()) 
 				runPipeline(shell, extractorService, corpusService, pipeline.get());
 		}
@@ -66,7 +66,7 @@ public class RunPipelineHandler {
 	public boolean canExecute(
 			@Optional ParameterizedCommand command, 
 			@Optional @Named(IServiceConstants.ACTIVE_SELECTION) EPipeline selectedPipeline,
-			PipelineService pipelineService,
+			ResourceService resourceService,
 			NLPService extractorService) {
 		if(command == null || command.getParameterMap().isEmpty()) {
 			// try to run handler from selected EPipeline
@@ -79,8 +79,8 @@ public class RunPipelineHandler {
 			Map<String, Object> parameterMap = command.getParameterMap();
 			Object pipelineName = parameterMap.get(TermSuiteUI.COMMAND_RUN_PIPELINE_PARAMETER_PIPELINE_ID);
 			return pipelineName != null
-						&& pipelineService.getPipeline(pipelineName.toString()).isPresent()
-						&& extractorService.isPipelineValid(pipelineService.getPipeline(pipelineName.toString()).get())
+						&& resourceService.getPipeline(pipelineName.toString()).isPresent()
+						&& extractorService.isPipelineValid(resourceService.getPipeline(pipelineName.toString()).get())
 						;
 		}
 	}	

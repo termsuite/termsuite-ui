@@ -43,6 +43,7 @@ import fr.univnantes.termsuite.model.TermProperty;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EAssocMeasure;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESimilarityMeasure;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
@@ -74,6 +75,12 @@ public class NLPServiceImpl implements NLPService {
 	@Inject
 	LinguisticResourcesService resourceService;
 	
+
+	@Override
+	public boolean isLanguageSupported(ELang language) {
+		return SUPPORTED_LANGUAGES.contains(language);
+	}
+
 	@Override
 	public void runPipelineOnCorpus(EPipeline pipeline, ESingleLanguageCorpus corpus) {
 		List<ESingleLanguageCorpus> l = Lists.newArrayList();

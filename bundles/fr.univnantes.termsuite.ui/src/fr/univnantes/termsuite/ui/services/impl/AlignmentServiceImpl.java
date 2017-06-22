@@ -41,7 +41,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
 import fr.univnantes.termsuite.ui.services.AlignmentService;
 import fr.univnantes.termsuite.ui.services.CorpusService;
-import fr.univnantes.termsuite.ui.services.TermIndexService;
+import fr.univnantes.termsuite.ui.services.TerminologyService;
 import fr.univnantes.termsuite.ui.util.LangUtil;
 
 @SuppressWarnings("restriction")
@@ -202,8 +202,8 @@ public class AlignmentServiceImpl implements AlignmentService {
 			BilingualAlignmentService aligner;
 			try {
 				aligner = TermSuite.bilingualAligner()
-						.setSourceTerminology(context.get(TermIndexService.class).getTermIndex(sourceTerminology))
-						.setTargetTerminology(context.get(TermIndexService.class).getTermIndex(targetTerminology))
+						.setSourceTerminology(context.get(TerminologyService.class).readTerminology(sourceTerminology))
+						.setTargetTerminology(context.get(TerminologyService.class).readTerminology(targetTerminology))
 						.setDicoPath(Paths.get(dico.getPath()))
 						.setDistance(Cosine.class)
 						.create();

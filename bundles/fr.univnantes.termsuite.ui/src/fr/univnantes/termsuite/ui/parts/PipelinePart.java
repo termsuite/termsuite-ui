@@ -68,7 +68,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESimilarityMeasure;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
 import fr.univnantes.termsuite.ui.services.NLPService;
-import fr.univnantes.termsuite.ui.services.PipelineService;
+import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.services.TaggerService;
 import fr.univnantes.termsuite.ui.util.jface.IntegerValidator;
 import fr.univnantes.termsuite.ui.util.jface.StringToIntegerConverter;
@@ -533,12 +533,12 @@ public class PipelinePart {
 	}
 	
 	@Persist
-	public void save(MDirtyable dirty, PipelineService pipelineService,
+	public void save(MDirtyable dirty, ResourceService resourceService,
 			@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
 			EPipeline pipeline) {
 		// save changes via ITodoService for example
 		try {
-			pipelineService.savePipeline(pipeline);
+			resourceService.savePipeline(pipeline);
 			
 			// save was successful
 			dirty.setDirty(false);

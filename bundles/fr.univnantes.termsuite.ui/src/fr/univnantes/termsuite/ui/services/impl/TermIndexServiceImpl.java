@@ -22,10 +22,10 @@ import fr.univnantes.termsuite.io.json.JsonTerminologyIO;
 import fr.univnantes.termsuite.model.IndexedCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.services.CorpusService;
-import fr.univnantes.termsuite.ui.services.TermIndexService;
+import fr.univnantes.termsuite.ui.services.TerminologyService;
 import fr.univnantes.termsuite.ui.util.IOUtil;
 
-public class TermIndexServiceImpl implements TermIndexService {
+public class TermIndexServiceImpl implements TerminologyService {
 
 	@Inject
 	private IEclipseContext context;
@@ -44,12 +44,12 @@ public class TermIndexServiceImpl implements TermIndexService {
 			});
 
 	@Override
-	public IndexedCorpus getTermIndex(ETerminology terminology) throws ExecutionException {
+	public IndexedCorpus readTerminology(ETerminology terminology) throws ExecutionException {
 		return terminoCache.get(terminology);
 	}
 
 	@Override
-	public void saveTermIndex(ETerminology terminology, IndexedCorpus termIndex, boolean withOccurrences, boolean withContexts) throws IOException {
+	public void saveTerminologyJson(ETerminology terminology, IndexedCorpus termIndex, boolean withOccurrences, boolean withContexts) throws IOException {
 		FileOutputStream fos = new FileOutputStream(getPath(terminology).toFile());
 		Writer writer2 = new OutputStreamWriter(fos, "UTF-8");
 		JsonTerminologyIO.save(
@@ -66,7 +66,7 @@ public class TermIndexServiceImpl implements TermIndexService {
 
 
 	@Override
-	public boolean removeTerminology(ETerminology terminology) {
+	public boolean removeTerminologyJson(ETerminology terminology) {
 		terminology.getCorpus().getTerminologies().remove(terminology);
 		context.get(CorpusService.class).saveCorpus(terminology.getCorpus().getCorpus());
 		terminoCache.invalidate(terminology);
@@ -74,7 +74,7 @@ public class TermIndexServiceImpl implements TermIndexService {
 	}
 
 	@Override
-	public IndexedCorpus getTermIndexMetadata(ETerminology terminology) throws IOException {
+	public IndexedCorpus getMetadata(ETerminology terminology) throws IOException {
 		FileInputStream fis = new FileInputStream(getPath(terminology).toFile());
 		InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
 		IndexedCorpus termino = JsonTerminologyIO.load(

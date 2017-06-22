@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Shell;
 import fr.univnantes.termsuite.ui.dialogs.RenameDialog;
 import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.NLPService;
-import fr.univnantes.termsuite.ui.services.PipelineService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 
 public class RenameHandler {
@@ -26,7 +25,6 @@ public class RenameHandler {
 			@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
 			ResourceService resourceService,
 			NLPService extractorService,
-			PipelineService pipelineService,
 			CorpusService corpusService) {
 		RenameDialog dialog = new RenameDialog(shell, resourceService, selectedObject);
 		if(dialog.open() == Window.OK) 

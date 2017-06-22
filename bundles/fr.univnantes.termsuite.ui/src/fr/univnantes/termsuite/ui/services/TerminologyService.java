@@ -19,7 +19,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
  * @see ETerminology
  * 
  */
-public interface TermIndexService {
+public interface TerminologyService {
 	
 	/**
 	 * Gets the TermSuite {@link IndexedCorpus} associated to the
@@ -33,7 +33,7 @@ public interface TermIndexService {
 	 * @throws ExecutionException 
 	 * 				if an {@link IOException} occurs while loading the {@link TermIndex} from file.
 	 */
-	public IndexedCorpus getTermIndex(ETerminology terminology) throws ExecutionException;
+	public IndexedCorpus readTerminology(ETerminology terminology) throws ExecutionException;
 	
 	/**
 	 * 
@@ -42,7 +42,7 @@ public interface TermIndexService {
 	 * @return
 	 * @throws ExecutionException
 	 */
-	public IndexedCorpus getTermIndexMetadata(ETerminology terminology) throws IOException;
+	public IndexedCorpus getMetadata(ETerminology terminology) throws IOException;
 
 	
 
@@ -60,7 +60,7 @@ public interface TermIndexService {
 	 *  		Set it to <code>true</code> if context vectors should be stored.
 	 * @throws IOException 
 	 */
-	public void saveTermIndex(ETerminology terminology, IndexedCorpus termIndex, boolean withOccurrences, boolean withContexts) throws IOException;
+	public void saveTerminologyJson(ETerminology terminology, IndexedCorpus termIndex, boolean withOccurrences, boolean withContexts) throws IOException;
 	
 	/**
 	 * Removes from file system the term index associated with the 
@@ -71,7 +71,7 @@ public interface TermIndexService {
 	 * @return
 	 * 			<code>true</code> if removed properly, <code>false</code> otherwise.
 	 */
-	public boolean removeTerminology(ETerminology terminology);
+	public boolean removeTerminologyJson(ETerminology terminology);
 
 
 }

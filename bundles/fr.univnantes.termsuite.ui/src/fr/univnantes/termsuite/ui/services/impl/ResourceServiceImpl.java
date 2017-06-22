@@ -30,16 +30,29 @@ import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
+import fr.univnantes.termsuite.ui.model.termsuiteui.EPipelineList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ETagger;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ETaggerConfig;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
+import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
 import fr.univnantes.termsuite.ui.services.CorpusService;
-import fr.univnantes.termsuite.ui.services.PipelineService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
+import fr.univnantes.termsuite.ui.services.TaggerService;
 import fr.univnantes.termsuite.ui.util.WorkspaceUtil;
 
 public class ResourceServiceImpl implements ResourceService {
-
+	@Inject
+	IEventBroker eventBroker;
+	
+	private EPipelineList pipelines = TermsuiteuiFactory.eINSTANCE.createEPipelineList();
+	
+	public ResourceServiceImpl() {
+		// Register the XMI resource factory for the .pipeline extension
+		loadPipelines();
+	}
+	
 	BiMap<String, EResource> resources = HashBiMap.create();
 	
 	@Override
@@ -129,7 +142,7 @@ public class ResourceServiceImpl implements ResourceService {
 				if(corpusNames.contains(newName))
 					return "A corpus named " + newName + " already exists";
 			} else if(resource instanceof EPipeline) {
-				List<String> pipelineNames = context.get(PipelineService.class).getPipelineList().getPipelines().stream().map(EPipeline::getName).collect(toList());
+				List<String> pipelineNames = getPipelineList().getPipelines().stream().map(EPipeline::getName).collect(toList());
 				if(pipelineNames.contains(newName))
 					return "A pipeline named " + newName + " already exists";
 			} else if(resource instanceof ETerminology) {
@@ -150,7 +163,7 @@ public class ResourceServiceImpl implements ResourceService {
 		if(object instanceof ETerminology)
 			return context.get(CorpusService.class).getWorkspacePath((ETerminology)object);
 		if(object instanceof EPipeline)
-			return context.get(PipelineService.class).getPath((EPipeline)object);
+			return getPath((EPipeline)object);
 		else throw new IllegalArgumentException("A resource of type "+object.getClass().getSimpleName()+" cannot have a filepath.");
 	}
 
@@ -202,7 +215,7 @@ public class ResourceServiceImpl implements ResourceService {
 		} else if(object instanceof ECorpus) {
 			return CorpusService.CORPUS_EXTENSION;
 		} else if(object instanceof EPipeline) {
-			return PipelineService.PIPELINE_EXTENSION;
+			return PIPELINE_EXTENSION;
 		} else
 			throw new IllegalStateException("No file serialization support for object of type " + object.getClass().getSimpleName());
 	}
@@ -215,4 +228,88 @@ public class ResourceServiceImpl implements ResourceService {
 	private Optional<EAttribute> getNameEAttribute(EClass eClass) {
 		return eClass.getEAllAttributes().stream().filter(a -> a.getName().equals("name")).findFirst();
 	}
+	
+
+
+	private void loadPipelines() {
+		List<EPipeline> list = WorkspaceUtil.loadResources(PIPELINE_DIR, PIPELINE_EXTENSION, EPipeline.class);
+		pipelines.getPipelines().addAll(list);
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see fr.univnantes.termsuite.ui.services.PipelineService#savePipeline(fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline)
+	 */
+	@Override
+	public void savePipeline(EPipeline pipeline) throws IOException {
+		WorkspaceUtil.saveResource(pipeline, PIPELINE_DIR, pipeline.getName(), PIPELINE_EXTENSION);
+	}
+
+
+	
+	
+	/* (non-Javadoc)
+	 * @see fr.univnantes.termsuite.ui.services.PipelineService#getPipelineList()
+	 */
+	@Override
+	public EPipelineList getPipelineList() {
+		return pipelines;
+	}
+
+	/* (non-Javadoc)
+	 * @see fr.univnantes.termsuite.ui.services.PipelineService#createPipeline(java.lang.String)
+	 */
+	@Override
+	public EPipeline createPipeline(String name) throws IOException {
+		EPipeline p = TermsuiteuiFactory.eINSTANCE.createEPipeline();
+		p.setName(name);
+		TaggerService taggerService = this.context.get(TaggerService.class);
+		if(taggerService.getTaggerConfigs().size() > 0) {
+			ETaggerConfig treeTagger = null;
+			for(ETaggerConfig config:taggerService.getTaggerConfigs())
+				if(config.getTaggerType() == ETagger.TREE_TAGGER)
+					treeTagger = config;
+			ETaggerConfig selectedConfig = treeTagger != null ? treeTagger : taggerService.getTaggerConfigs().iterator().next();
+			p.setTaggerConfigName(selectedConfig.getName());
+		}
+		pipelines.getPipelines().add(p);
+		savePipeline(p);
+		return p;
+	}
+
+	/* (non-Javadoc)
+	 * @see fr.univnantes.termsuite.ui.services.PipelineService#canCreatePipeline(java.lang.String)
+	 */
+	@Override
+	public boolean canCreatePipeline(String string) {
+		for(EPipeline p:pipelines.getPipelines()) {
+			if(p.getName().equals(string))
+				return false;
+		}
+		return true;
+	}
+
+
+	@Override
+	public void remove(EPipeline s) {
+		pipelines.getPipelines().remove(s);
+		WorkspaceUtil.removeResource(PIPELINE_DIR, s.getName(), PIPELINE_EXTENSION);
+		eventBroker.post(TermSuiteEvents.PIPELINE_REMOVED, s);
+	}
+
+
+	@Override
+	public Optional<EPipeline> getPipeline(String pipelineName) {
+		return pipelines.getPipelines().stream()
+				.filter(p -> p.getName().equals(pipelineName))
+				.findFirst();
+	}
+
+
+	@Override
+	public Path getPath(EPipeline pipeline) {
+		return WorkspaceUtil.getWorkspacePath(PIPELINE_DIR, pipeline.getName() + "." + PIPELINE_EXTENSION);
+	}
+
 }

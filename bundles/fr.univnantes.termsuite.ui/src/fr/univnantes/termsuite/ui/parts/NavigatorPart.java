@@ -56,7 +56,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.LinguisticResourcesService;
-import fr.univnantes.termsuite.ui.services.PipelineService;
+import fr.univnantes.termsuite.ui.services.NLPService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.util.CommandUtil;
 import fr.univnantes.termsuite.ui.util.CustomTreeNode;
@@ -108,7 +108,10 @@ public class NavigatorPart implements TreePart {
 	private CorpusService corpusService;
 
 	@Inject
-	private PipelineService pipelineService;
+	private ResourceService resourceService;
+
+	@Inject
+	private NLPService nlpService;
 
 	@Inject
 	private LinguisticResourcesService lingueeService;
@@ -127,7 +130,6 @@ public class NavigatorPart implements TreePart {
 			final ESelectionService selectionService,
 			EMenuService menuService,
 			IEventBroker eventBroker,
-			final ResourceService resourceService,
 			final EHandlerService handlerService,
 			final ECommandService commandService) {
 		
@@ -138,7 +140,7 @@ public class NavigatorPart implements TreePart {
 						NavigatorPart.this.viewer.refresh();
 					}
 				};
-		pipelineService.getPipelineList().eAdapters().add(refresher);
+		resourceService.getPipelineList().eAdapters().add(refresher);
 		corpusService.getCorporaList().eAdapters().add(refresher);
 		
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -271,7 +273,7 @@ public class NavigatorPart implements TreePart {
 				if(node.getNodeType() == NODE_CORPORA)
 					return corpusService.getCorporaList().getCorpora().toArray();
 				else if (node.getNodeType() == NODE_PIPELINES)
-					return pipelineService.getPipelineList().getPipelines().toArray();
+					return resourceService.getPipelineList().getPipelines().toArray();
 				else if (node.getNodeType() == NODE_FOLDER_TERMINO) {
 					ESingleLanguageCorpus c = (ESingleLanguageCorpus)node.getParent();
 					EList<ETerminology> terminologies = c
@@ -305,7 +307,7 @@ public class NavigatorPart implements TreePart {
 				ECorpus c = (ECorpus) parentElement;
 				List<ESingleLanguageCorpus> slcList = Lists.newArrayList();
 				for(ESingleLanguageCorpus slc:c.getSingleLanguageCorpora())
-					if(corpusService.isLanguageSupported(slc.getLanguage()))
+					if(nlpService.isLanguageSupported(slc.getLanguage()))
 						slcList.add(slc);
 				return slcList.toArray();
 			} else if (parentElement instanceof ESingleLanguageCorpus) {
@@ -362,7 +364,7 @@ public class NavigatorPart implements TreePart {
 				else if (node.getNodeType() == NODE_RESOURCES)
 					return true;
 				else if (node.getNodeType() == NODE_PIPELINES)
-					return !pipelineService.getPipelineList().getPipelines().isEmpty();
+					return !resourceService.getPipelineList().getPipelines().isEmpty();
 				else if (node.getNodeType() == NODE_FOLDER_TERMINO) {
 					ESingleLanguageCorpus c = (ESingleLanguageCorpus)node.getParent();
 					return !c.getTerminologies().isEmpty();

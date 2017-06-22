@@ -52,7 +52,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
-import fr.univnantes.termsuite.ui.services.TermIndexService;
+import fr.univnantes.termsuite.ui.services.TerminologyService;
 import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
 import fr.univnantes.termsuite.ui.util.treeviewer.TreePart;
 import fr.univnantes.termsuite.ui.viewers.TermIndexViewer;
@@ -74,7 +74,7 @@ public class TerminologyPart implements TreePart {
 	private IEventBroker eventBroker; 
 
 	@Inject 
-	private TermIndexService termIndexService;
+	private TerminologyService termIndexService;
 	
 	@Inject
 	TermSuiteSelectionService termSuiteSelectionService;
@@ -247,7 +247,7 @@ public class TerminologyPart implements TreePart {
 			});
 			try {
 				if(terminology != null) {
-					final IndexedCorpus termIndex = termIndexService.getTermIndex(terminology);
+					final IndexedCorpus termIndex = termIndexService.readTerminology(terminology);
 					Job job = Job.create("Open terminology", monitor -> {
 							sync.asyncExec(new Runnable() {
 								@Override
@@ -272,7 +272,7 @@ public class TerminologyPart implements TreePart {
 
 	}
 
-	private void subscribe(final IEclipseContext context, final TermIndexService termIndexService,
+	private void subscribe(final IEclipseContext context, final TerminologyService termIndexService,
 			final Composite parent) {
 		this.eventBroker.subscribe(TermSuiteEvents.SEARCH_TEXT_MODIFIED, new EventHandler(){
 			@Override

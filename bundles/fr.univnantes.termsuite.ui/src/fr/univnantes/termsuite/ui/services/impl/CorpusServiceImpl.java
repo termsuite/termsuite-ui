@@ -59,6 +59,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
 import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.NLPService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.util.FileUtil;
 import fr.univnantes.termsuite.ui.util.LangUtil;
@@ -159,7 +160,7 @@ public class CorpusServiceImpl implements CorpusService {
 				public boolean accept(File child) {
 					if(!child.isDirectory())
 						return false;
-					for(ELang l:SUPPORTED_LANGUAGES) {
+					for(ELang l:NLPService.SUPPORTED_LANGUAGES) {
 						if(LangUtil.getTermsuiteLang(l).getNameUC().equals(child.getName())) 
 							return true;
 					}
@@ -364,11 +365,6 @@ public class CorpusServiceImpl implements CorpusService {
 	}
 
 	@Override
-	public boolean isLanguageSupported(ELang language) {
-		return SUPPORTED_LANGUAGES.contains(language);
-	}
-
-	@Override
 	public TXTCorpus asTxtCorpus(ESingleLanguageCorpus corpus) {
 		return new TXTCorpus(
 				Lang.forName(corpus.getLanguage().getName().toLowerCase()), 
@@ -458,13 +454,4 @@ public class CorpusServiceImpl implements CorpusService {
 		return corpusCache.getUnchecked(slc);
 	}
 
-	@Override
-	public List<ETerminology> getTerminologies(ESingleLanguageCorpus slc) {
-		List<ETerminology> terminologies = new ArrayList<>();
-		for(File f:getWorkspacePath(slc).toFile().listFiles(f -> f.getName().endsWith("."+JSON_EXTENSION))) {
-			ETerminology termino = WorkspaceUtil.loadResource(f.getPath(), ETerminology.class);
-			terminologies.add(termino);	
-		}
-		return terminologies;
-	}
 }

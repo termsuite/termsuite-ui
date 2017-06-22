@@ -24,7 +24,6 @@ public interface CorpusService {
 	public static final String CORPUS_EXTENSION = "corpus";
 	public static final String CORPUS_DIR = "corpora";
 
-	public static final Set<ELang> SUPPORTED_LANGUAGES = ImmutableSet.of(ELang.FR, ELang.EN, ELang.ES, ELang.DE, ELang.RU);
 
 	public ECorporaList getCorporaList();
 
@@ -52,7 +51,6 @@ public interface CorpusService {
 	
 	
 	public List<EDocument> getDocuments(ESingleLanguageCorpus corpus);
-	public List<ETerminology> getTerminologies(ESingleLanguageCorpus corpus);
 
 	public String getCollectionPath(ESingleLanguageCorpus corpus);
 
@@ -107,14 +105,11 @@ public interface CorpusService {
 	 */
 	public String getDocumentExcerpt(EDocument document, int begin, int end);
 
-	public boolean isLanguageSupported(ELang language);
 
 	public File[] candidateSLCChildrenForPath(String path);
 
 	public TXTCorpus asTxtCorpus(ESingleLanguageCorpus corpus);
 
-	
-	
 	public Path getWorkspacePath(ECorpus resource);
 
 	public Path getWorkspacePath(ETerminology resource);
