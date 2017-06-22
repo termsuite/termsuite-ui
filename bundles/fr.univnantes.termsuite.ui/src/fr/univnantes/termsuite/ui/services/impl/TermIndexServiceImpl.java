@@ -68,13 +68,9 @@ public class TermIndexServiceImpl implements TermIndexService {
 	@Override
 	public boolean removeTerminology(ETerminology terminology) {
 		terminology.getCorpus().getTerminologies().remove(terminology);
-		try {
-			context.get(CorpusService.class).saveCorpus(terminology.getCorpus().getCorpus());
-			terminoCache.invalidate(terminology);
-			return getPath(terminology).toFile().delete();
-		} catch (IOException e) {
-			return false;
-		}
+		context.get(CorpusService.class).saveCorpus(terminology.getCorpus().getCorpus());
+		terminoCache.invalidate(terminology);
+		return getPath(terminology).toFile().delete();
 	}
 
 	@Override

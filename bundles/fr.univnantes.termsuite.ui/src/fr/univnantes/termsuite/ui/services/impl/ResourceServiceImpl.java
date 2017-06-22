@@ -143,39 +143,57 @@ public class ResourceServiceImpl implements ResourceService {
 		Preconditions.checkArgument(isRenameable(object.getClass()), "Not allwed to rename a resource of class %s", object.getClass().getName());
 
 		
-		// rename the file
-		if(object instanceof EResource) {
-			/*
-			 * An EResource has a file within workspace.
-			 * 
-			 * This piece of code cannot be applied on a corpus for example.
-			 *  
-			 */
-			try {
-				Path path = asFilePath(object);
-				Files.move(path, path.resolveSibling(newName));
-			} catch (IOException e) {
-				throw new TermSuiteException("Cloud not rename the resource file: " + e.getMessage(), e);
-			}
-		}
 		
-		Optional<EAttribute> a = getNameEAttribute(object.eClass());
-		if(a.isPresent())
-			object.eSet(a.get(), newName);
-		else
-			throw new IllegalArgumentException("Found no attribute \"name\" for class: " + object.eClass().getName());
-		if(object instanceof EResource)
-			save((EResource)object);
+		
+		try {
+			if(object instanceof ETerminology) {
+				// terminology belongs to the corpus. The corpus must be saved instead of the terminology.
+				CorpusService corpusService = context.get(CorpusService.class);
+				ETerminology termino = (ETerminology)object;
+				Path oldPath = corpusService.getWorkspacePath(termino);
+				termino.setName(newName);
+				Path newPath = corpusService.getWorkspacePath(termino);
+				corpusService.saveCorpus(termino.getCorpus().getCorpus());
+				Files.move(oldPath, newPath);
+				
+			} else if(object instanceof EResource) {
+				/*
+				 * An EResource has a file within workspace.
+				 * 
+				 * This piece of code cannot be applied on a corpus for example.
+				 *  
+				 */
+				Path oldPath = asFilePath(object);
+				Optional<EAttribute> a = getNameEAttribute(object.eClass());
+				if(a.isPresent())
+					object.eSet(a.get(), newName);
+				else
+					throw new IllegalArgumentException("Found no attribute \"name\" for class: " + object.eClass().getName());
+				Path newPath = asFilePath(object);
+				Files.move(oldPath, newPath);
+				save((EResource)object);
+			}
+		} catch (IOException e) {
+			throw new TermSuiteException("Cloud not rename the resource file: " + e.getMessage(), e);
+		}
 		broker.post(TermSuiteEvents.OBJECT_RENAMED, object);
+
+	}
+
+	private String getResourceExtension(EObject object) {
+		if(object instanceof ETerminology) {
+			throw new IllegalArgumentException("ETerminology is contained in corpus. No specific resource file for ETerminology.");
+		} else if(object instanceof ECorpus) {
+			return CorpusService.CORPUS_EXTENSION;
+		} else if(object instanceof EPipeline) {
+			return PipelineService.PIPELINE_EXTENSION;
+		} else
+			throw new IllegalStateException("No file serialization support for object of type " + object.getClass().getSimpleName());
 	}
 
 	@Override
 	public void save(EResource resource) {
-		try {
-			WorkspaceUtil.saveResource(resource, asFilePath(resource));
-		} catch (IOException e) {
-			throw new TermSuiteException("Cloud not save resource to file: " + e.getMessage(), e);
-		}
+		WorkspaceUtil.saveResource(resource, asFilePath(resource));
 	}
 
 	private Optional<EAttribute> getNameEAttribute(EClass eClass) {

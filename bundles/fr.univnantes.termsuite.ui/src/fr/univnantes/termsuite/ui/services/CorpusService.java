@@ -1,7 +1,6 @@
 package fr.univnantes.termsuite.ui.services;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
@@ -58,7 +57,7 @@ public interface CorpusService {
 	public String getCollectionPath(ESingleLanguageCorpus corpus);
 
 	
-	public void saveCorpus(ECorpus corpus) throws IOException;
+	public void saveCorpus(ECorpus corpus);
 	public void removeCorpus(ECorpus s);
 	public ETerminology createTerminology(ESingleLanguageCorpus corpus, String terminologyName, EOccurrenceMode occMode,
 			boolean hasContexts);

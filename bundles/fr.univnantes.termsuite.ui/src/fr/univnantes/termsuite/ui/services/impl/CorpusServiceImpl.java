@@ -2,7 +2,6 @@ package fr.univnantes.termsuite.ui.services.impl;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -150,11 +149,7 @@ public class CorpusServiceImpl implements CorpusService {
 		}
 		corpora.getCorpora().add(corpus);
 		resetCache();
-		try {
-			saveCorpus(corpus);
-		} catch (IOException e) {
-			throw new TermSuiteException(e);
-		}
+		saveCorpus(corpus);
 		return corpus;
 	}
 
@@ -197,7 +192,7 @@ public class CorpusServiceImpl implements CorpusService {
 
 	
 	@Override
-	public void saveCorpus(ECorpus corpus) throws IOException {
+	public void saveCorpus(ECorpus corpus) {
 		resetCache();
 		WorkspaceUtil.saveResource(corpus, CORPUS_DIR, corpus.getName(), CORPUS_EXTENSION);
 	}
@@ -224,14 +219,14 @@ public class CorpusServiceImpl implements CorpusService {
 	
 	
 	@Override
-	public void removeTerminology(ETerminology s) {
-		ECorpus corpus = s.getCorpus().getCorpus();
-		s.getCorpus().getTerminologies().remove(s);
+	public void removeTerminology(ETerminology terminology) {
 		try {
+			ECorpus corpus = terminology.getCorpus().getCorpus();
+			getWorkspacePath(terminology).toFile().delete();
+			terminology.getCorpus().getTerminologies().remove(terminology);
 			context.get(CorpusService.class).saveCorpus(corpus);
-			getWorkspacePath(s).toFile().delete();
-			eventBroker.post(TermSuiteEvents.TERMINOLOGY_REMOVED, s);
-		} catch (IOException e) {
+			eventBroker.post(TermSuiteEvents.TERMINOLOGY_REMOVED, terminology);
+		} catch (TermSuiteException e) {
 			MessageDialog.openError(parent, "Error", "Could not remove the terminology. Error: " + e.getMessage());
 		}
 	}
@@ -409,7 +404,9 @@ public class CorpusServiceImpl implements CorpusService {
 
 	@Override
 	public Path getWorkspacePath(ESingleLanguageCorpus slc) {
-		return createParents(getWorkspacePath(slc.getCorpus()).resolve(slc.getLanguage().toString()));
+		Path corpusPath = getWorkspacePath(slc.getCorpus());
+		Path slcPath = corpusPath.resolve(slc.getLanguage().toString());
+		return createParents(slcPath);
 	}
 
 	@Override

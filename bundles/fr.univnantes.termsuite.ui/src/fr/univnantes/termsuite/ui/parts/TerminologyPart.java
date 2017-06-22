@@ -238,7 +238,7 @@ public class TerminologyPart implements TreePart {
 				public void notifyChanged(Notification notification) {
 					super.notifyChanged(notification);
 					if(notification.getFeature().equals(TermsuiteuiPackage.eINSTANCE.getETerminology_Name())) {
-						mPart.setLabel(notification.getNewStringValue());
+						mPart.setLabel(toPartLabel(terminology));
 					} else {
 						// set dirty
 //						dirty.setDirty(true);
@@ -288,5 +288,14 @@ public class TerminologyPart implements TreePart {
 	@Override
 	public TreeViewer getTreeViewer() {
 		return this.viewer;
+	}
+
+
+
+	public static  String toPartLabel(ETerminology termino) {
+		return String.format("%s/%s/%s", 
+				termino.getCorpus().getCorpus().getName(), 
+				termino.getCorpus().getLanguage().getName().toLowerCase(), 
+				termino.getName());
 	}
 }

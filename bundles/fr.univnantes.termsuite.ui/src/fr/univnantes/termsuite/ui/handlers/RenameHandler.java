@@ -11,7 +11,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 
 import fr.univnantes.termsuite.ui.dialogs.RenameDialog;
-import fr.univnantes.termsuite.ui.model.termsuiteui.EResource;
 import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.ExtractorService;
 import fr.univnantes.termsuite.ui.services.PipelineService;
@@ -40,4 +39,5 @@ public class RenameHandler {
 			@Optional @Named(IServiceConstants.ACTIVE_SELECTION) EObject selectedObject) {
 		return selectedObject != null && (
 				resourceService.isRenameable(selectedObject.getClass()));
-	}	}
+	}
+}

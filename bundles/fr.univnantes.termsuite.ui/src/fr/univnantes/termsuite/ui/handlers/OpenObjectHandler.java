@@ -96,10 +96,7 @@ public class OpenObjectHandler {
 			partId = TerminologyPart.ID;
 			ETerminology termino = (ETerminology)inputObject;
 			iconURI = TermsuiteImg.INSTANCE.getFlaggedTerminoURI(termino.getCorpus().getLanguage());
-			label = String.format("%s/%s/%s", 
-					termino.getCorpus().getCorpus().getName(), 
-					termino.getCorpus().getLanguage().getName().toLowerCase(), 
-					termino.getName());	
+			label = TerminologyPart.toPartLabel(termino);	
 		} else if(inputObject instanceof EPipeline) {
 			partId = PipelinePart.ID;
 			label = ((EPipeline)inputObject).getName();
@@ -119,7 +116,7 @@ public class OpenObjectHandler {
 		eventBroker.send(TermSuiteEvents.EDITOR_INITIATED, part.getObject());
 		partService.activate(part);
 	}
-	
+
 	@CanExecute
 	public boolean canExecute(
 			@Optional @Named(PARAM_INPUT_OBJECT_ID) String inputObjectId,

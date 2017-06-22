@@ -38,8 +38,7 @@ public class WorkspaceUtil {
 	 * 			the file extension
 	 * @throws IOException
 	 */
-	public static void saveResource(EObject emfObject, String workspaceDir, String fileBaseName, String fileExtension)
-			throws IOException {
+	public static void saveResource(EObject emfObject, String workspaceDir, String fileBaseName, String fileExtension) {
 
 		Path p = Paths.get(
 				Platform.getLocation().toString(), 
@@ -48,7 +47,7 @@ public class WorkspaceUtil {
 		saveResource(emfObject, p);
 	}
 
-	public static void saveResource(EObject emfObject, Path path) throws IOException {
+	public static void saveResource(EObject emfObject, Path path) {
 		// Obtain a new resource set
 		ResourceSet resSet = new ResourceSetImpl();
 		Resource resource = resSet
@@ -64,7 +63,11 @@ public class WorkspaceUtil {
 		// now save the content.
 		Map<String, Object> options = Maps.newHashMap();
 //		options.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, false);
-		resource.save(options);
+		try {
+			resource.save(options);
+		} catch (IOException e) {
+			throw new TermSuiteException("Could not save resource " + emfObject.getClass().getSimpleName(), e);
+		}
 	}
 	
 	/**
