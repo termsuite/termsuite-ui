@@ -47,7 +47,7 @@ public interface CorpusService {
 	 * @param corpus
 	 * @return
 	 */
-	public String getOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline);
+	public Path getOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline);
 
 	
 	
@@ -91,7 +91,7 @@ public interface CorpusService {
 	 * @param corpus
 	 * @return
 	 */
-	public String getOutputDirectory(ESingleLanguageCorpus corpus);
+	public Path getOutputDirectory(ESingleLanguageCorpus corpus);
 
 	/**
 	 * Return the covered text of two begin/end indexes in a {@link EDocument}.

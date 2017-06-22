@@ -40,5 +40,6 @@ public interface ResourceService {
 	public String canRename(EObject object, String newName);
 	public Path asFilePath(EObject object);
 	public void save(EResource resource);
+	public Path getOutputDirectory();
 
 }

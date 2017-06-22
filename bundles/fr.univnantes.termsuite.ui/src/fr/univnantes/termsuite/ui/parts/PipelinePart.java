@@ -62,7 +62,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESimilarityMeasure;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
-import fr.univnantes.termsuite.ui.services.ExtractorService;
+import fr.univnantes.termsuite.ui.services.NLPService;
 import fr.univnantes.termsuite.ui.services.PipelineService;
 import fr.univnantes.termsuite.ui.services.TaggerService;
 import fr.univnantes.termsuite.ui.util.jface.IntegerValidator;
@@ -150,7 +150,7 @@ public class PipelinePart {
 			this.pipelineStatusValue.setValue("No pipeline value");
 			form.setMessage("No pipeline value", IMessageProvider.ERROR);
 		} else {
-			String msg = context.get(ExtractorService.class).validatePipeline(pipeline);
+			String msg = context.get(NLPService.class).validatePipeline(pipeline);
 			this.pipelineStatusValue.setValue(msg);
 			this.pipelineValidValue.setValue(msg == null);
 			if(this.pipelineStatusValue.getValue() == null)

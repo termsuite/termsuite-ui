@@ -12,9 +12,4 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 
 public interface PreprocessorService {
 
-	public Job getPreparedCorpusJob(EPipeline pipeline, ESingleLanguageCorpus corpus);
-
-	public Optional<IndexedCorpus> getCachedPreparedCorpus(ESingleLanguageCorpus corpus, String taggerConfigName);
-
-	public Path getCachePath(ESingleLanguageCorpus corpus, String taggerConfigName);
 }

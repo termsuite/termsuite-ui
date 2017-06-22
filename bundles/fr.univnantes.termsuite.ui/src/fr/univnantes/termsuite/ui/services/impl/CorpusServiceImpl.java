@@ -21,8 +21,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -50,7 +48,6 @@ import fr.univnantes.termsuite.model.Document;
 import fr.univnantes.termsuite.model.Lang;
 import fr.univnantes.termsuite.model.TermOccurrence;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
-import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorporaList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
@@ -62,6 +59,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
 import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.util.FileUtil;
 import fr.univnantes.termsuite.ui.util.LangUtil;
 import fr.univnantes.termsuite.ui.util.WorkspaceUtil;
@@ -231,24 +229,16 @@ public class CorpusServiceImpl implements CorpusService {
 		}
 	}
 
-
 	@Override
-	public String getOutputDirectory(ESingleLanguageCorpus corpus) {
-		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(TermSuiteUI.PLUGIN_ID);
-		String rootOutputDir = preferences.get(
-				TermSuiteUIPreferences.OUTPUT_DIRECTORY, 
-				WorkspaceUtil.getWorkspacePath( "output").toString());
-		Path path = Paths.get(
-				rootOutputDir, 
-				corpus.getCorpus().getName(), 
-				corpus.getLanguage().getName());
-		return path.toString();		
+	public Path getOutputDirectory(ESingleLanguageCorpus corpus) {
+		return context.get(ResourceService.class).getOutputDirectory()
+				.resolve(corpus.getCorpus().getName())
+				.resolve(corpus.getLanguage().getName());
 	}
 
 	@Override
-	public String getOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline) {
-		return Paths.get(getOutputDirectory(corpus), 
-				pipeline.getName()).toString();
+	public Path getOutputDirectory(ESingleLanguageCorpus corpus, EPipeline pipeline) {
+		return getOutputDirectory(corpus).resolve(pipeline.getName());
 	}
 
 

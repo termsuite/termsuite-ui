@@ -21,7 +21,7 @@ import fr.univnantes.termsuite.ui.dialogs.CorpusSelectionDialog;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.services.CorpusService;
-import fr.univnantes.termsuite.ui.services.ExtractorService;
+import fr.univnantes.termsuite.ui.services.NLPService;
 import fr.univnantes.termsuite.ui.services.PipelineService;
 
 public class RunPipelineHandler {
@@ -32,7 +32,7 @@ public class RunPipelineHandler {
 	public void execute(ParameterizedCommand command, 
 			@Optional @Named(IServiceConstants.ACTIVE_SELECTION) EPipeline selectedPipeline,
 			@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
-			ExtractorService extractorService,
+			NLPService extractorService,
 			PipelineService pipelineService,
 			CorpusService corpusService) {
 		Map<String, Object> parameterMap = command.getParameterMap();
@@ -49,7 +49,7 @@ public class RunPipelineHandler {
 		}
 	}
 
-	private void runPipeline(Shell shell, ExtractorService extractorService, CorpusService corpusService,
+	private void runPipeline(Shell shell, NLPService extractorService, CorpusService corpusService,
 			EPipeline pipeline) {
 		CorpusSelectionDialog dialog = new CorpusSelectionDialog(shell, corpusService.getCorporaList().getCorpora());
 		List<ESingleLanguageCorpus> selectedCorpora = new ArrayList<>();
@@ -67,7 +67,7 @@ public class RunPipelineHandler {
 			@Optional ParameterizedCommand command, 
 			@Optional @Named(IServiceConstants.ACTIVE_SELECTION) EPipeline selectedPipeline,
 			PipelineService pipelineService,
-			ExtractorService extractorService) {
+			NLPService extractorService) {
 		if(command == null || command.getParameterMap().isEmpty()) {
 			// try to run handler from selected EPipeline
 			if(selectedPipeline != null)

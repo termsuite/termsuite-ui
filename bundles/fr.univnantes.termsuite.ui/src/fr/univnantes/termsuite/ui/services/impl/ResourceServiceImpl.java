@@ -5,11 +5,14 @@ import static java.util.stream.Collectors.toList;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.ecore.EAttribute;
@@ -23,6 +26,8 @@ import com.google.common.collect.HashBiMap;
 
 import fr.univnantes.termsuite.api.TermSuiteException;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
+import fr.univnantes.termsuite.ui.TermSuiteUI;
+import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EResource;
@@ -56,6 +61,17 @@ public class ResourceServiceImpl implements ResourceService {
 	@Override
 	public String toModelTag(ETerminology targetTerminology) {
 		return MODEL_TAG_PREFIX + getResourceId(targetTerminology);
+	}
+	
+	@Override
+	public Path getOutputDirectory() {
+		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(TermSuiteUI.PLUGIN_ID);
+		String path = preferences.get(
+				TermSuiteUIPreferences.OUTPUT_DIRECTORY, 
+				WorkspaceUtil.getWorkspacePath( TermSuiteUIPreferences.OUTPUT_DIRECTORY_DEFAULT).toString());
+		Path path2 = Paths.get(path);
+		path2.toFile().mkdirs();
+		return path2;
 	}
 
 	@Override

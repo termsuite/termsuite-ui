@@ -9,6 +9,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.eclipse.core.runtime.ICoreRunnable;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
@@ -22,10 +24,7 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventHandler;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
 import fr.univnantes.termsuite.api.ExtractorOptions;
@@ -50,13 +49,15 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.services.CorpusService;
-import fr.univnantes.termsuite.ui.services.ExtractorService;
 import fr.univnantes.termsuite.ui.services.LinguisticResourcesService;
-import fr.univnantes.termsuite.ui.services.PreprocessorService;
+import fr.univnantes.termsuite.ui.services.NLPService;
+import fr.univnantes.termsuite.ui.services.ResourceService;
+import fr.univnantes.termsuite.ui.services.TaggerService;
 import fr.univnantes.termsuite.ui.util.Jobs;
 
-public class ExtractorServiceImpl implements ExtractorService {
-	
+public class NLPServiceImpl implements NLPService {
+	public static final int MAX_SIZE = 500000;
+
 	@Inject
 	@Named(IServiceConstants.ACTIVE_SHELL) Shell activeShell;
 
@@ -80,8 +81,6 @@ public class ExtractorServiceImpl implements ExtractorService {
 		runPipelineOnCorpus(pipeline, l);
 	}
 
-
-
 	@Override
 	public void runPipelineOnSeveralCorpus(EPipeline pipeline, Iterable<ESingleLanguageCorpus> corpusList) {
 		runPipelineOnCorpus(pipeline, corpusList);		
@@ -96,17 +95,21 @@ public class ExtractorServiceImpl implements ExtractorService {
 			final Iterable<ESingleLanguageCorpus> corpusList) {
 
 		for(final ESingleLanguageCorpus corpus:corpusList) {
-			PreprocessorService preprocessorService = context.get(PreprocessorService.class);
-			Optional<IndexedCorpus> cachedPreparedCorpus = preprocessorService.getCachedPreparedCorpus(corpus, pipeline.getTaggerConfigName());
-			if(cachedPreparedCorpus.isPresent())
-				runPipelineOnPreprocessedCorpus(pipeline, corpus, cachedPreparedCorpus.get());
+			Path preprocessedCorpusPath = getCachePath(corpus, pipeline.getTaggerConfigName(), pipeline.getMaxNumTermsMemory());
+
+			if(preprocessedCorpusPath.toFile().isFile())
+				runPipelineOnPreprocessedCorpus(pipeline, corpus, IndexedCorpusIO.fromJson(preprocessedCorpusPath));
 			else {
-				Job preprocessCorpusJob = preprocessorService.getPreparedCorpusJob(pipeline, corpus);
-				eventBroker.subscribe(TermSuiteEvents.CORPUS_PREPROCESSED, new EventHandler() {
+				Job preprocessCorpusJob = getPrepareCorpusJob(pipeline, corpus);
+				preprocessCorpusJob.addJobChangeListener(new JobChangeAdapter(){
 					@Override
-					public void handleEvent(Event event) {
-						IndexedCorpus indexedCorpus = (IndexedCorpus)event.getProperty(IEventBroker.DATA);
-						runPipelineOnPreprocessedCorpus(pipeline, corpus, indexedCorpus);
+					public void done(IJobChangeEvent event) {
+						if(event.getResult().isOK()) {
+							runPipelineOnPreprocessedCorpus(
+									pipeline, 
+									corpus, 
+									IndexedCorpusIO.fromJson(preprocessedCorpusPath));
+						}
 					}
 				});
 				preprocessCorpusJob.schedule();
@@ -114,8 +117,6 @@ public class ExtractorServiceImpl implements ExtractorService {
 			}
 		}
 	}
-
-
 
 	public void runPipelineOnPreprocessedCorpus(EPipeline pipeline, ESingleLanguageCorpus corpus, IndexedCorpus preparedCorpus) {
 		String jobName = "Extracting terminology with pipeline " + pipeline.getName() + " on corpus " + preparedCorpus.getTerminology().getName() + "("+preparedCorpus.getTerminology().getLang()+")";
@@ -230,4 +231,65 @@ public class ExtractorServiceImpl implements ExtractorService {
 	public boolean isPipelineValid(EPipeline pipeline) {
 		return validatePipeline(pipeline) == null;
 	}
+	
+	
+	@Override
+	public Job getPrepareCorpusJob(EPipeline pipeline, ESingleLanguageCorpus corpus) {
+		String jobName = String.format("Preprocessing corpus %s - %s (%d documents)", 
+				corpus.getCorpus().getName(), 
+				corpus.getLanguage().getName(), 
+				context.get(CorpusService.class).getDocuments(corpus).size());
+		Job job = Job.create(jobName, monitor -> {
+			final int totalWork = 1000;
+			CorpusService corpusService = context.get(CorpusService.class);
+			final SubMonitor subMonitor = SubMonitor.convert(monitor, totalWork);
+			try {
+				IndexedCorpus preparedCorpus = TermSuite.preprocessor()
+					.setTagger(context.get(TaggerService.class).getTermSuiteTagger(pipeline))
+					.setTaggerPath(context.get(TaggerService.class).getTaggerPath(pipeline))
+					.setListener(new WorkbenchPipelineListener(subMonitor, sync, totalWork))
+				 	.toIndexedCorpus(
+						corpusService.asTxtCorpus(corpus), 
+						MAX_SIZE);
+				
+				// save preprocessed corpus to cache
+				Path cachePath = getCachePath(corpus, pipeline.getTaggerConfigName(), pipeline.getMaxNumTermsMemory());
+				IndexedCorpusIO.toJson(preparedCorpus, new FileWriter(cachePath.toFile()));
+				
+				eventBroker.post(TermSuiteEvents.CORPUS_PREPROCESSED, preparedCorpus);
+				return Status.OK_STATUS;
+			} catch(Exception e) {
+				if(e.getCause() != null && e.getCause() instanceof OperationCanceledException)
+					return Status.CANCEL_STATUS;
+				else if(e.getCause() != null && e.getCause().getCause() != null && e.getCause().getCause() instanceof OperationCanceledException)
+					return Status.CANCEL_STATUS;
+				else
+					return new Status(Status.ERROR, TermSuiteUI.PLUGIN_ID, e.getMessage(), e);
+			} finally {
+				subMonitor.done();
+			}
+		});
+		job.setRule(Jobs.MUTEX_RULE);
+		job.setPriority(Job.BUILD);
+		return job;
+	}
+
+	public static final String PREPROCESS_CACHE_DIR_NAME = "nlp-cache";
+	
+	@Override
+	public Path getCachePath(ESingleLanguageCorpus corpus, String taggerConfigName, int maxSize) {
+		ResourceService resourceService = context.get(ResourceService.class);
+		Path dir = resourceService
+				.getOutputDirectory()
+				.resolve(PREPROCESS_CACHE_DIR_NAME);
+		dir.toFile().mkdirs();
+		return dir.resolve(String.format("%s-%s-%s-%d.json", 
+				corpus.getCorpus().getName(),
+				corpus.getLanguage(),
+				taggerConfigName,
+				maxSize
+				))
+		;
+	}
+
 }
