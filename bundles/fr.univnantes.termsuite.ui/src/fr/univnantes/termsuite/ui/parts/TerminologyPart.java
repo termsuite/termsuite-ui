@@ -1,7 +1,5 @@
 package fr.univnantes.termsuite.ui.parts;
 
-import java.util.EventObject;
-
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
@@ -39,7 +37,6 @@ import fr.univnantes.termsuite.model.TermProperty;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.controls.DelayableText;
-import fr.univnantes.termsuite.ui.controls.DelayedModificationListener;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
@@ -83,7 +80,7 @@ public class TerminologyPart implements TreePart {
 			final EPartService partService,
 			final Composite parent, MPart part) {
 		this.parent = parent;
-		parent.setLayout(new GridLayout(2, false));
+		parent.setLayout(new GridLayout(4, false));
 
 		viewerConfig = TermsuiteuiFactory.eINSTANCE.createETerminoViewerConfig();
 		viewerConfig.setSortingPropertyName(TermProperty.RANK.getJsonField());
@@ -96,7 +93,7 @@ public class TerminologyPart implements TreePart {
 	    
 		// populate viewer
 		this.viewer = new TerminologyViewer(viewerConfig, parent, SWT.SINGLE| SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
-		GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(viewer.getControl());
+		GridDataFactory.fillDefaults().span(4, 1).grab(true, true).applyTo(viewer.getControl());
 		
 		subscribe(context, eTerminologyService, parent);
 		
@@ -163,60 +160,36 @@ public class TerminologyPart implements TreePart {
 	
 
 	private DelayableText numOfTermsToShow;
-	private Label numOfTermsBeforeFiltering;
-	
 	
 	private void populateInfoContainer(Composite infoContainer) {
-		
-		// The total number of terms label
-		new Label(infoContainer, SWT.NONE).setText("Number of terms in termino (before filtering): ");
-		numOfTermsBeforeFiltering = new Label(infoContainer, SWT.NONE);
-		GridDataFactory.fillDefaults().applyTo(numOfTermsBeforeFiltering);
-		
-		// horizontal line
-	    Label separator = new Label(infoContainer, SWT.HORIZONTAL | SWT.SEPARATOR);
-	    GridDataFactory.fillDefaults().span(2,1).applyTo(separator);
-		
-	    
-		// The search filter
-		new Label(infoContainer, SWT.NONE).setText("Search pattern: ");
-		final DelayableText searchText = new DelayableText(1000, infoContainer, SWT.SEARCH | SWT.ICON_SEARCH | SWT.CANCEL | SWT.BORDER);
-		searchText.setMessage("Search");
-		GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(searchText);
-		searchText.addDelayedModificationListener(new DelayedModificationListener() {
-			@Override
-			public void modifyText(final EventObject e) {
-				sync.asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						viewerConfig.setSearchString((String)((DelayableText)e.getSource()).getText());
-					}
-				});
-			}
+		// maxNumOfterm filter
+	    Label nbTermsLimit = new Label(infoContainer, SWT.NONE);
+	    nbTermsLimit.setText("Nb terms limit:");
+		GridDataFactory.fillDefaults().grab(false, false).applyTo(nbTermsLimit);
+		numOfTermsToShow = new DelayableText(500, infoContainer, SWT.NONE);
+		numOfTermsToShow.setText(Integer.toString(viewerConfig.getNbDisplayedTerms()));
+		GridDataFactory.fillDefaults().hint(50, SWT.DEFAULT).grab(false, false).applyTo(numOfTermsToShow);
+		numOfTermsToShow.addDelayedModificationListener(e -> {
+			sync.asyncExec(() -> {
+				try {
+					int maxTerms = Integer.parseInt(((DelayableText)e.getSource()).getText());
+					viewerConfig.setNbDisplayedTerms(maxTerms);
+				} catch(NumberFormatException nfe) {}
+			});
 		});
 
 		
-		
-		// maxNumOfterm filter
-		new Label(infoContainer, SWT.NONE).setText("How many terms to show: ");
-		numOfTermsToShow = new DelayableText(500, infoContainer, SWT.NONE);
-		numOfTermsToShow.setText(Integer.toString(viewerConfig.getNbDisplayedTerms()));
-		GridDataFactory.fillDefaults().applyTo(numOfTermsToShow);
-		numOfTermsToShow.addDelayedModificationListener(new DelayedModificationListener() {
-			@Override
-			public void modifyText(final EventObject e) {
-				sync.asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							int maxTerms = Integer.parseInt(((DelayableText)e.getSource()).getText());
-							viewerConfig.setNbDisplayedTerms(maxTerms);
-						} catch(NumberFormatException e) {}
-					}
-				});
-				
-			}
-		});
+		// The search filter
+	    Label searchLabel = new Label(infoContainer, SWT.NONE);
+	    searchLabel.setText("Search:");
+		GridDataFactory.fillDefaults().grab(false, false).applyTo(searchLabel);
+		final DelayableText searchText = new DelayableText(1000, infoContainer, SWT.SEARCH | SWT.ICON_SEARCH | SWT.CANCEL | SWT.BORDER);
+		searchText.setMessage("Search");
+		GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).grab(true, false).applyTo(searchText);
+		searchText.addDelayedModificationListener(e -> 
+				sync.asyncExec(() -> 
+					viewerConfig.setSearchString((String)((DelayableText)e.getSource()).getText()))
+			);
 	}
 
 	@Inject @Optional
@@ -238,7 +211,6 @@ public class TerminologyPart implements TreePart {
 				final IndexedCorpus indexedCorpus = eTerminologyService.readTerminology(terminology);
 				Job job = Job.create("Open terminology", monitor -> {
 					sync.asyncExec(() -> {
-						numOfTermsBeforeFiltering.setText(Integer.toString(indexedCorpus.getTerminology().getTerms().size()));
 						viewer.setInput(TermSuite.getTerminologyService(indexedCorpus.getTerminology()));
 					});
 					return Status.OK_STATUS;
