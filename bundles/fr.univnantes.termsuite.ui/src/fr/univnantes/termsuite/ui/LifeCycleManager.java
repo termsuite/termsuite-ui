@@ -37,7 +37,7 @@ import fr.univnantes.termsuite.ui.services.NLPService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.services.TaggerService;
 import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
-import fr.univnantes.termsuite.ui.services.TerminologyService;
+import fr.univnantes.termsuite.ui.services.ETerminologyService;
 import fr.univnantes.termsuite.ui.services.impl.AlignmentServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.CorpusServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.LinguisticResourcesServiceImpl;
@@ -148,7 +148,7 @@ public class LifeCycleManager {
 		cont.set(LinguisticResourcesService.class, ContextInjectionFactory.make(LinguisticResourcesServiceImpl.class, cont));
 		cont.set(ResourceService.class, ContextInjectionFactory.make(ResourceServiceImpl.class, cont));
 		cont.set(NLPService.class, ContextInjectionFactory.make(NLPServiceImpl.class, cont));
-		cont.set(TerminologyService.class, ContextInjectionFactory.make(TerminologyServiceImpl.class, cont));
+		cont.set(ETerminologyService.class, ContextInjectionFactory.make(TerminologyServiceImpl.class, cont));
 		cont.set(CorpusService.class, ContextInjectionFactory.make(CorpusServiceImpl.class, cont));
 		cont.set(TaggerService.class, ContextInjectionFactory.make(TaggerServiceImpl.class, cont));
 		cont.set(TermSuiteSelectionService.class, ContextInjectionFactory.make(TermSuiteSelectionServiceImpl.class, cont));

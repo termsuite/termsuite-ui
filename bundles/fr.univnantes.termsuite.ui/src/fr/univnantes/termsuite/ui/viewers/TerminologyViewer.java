@@ -11,7 +11,6 @@ import com.google.common.collect.ComparisonChain;
 
 import fr.univnantes.termsuite.framework.service.RelationService;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
-import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
 import fr.univnantes.termsuite.ui.util.jface.ExpandCollapseDoubleClickListener;
 
 /**
@@ -21,8 +20,7 @@ import fr.univnantes.termsuite.ui.util.jface.ExpandCollapseDoubleClickListener;
  * @author Damien Cram
  *
  */
-public class TermIndexViewer extends TreeViewer {
-
+public class TerminologyViewer extends TreeViewer {
 
 	private ViewerComparator variationComparator = new ViewerComparator() {
 		public int compare(Viewer viewer, Object e1, Object e2) {
@@ -40,17 +38,11 @@ public class TermIndexViewer extends TreeViewer {
 	};
 	
 
-	public TermIndexViewer(ETerminoViewerConfig config, Composite parent, int style) {
+	public TerminologyViewer(ETerminoViewerConfig config, Composite parent, int style) {
 		super(parent, style);
 		config.eAdapters().add(new AdapterImpl() {
 			public void notifyChanged(Notification notification) {
-				switch (notification.getFeatureID(ETerminoViewerConfig.class)) {
-				case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__NB_DISPLAYED_TERMS:
-					refresh();
-					break;
-				case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SEARCH_STRING:
-					refresh();
-				}
+				refresh();
 			}
 		});
 		

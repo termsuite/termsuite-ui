@@ -31,7 +31,6 @@ import fr.univnantes.termsuite.engines.cleaner.TerminoFilterOptions;
 import fr.univnantes.termsuite.engines.contextualizer.AssociationRate;
 import fr.univnantes.termsuite.engines.contextualizer.LogLikelihood;
 import fr.univnantes.termsuite.engines.contextualizer.MutualInformation;
-import fr.univnantes.termsuite.framework.PipelineStats;
 import fr.univnantes.termsuite.metrics.Cosine;
 import fr.univnantes.termsuite.metrics.Jaccard;
 import fr.univnantes.termsuite.metrics.SimilarityDistance;
@@ -60,9 +59,6 @@ public class NLPServiceImpl implements NLPService {
 	
 	@Inject
 	private UISynchronize sync;
-	
-	@Inject
-	private ILoggerProvider loggerProvider;
 
 	@Inject
 	private IEventBroker eventBroker;
@@ -126,7 +122,7 @@ public class NLPServiceImpl implements NLPService {
 		Job job = Job.create(jobName, (ICoreRunnable) monitor -> {
 			int totalWork = 10000;
 			SubMonitor subMonitor = SubMonitor.convert(monitor, totalWork);
-			PipelineStats stats = TermSuite.terminoExtractor()
+			TermSuite.terminoExtractor()
 					.setOptions(toExtractorOptions(pipeline))
 					.setListener(new WorkbenchPipelineListener(subMonitor, sync, totalWork))
 					.setResourceConfig(resourceService.getResourceConfig())

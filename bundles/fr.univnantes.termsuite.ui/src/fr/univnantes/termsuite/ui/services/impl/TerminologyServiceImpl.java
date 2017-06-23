@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Path;
-import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 
@@ -21,11 +20,11 @@ import fr.univnantes.termsuite.io.json.JsonOptions;
 import fr.univnantes.termsuite.io.json.JsonTerminologyIO;
 import fr.univnantes.termsuite.model.IndexedCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
+import fr.univnantes.termsuite.ui.services.ETerminologyService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
-import fr.univnantes.termsuite.ui.services.TerminologyService;
 import fr.univnantes.termsuite.ui.util.IOUtil;
 
-public class TerminologyServiceImpl implements TerminologyService {
+public class TerminologyServiceImpl implements ETerminologyService {
 
 	@Inject
 	private IEclipseContext context;
@@ -44,8 +43,8 @@ public class TerminologyServiceImpl implements TerminologyService {
 			});
 
 	@Override
-	public IndexedCorpus readTerminology(ETerminology terminology) throws ExecutionException {
-		return terminoCache.get(terminology);
+	public IndexedCorpus readTerminology(ETerminology terminology) {
+		return terminoCache.getUnchecked(terminology);
 	}
 
 	@Override

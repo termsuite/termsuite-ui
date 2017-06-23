@@ -1,9 +1,6 @@
 package fr.univnantes.termsuite.ui.parts;
 
-import java.util.Collections;
 import java.util.EventObject;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -33,16 +30,11 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventHandler;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-
+import fr.univnantes.termsuite.api.TermSuite;
 import fr.univnantes.termsuite.model.IndexedCorpus;
 import fr.univnantes.termsuite.model.Property;
 import fr.univnantes.termsuite.model.RelationProperty;
-import fr.univnantes.termsuite.model.Term;
 import fr.univnantes.termsuite.model.TermProperty;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
@@ -52,19 +44,19 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
-import fr.univnantes.termsuite.ui.services.TerminologyService;
+import fr.univnantes.termsuite.ui.services.ETerminologyService;
 import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
 import fr.univnantes.termsuite.ui.util.treeviewer.TreePart;
-import fr.univnantes.termsuite.ui.viewers.TermIndexViewer;
 import fr.univnantes.termsuite.ui.viewers.TermLabelProvider;
 import fr.univnantes.termsuite.ui.viewers.TermSelectionListener;
+import fr.univnantes.termsuite.ui.viewers.TerminologyViewer;
 
 public class TerminologyPart implements TreePart {
 	
 	public static final String ID = "fr.univnantes.termsuite.ui.partdescriptor.terminology";
 	public static final String POPUP_MENU_ID = "fr.univnantes.termsuite.ui.popupmenu.terminology";
 
-	private TermIndexViewer viewer;
+	private TerminologyViewer viewer;
 	private ETerminoViewerConfig viewerConfig;
 
 	@Inject
@@ -74,7 +66,7 @@ public class TerminologyPart implements TreePart {
 	private IEventBroker eventBroker; 
 
 	@Inject 
-	private TerminologyService termIndexService;
+	private ETerminologyService eTerminologyService;
 	
 	@Inject
 	TermSuiteSelectionService termSuiteSelectionService;
@@ -94,15 +86,19 @@ public class TerminologyPart implements TreePart {
 		parent.setLayout(new GridLayout(2, false));
 
 		viewerConfig = TermsuiteuiFactory.eINSTANCE.createETerminoViewerConfig();
+		viewerConfig.setSortingPropertyName(TermProperty.RANK.getJsonField());
+		viewerConfig.setSortingAsc(true);
+		viewerConfig.setSearchString("");
+		viewerConfig.setNbDisplayedTerms(1000);
 
 		// populate headers
 	    populateInfoContainer(parent);
 	    
 		// populate viewer
-		this.viewer = new TermIndexViewer(viewerConfig, parent, SWT.SINGLE| SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		this.viewer = new TerminologyViewer(viewerConfig, parent, SWT.SINGLE| SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(viewer.getControl());
 		
-		subscribe(context, termIndexService, parent);
+		subscribe(context, eTerminologyService, parent);
 		
 		addColumn(TermProperty.RANK, 50);
 		addColumn(TermProperty.PILOT, 300);
@@ -132,7 +128,7 @@ public class TerminologyPart implements TreePart {
 		column1.getColumn().setWidth(width);
 		column1.getColumn().setText(property.getPropertyName());
 		column1.getColumn().setToolTipText(property.getDescription());
-		if(property.isNumeric()) {
+		if(property instanceof TermProperty && property.isNumeric()) {
 			column1.getColumn().addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -142,7 +138,7 @@ public class TerminologyPart implements TreePart {
 					 * http://www.programcreek.com/java-api-examples/index.php?api=org.eclipse.jface.viewers.TreeViewerColumn
 					 */
 					updateSortingProperty(property);
-					setSortedInput();
+					viewer.refresh();
 				}
 
 
@@ -160,18 +156,11 @@ public class TerminologyPart implements TreePart {
 			this.sortingProperty = property;
 			this.desc = true;
 		}
+		viewerConfig.setSortingPropertyName(sortingProperty.getJsonField());
+		viewerConfig.setSortingAsc(!desc);
+
 	}
 	
-	private IndexedCorpus termIndex = null;
-
-	private void setSortedInput() {
-		List<Term> sortedTerms = Lists.newArrayList(termIndex.getTerminology().getTerms().values());
-		Preconditions.checkState(sortingProperty instanceof TermProperty,
-				"Can only sort on a TermProperty. Got: %s", sortingProperty);
-		Collections.sort(sortedTerms, ((TermProperty) sortingProperty).getComparator(desc));
-		this.viewer.setInput(sortedTerms);
-	}
-
 
 	private DelayableText numOfTermsToShow;
 	private Label numOfTermsBeforeFiltering;
@@ -245,45 +234,31 @@ public class TerminologyPart implements TreePart {
 					}
 				}
 			});
-			try {
-				if(terminology != null) {
-					final IndexedCorpus termIndex = termIndexService.readTerminology(terminology);
-					Job job = Job.create("Open terminology", monitor -> {
-							sync.asyncExec(new Runnable() {
-								@Override
-								public void run() {
-									numOfTermsBeforeFiltering.setText(Integer.toString(termIndex.getTerminology().getTerms().size()));
-									TerminologyPart.this.termIndex = termIndex;
-									TerminologyPart.this.setSortedInput();
-								}
-							});
-							return Status.OK_STATUS;
+			if(terminology != null) {
+				final IndexedCorpus indexedCorpus = eTerminologyService.readTerminology(terminology);
+				Job job = Job.create("Open terminology", monitor -> {
+					sync.asyncExec(() -> {
+						numOfTermsBeforeFiltering.setText(Integer.toString(indexedCorpus.getTerminology().getTerms().size()));
+						viewer.setInput(TermSuite.getTerminologyService(indexedCorpus.getTerminology()));
 					});
-					job.schedule();
+					return Status.OK_STATUS;
+				});
+				job.schedule();
 
-				} else
-					MessageDialog.openError(parent.getShell(), 
-							"Could not open Terminology",
-							"No termino found in context.");
-			} catch (ExecutionException e) {
-				MessageDialog.openError(parent.getShell(), "Could not open Terminology", e.getMessage());
-			}
+			} else
+				MessageDialog.openError(parent.getShell(), 
+						"Could not open Terminology",
+						"No termino found in context.");
 		}
-
 	}
-
-	private void subscribe(final IEclipseContext context, final TerminologyService termIndexService,
+	
+	private void subscribe(final IEclipseContext context, final ETerminologyService eTerminologyService,
 			final Composite parent) {
-		this.eventBroker.subscribe(TermSuiteEvents.SEARCH_TEXT_MODIFIED, new EventHandler(){
-			@Override
-			public void handleEvent(Event event) {
-				viewerConfig.setSearchString((String)event.getProperty(IEventBroker.DATA));
-			}
-		});
-
+		this.eventBroker.subscribe(
+			TermSuiteEvents.SEARCH_TEXT_MODIFIED, 
+			event -> viewerConfig.setSearchString((String)event.getProperty(IEventBroker.DATA))
+		);
 	}
-
-
 
 	@Override
 	public TreeViewer getTreeViewer() {

@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,8 +39,8 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
 import fr.univnantes.termsuite.ui.services.AlignmentService;
+import fr.univnantes.termsuite.ui.services.ETerminologyService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
-import fr.univnantes.termsuite.ui.services.TerminologyService;
 import fr.univnantes.termsuite.ui.util.LangUtil;
 
 @SuppressWarnings("restriction")
@@ -200,16 +199,13 @@ public class AlignmentServiceImpl implements AlignmentService {
 			
 		} else {
 			BilingualAlignmentService aligner;
-			try {
-				aligner = TermSuite.bilingualAligner()
-						.setSourceTerminology(context.get(TerminologyService.class).readTerminology(sourceTerminology))
-						.setTargetTerminology(context.get(TerminologyService.class).readTerminology(targetTerminology))
-						.setDicoPath(Paths.get(dico.getPath()))
-						.setDistance(Cosine.class)
-						.create();
-			} catch (ExecutionException e) {
-				throw new RuntimeException(e);
-			}
+			ETerminologyService terminoService = context.get(ETerminologyService.class);
+			aligner = TermSuite.bilingualAligner()
+					.setSourceTerminology(terminoService.readTerminology(sourceTerminology))
+					.setTargetTerminology(terminoService.readTerminology(targetTerminology))
+					.setDicoPath(Paths.get(dico.getPath()))
+					.setDistance(Cosine.class)
+					.create();
 			
 			return aligner.align(term, 20, 2);
 		}

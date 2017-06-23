@@ -19,7 +19,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
  * @see ETerminology
  * 
  */
-public interface TerminologyService {
+public interface ETerminologyService {
 	
 	/**
 	 * Gets the TermSuite {@link IndexedCorpus} associated to the
@@ -30,10 +30,8 @@ public interface TerminologyService {
 	 * 			The terminology object
 	 * 
 	 * @return
-	 * @throws ExecutionException 
-	 * 				if an {@link IOException} occurs while loading the {@link TermIndex} from file.
 	 */
-	public IndexedCorpus readTerminology(ETerminology terminology) throws ExecutionException;
+	public IndexedCorpus readTerminology(ETerminology terminology);
 	
 	/**
 	 * 

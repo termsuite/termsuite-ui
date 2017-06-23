@@ -569,6 +569,24 @@ public class TermsuiteuiPackageImpl extends EPackageImpl implements TermsuiteuiP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getETerminoViewerConfig_SortingPropertyName() {
+		return (EAttribute)eTerminoViewerConfigEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getETerminoViewerConfig_SortingAsc() {
+		return (EAttribute)eTerminoViewerConfigEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getEResource() {
 		return eResourceEClass;
 	}
@@ -905,6 +923,8 @@ public class TermsuiteuiPackageImpl extends EPackageImpl implements TermsuiteuiP
 		eTerminoViewerConfigEClass = createEClass(ETERMINO_VIEWER_CONFIG);
 		createEAttribute(eTerminoViewerConfigEClass, ETERMINO_VIEWER_CONFIG__NB_DISPLAYED_TERMS);
 		createEAttribute(eTerminoViewerConfigEClass, ETERMINO_VIEWER_CONFIG__SEARCH_STRING);
+		createEAttribute(eTerminoViewerConfigEClass, ETERMINO_VIEWER_CONFIG__SORTING_PROPERTY_NAME);
+		createEAttribute(eTerminoViewerConfigEClass, ETERMINO_VIEWER_CONFIG__SORTING_ASC);
 
 		eResourceEClass = createEClass(ERESOURCE);
 		createEAttribute(eResourceEClass, ERESOURCE__ID);
@@ -1022,6 +1042,8 @@ public class TermsuiteuiPackageImpl extends EPackageImpl implements TermsuiteuiP
 		initEClass(eTerminoViewerConfigEClass, ETerminoViewerConfig.class, "ETerminoViewerConfig", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getETerminoViewerConfig_NbDisplayedTerms(), ecorePackage.getEInt(), "nbDisplayedTerms", "500", 0, 1, ETerminoViewerConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getETerminoViewerConfig_SearchString(), ecorePackage.getEString(), "searchString", "", 1, 1, ETerminoViewerConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getETerminoViewerConfig_SortingPropertyName(), ecorePackage.getEString(), "sortingPropertyName", null, 0, 1, ETerminoViewerConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getETerminoViewerConfig_SortingAsc(), ecorePackage.getEBoolean(), "sortingAsc", "false", 1, 1, ETerminoViewerConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(eResourceEClass, EResource.class, "EResource", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getEResource_Id(), ecorePackage.getEString(), "id", null, 0, 1, EResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -7,10 +7,11 @@ import java.util.regex.Pattern;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+import fr.univnantes.termsuite.api.TermOrdering;
 import fr.univnantes.termsuite.framework.service.RelationService;
 import fr.univnantes.termsuite.framework.service.TermService;
 import fr.univnantes.termsuite.framework.service.TerminologyService;
-import fr.univnantes.termsuite.model.RelationType;
+import fr.univnantes.termsuite.model.TermProperty;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
 
 public class TerminologyContentProvider implements ITreeContentProvider {
@@ -29,9 +30,9 @@ public class TerminologyContentProvider implements ITreeContentProvider {
 				TermService t = (TermService)termOrVariant;
 				return pattern.matcher(t.getGroupingKey()).find()
 						|| pattern.matcher(t.getPilot()).find()
-						|| t.outboundRelations(RelationType.VARIATION).filter(v->{
+						|| t.variations().filter(v->{
 							return isMatchingTerm(v);
-							}
+						}
 						).findAny().isPresent();
 			} else if (termOrVariant instanceof RelationService) {
 				RelationService v = (RelationService) termOrVariant;
@@ -59,22 +60,29 @@ public class TerminologyContentProvider implements ITreeContentProvider {
 	public Object[] getElements(Object inputElement) {
 		return this.terminologyService.terms()
 			.filter(this::isMatchingTerm)
+			.sorted(TermOrdering.natural()
+					.addSortingProperty(asTermProperty(), viewerConfig.isSortingAsc())
+					.toTermServiceComparator())
 			.limit(viewerConfig.getNbDisplayedTerms())
 			.collect(toList())
 			.toArray();
+	}
+
+	private TermProperty asTermProperty() {
+		return TermProperty.forName(viewerConfig.getSortingPropertyName());
 	}
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof TermService) {
 			TermService t = (TermService)parentElement;
-			return t.outboundRelations(RelationType.VARIATION)
+			return t.variations()
 					.filter(this::isMatchingTerm)
 					.collect(toList())
 					.toArray();
 		} else if (parentElement instanceof RelationService) {
 			RelationService r = (RelationService)parentElement;
-			return r.getTo().outboundRelations(RelationType.VARIATION)
+			return r.getTo().variations()
 					.filter(this::isMatchingTerm)
 					.collect(toList())
 					.toArray();
@@ -95,13 +103,13 @@ public class TerminologyContentProvider implements ITreeContentProvider {
 	public boolean hasChildren(Object element) {
 		if (element instanceof TermService) {
 			return ((TermService)element)
-					.outboundRelations(RelationType.VARIATION)
+					.variations()
 					.findAny()
 					.isPresent();
 		} else if (element instanceof RelationService) {
 			return ((RelationService)element)
 					.getTo()
-					.outboundRelations(RelationType.VARIATION)
+					.variations()
 					.findAny()
 					.isPresent();
 		} else

@@ -15,6 +15,8 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig#getNbDisplayedTerms <em>Nb Displayed Terms</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig#getSearchString <em>Search String</em>}</li>
+ *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig#getSortingPropertyName <em>Sorting Property Name</em>}</li>
+ *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig#isSortingAsc <em>Sorting Asc</em>}</li>
  * </ul>
  *
  * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getETerminoViewerConfig()
@@ -75,5 +77,58 @@ public interface ETerminoViewerConfig extends EObject {
 	 * @generated
 	 */
 	void setSearchString(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Sorting Property Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Sorting Property Name</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Sorting Property Name</em>' attribute.
+	 * @see #setSortingPropertyName(String)
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getETerminoViewerConfig_SortingPropertyName()
+	 * @model
+	 * @generated
+	 */
+	String getSortingPropertyName();
+
+	/**
+	 * Sets the value of the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig#getSortingPropertyName <em>Sorting Property Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Sorting Property Name</em>' attribute.
+	 * @see #getSortingPropertyName()
+	 * @generated
+	 */
+	void setSortingPropertyName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Sorting Asc</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Sorting Asc</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Sorting Asc</em>' attribute.
+	 * @see #setSortingAsc(boolean)
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getETerminoViewerConfig_SortingAsc()
+	 * @model default="false" required="true"
+	 * @generated
+	 */
+	boolean isSortingAsc();
+
+	/**
+	 * Sets the value of the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig#isSortingAsc <em>Sorting Asc</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Sorting Asc</em>' attribute.
+	 * @see #isSortingAsc()
+	 * @generated
+	 */
+	void setSortingAsc(boolean value);
 
 } // ETerminoViewerConfig

@@ -1,7 +1,9 @@
 package fr.univnantes.termsuite.ui.viewers;
 
+import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
@@ -48,41 +50,59 @@ public class TermLabelProvider extends ColumnLabelProvider implements IStyledLab
 	}
 	
 	public Object getPropertyValue(Object object) {
-		if (object instanceof TermService) 
-			return getPropertyValue(((TermService)object).getTerm());
-		else if (object instanceof RelationService) 
-			return getPropertyValue(((RelationService)object).getTo().getTerm());
-		else if (object instanceof Term) 
-			return getTermPropertyValue((Term) object);
-		else if (object instanceof Relation) 
-			return getRelationPropertyValue((Relation) object);
+		if(property instanceof TermProperty) {
+			//get the property value from the term if TermProperty or from the target term
+			if (object instanceof TermService) 
+				return getPropertyValue(((TermService)object).getTerm());
+			else if (object instanceof RelationService) 
+				return getPropertyValue(((RelationService)object).getTo().getTerm());
+			else if (object instanceof Term) 
+				return getTermPropertyValue((Term) object);
+			else if (object instanceof Relation) 
+				return getRelationPropertyValue((Relation) object);
+		} else if(property instanceof RelationProperty) {
+			//get the property value from the term if TermProperty or from the target term
+			if (object instanceof TermService) 
+				return null;
+			else if (object instanceof RelationService) 
+				return getPropertyValue(((RelationService)object).getRelation());
+			else if (object instanceof Term) 
+				return null;
+			else if (object instanceof Relation) 
+				return getRelationPropertyValue((Relation) object);
+		}
 		throw new IllegalArgumentException("Not a supported type for TermLabelProvider: " + object.getClass());
-		
 		
 	}
 	@Override
 	public StyledString getStyledText(Object element) {
 		Pattern pattern = viewerConfig.getSearchString().trim().isEmpty() ? null
 				: Pattern.compile(viewerConfig.getSearchString());
-		Matcher matcher;
-		int b = 0;
-		int e = 0;
 
 		Object value = getPropertyValue(element);
 		if(value == null)
 			return new StyledString();
-		if(property.getRange().equals(String.class)) {
-			String str = (String) value;
-			if (pattern != null && (matcher = pattern.matcher(str)).find()) {
+		
+		String stringValue = property.getRange().equals(String.class) ?
+				(String)value 
+					: Collection.class.isAssignableFrom(property.getRange()) ?
+							((Collection<?>)value).stream().map(Object::toString).collect(Collectors.joining(", ")) :
+								null;
+		
+		if(stringValue != null) {
+			Matcher matcher;
+			int b = 0;
+			int e = 0;
+			if (pattern != null && (matcher = pattern.matcher(stringValue)).find()) {
 				b = matcher.start();
 				e = matcher.end();
 			}
 			StyledString styledString = new StyledString();
 	
-			styledString.append(str.substring(0, Ints.min(b, str.length())), StyledString.COUNTER_STYLER);
-			styledString.append(str.substring(Ints.min(b, str.length()), Ints.min(e, str.length())),
+			styledString.append(stringValue.substring(0, Ints.min(b, stringValue.length())), StyledString.COUNTER_STYLER);
+			styledString.append(stringValue.substring(Ints.min(b, stringValue.length()), Ints.min(e, stringValue.length())),
 					TermSuiteUI.STYLE_GRAYED_BOLD);
-			styledString.append(str.substring(Ints.min(e, str.length()), str.length()),
+			styledString.append(stringValue.substring(Ints.min(e, stringValue.length()), stringValue.length()),
 					StyledString.COUNTER_STYLER);
 			return styledString;
 		} else if(property.isDecimalNumber()) {

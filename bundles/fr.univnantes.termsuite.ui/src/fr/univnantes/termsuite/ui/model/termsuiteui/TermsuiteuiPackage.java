@@ -580,13 +580,31 @@ public interface TermsuiteuiPackage extends EPackage {
 	int ETERMINO_VIEWER_CONFIG__SEARCH_STRING = 1;
 
 	/**
+	 * The feature id for the '<em><b>Sorting Property Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ETERMINO_VIEWER_CONFIG__SORTING_PROPERTY_NAME = 2;
+
+	/**
+	 * The feature id for the '<em><b>Sorting Asc</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ETERMINO_VIEWER_CONFIG__SORTING_ASC = 3;
+
+	/**
 	 * The number of structural features of the '<em>ETermino Viewer Config</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ETERMINO_VIEWER_CONFIG_FEATURE_COUNT = 2;
+	int ETERMINO_VIEWER_CONFIG_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>ETermino Viewer Config</em>' class.
@@ -1341,6 +1359,28 @@ public interface TermsuiteuiPackage extends EPackage {
 	EAttribute getETerminoViewerConfig_SearchString();
 
 	/**
+	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig#getSortingPropertyName <em>Sorting Property Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Sorting Property Name</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig#getSortingPropertyName()
+	 * @see #getETerminoViewerConfig()
+	 * @generated
+	 */
+	EAttribute getETerminoViewerConfig_SortingPropertyName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig#isSortingAsc <em>Sorting Asc</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Sorting Asc</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig#isSortingAsc()
+	 * @see #getETerminoViewerConfig()
+	 * @generated
+	 */
+	EAttribute getETerminoViewerConfig_SortingAsc();
+
+	/**
 	 * Returns the meta object for class '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EResource <em>EResource</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1984,6 +2024,22 @@ public interface TermsuiteuiPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ETERMINO_VIEWER_CONFIG__SEARCH_STRING = eINSTANCE.getETerminoViewerConfig_SearchString();
+
+		/**
+		 * The meta object literal for the '<em><b>Sorting Property Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ETERMINO_VIEWER_CONFIG__SORTING_PROPERTY_NAME = eINSTANCE.getETerminoViewerConfig_SortingPropertyName();
+
+		/**
+		 * The meta object literal for the '<em><b>Sorting Asc</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ETERMINO_VIEWER_CONFIG__SORTING_ASC = eINSTANCE.getETerminoViewerConfig_SortingAsc();
 
 		/**
 		 * The meta object literal for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.EResourceImpl <em>EResource</em>}' class.

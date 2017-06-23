@@ -20,6 +20,8 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
  * <ul>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminoViewerConfigImpl#getNbDisplayedTerms <em>Nb Displayed Terms</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminoViewerConfigImpl#getSearchString <em>Search String</em>}</li>
+ *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminoViewerConfigImpl#getSortingPropertyName <em>Sorting Property Name</em>}</li>
+ *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminoViewerConfigImpl#isSortingAsc <em>Sorting Asc</em>}</li>
  * </ul>
  *
  * @generated
@@ -64,6 +66,46 @@ public class ETerminoViewerConfigImpl extends MinimalEObjectImpl.Container imple
 	 * @ordered
 	 */
 	protected String searchString = SEARCH_STRING_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getSortingPropertyName() <em>Sorting Property Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSortingPropertyName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String SORTING_PROPERTY_NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getSortingPropertyName() <em>Sorting Property Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSortingPropertyName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String sortingPropertyName = SORTING_PROPERTY_NAME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isSortingAsc() <em>Sorting Asc</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isSortingAsc()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean SORTING_ASC_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isSortingAsc() <em>Sorting Asc</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isSortingAsc()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean sortingAsc = SORTING_ASC_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -131,6 +173,48 @@ public class ETerminoViewerConfigImpl extends MinimalEObjectImpl.Container imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getSortingPropertyName() {
+		return sortingPropertyName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setSortingPropertyName(String newSortingPropertyName) {
+		String oldSortingPropertyName = sortingPropertyName;
+		sortingPropertyName = newSortingPropertyName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SORTING_PROPERTY_NAME, oldSortingPropertyName, sortingPropertyName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isSortingAsc() {
+		return sortingAsc;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setSortingAsc(boolean newSortingAsc) {
+		boolean oldSortingAsc = sortingAsc;
+		sortingAsc = newSortingAsc;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SORTING_ASC, oldSortingAsc, sortingAsc));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -138,6 +222,10 @@ public class ETerminoViewerConfigImpl extends MinimalEObjectImpl.Container imple
 				return getNbDisplayedTerms();
 			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SEARCH_STRING:
 				return getSearchString();
+			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SORTING_PROPERTY_NAME:
+				return getSortingPropertyName();
+			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SORTING_ASC:
+				return isSortingAsc();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -155,6 +243,12 @@ public class ETerminoViewerConfigImpl extends MinimalEObjectImpl.Container imple
 				return;
 			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SEARCH_STRING:
 				setSearchString((String)newValue);
+				return;
+			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SORTING_PROPERTY_NAME:
+				setSortingPropertyName((String)newValue);
+				return;
+			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SORTING_ASC:
+				setSortingAsc((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -174,6 +268,12 @@ public class ETerminoViewerConfigImpl extends MinimalEObjectImpl.Container imple
 			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SEARCH_STRING:
 				setSearchString(SEARCH_STRING_EDEFAULT);
 				return;
+			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SORTING_PROPERTY_NAME:
+				setSortingPropertyName(SORTING_PROPERTY_NAME_EDEFAULT);
+				return;
+			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SORTING_ASC:
+				setSortingAsc(SORTING_ASC_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -190,6 +290,10 @@ public class ETerminoViewerConfigImpl extends MinimalEObjectImpl.Container imple
 				return nbDisplayedTerms != NB_DISPLAYED_TERMS_EDEFAULT;
 			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SEARCH_STRING:
 				return SEARCH_STRING_EDEFAULT == null ? searchString != null : !SEARCH_STRING_EDEFAULT.equals(searchString);
+			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SORTING_PROPERTY_NAME:
+				return SORTING_PROPERTY_NAME_EDEFAULT == null ? sortingPropertyName != null : !SORTING_PROPERTY_NAME_EDEFAULT.equals(sortingPropertyName);
+			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SORTING_ASC:
+				return sortingAsc != SORTING_ASC_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -208,6 +312,10 @@ public class ETerminoViewerConfigImpl extends MinimalEObjectImpl.Container imple
 		result.append(nbDisplayedTerms);
 		result.append(", searchString: ");
 		result.append(searchString);
+		result.append(", sortingPropertyName: ");
+		result.append(sortingPropertyName);
+		result.append(", sortingAsc: ");
+		result.append(sortingAsc);
 		result.append(')');
 		return result.toString();
 	}
