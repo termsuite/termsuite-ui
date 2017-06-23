@@ -3,12 +3,15 @@
 package fr.univnantes.termsuite.ui.model.termsuiteui.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
+import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
+import java.util.Collection;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,6 +25,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminoViewerConfigImpl#getSearchString <em>Search String</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminoViewerConfigImpl#getSortingPropertyName <em>Sorting Property Name</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminoViewerConfigImpl#isSortingAsc <em>Sorting Asc</em>}</li>
+ *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminoViewerConfigImpl#getSelectedPropertyNames <em>Selected Property Names</em>}</li>
  * </ul>
  *
  * @generated
@@ -106,6 +110,16 @@ public class ETerminoViewerConfigImpl extends MinimalEObjectImpl.Container imple
 	 * @ordered
 	 */
 	protected boolean sortingAsc = SORTING_ASC_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getSelectedPropertyNames() <em>Selected Property Names</em>}' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSelectedPropertyNames()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<String> selectedPropertyNames;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -215,6 +229,18 @@ public class ETerminoViewerConfigImpl extends MinimalEObjectImpl.Container imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<String> getSelectedPropertyNames() {
+		if (selectedPropertyNames == null) {
+			selectedPropertyNames = new EDataTypeUniqueEList<String>(String.class, this, TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SELECTED_PROPERTY_NAMES);
+		}
+		return selectedPropertyNames;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -226,6 +252,8 @@ public class ETerminoViewerConfigImpl extends MinimalEObjectImpl.Container imple
 				return getSortingPropertyName();
 			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SORTING_ASC:
 				return isSortingAsc();
+			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SELECTED_PROPERTY_NAMES:
+				return getSelectedPropertyNames();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -235,6 +263,7 @@ public class ETerminoViewerConfigImpl extends MinimalEObjectImpl.Container imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -249,6 +278,10 @@ public class ETerminoViewerConfigImpl extends MinimalEObjectImpl.Container imple
 				return;
 			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SORTING_ASC:
 				setSortingAsc((Boolean)newValue);
+				return;
+			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SELECTED_PROPERTY_NAMES:
+				getSelectedPropertyNames().clear();
+				getSelectedPropertyNames().addAll((Collection<? extends String>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -274,6 +307,9 @@ public class ETerminoViewerConfigImpl extends MinimalEObjectImpl.Container imple
 			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SORTING_ASC:
 				setSortingAsc(SORTING_ASC_EDEFAULT);
 				return;
+			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SELECTED_PROPERTY_NAMES:
+				getSelectedPropertyNames().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -294,6 +330,8 @@ public class ETerminoViewerConfigImpl extends MinimalEObjectImpl.Container imple
 				return SORTING_PROPERTY_NAME_EDEFAULT == null ? sortingPropertyName != null : !SORTING_PROPERTY_NAME_EDEFAULT.equals(sortingPropertyName);
 			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SORTING_ASC:
 				return sortingAsc != SORTING_ASC_EDEFAULT;
+			case TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SELECTED_PROPERTY_NAMES:
+				return selectedPropertyNames != null && !selectedPropertyNames.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -316,6 +354,8 @@ public class ETerminoViewerConfigImpl extends MinimalEObjectImpl.Container imple
 		result.append(sortingPropertyName);
 		result.append(", sortingAsc: ");
 		result.append(sortingAsc);
+		result.append(", selectedPropertyNames: ");
+		result.append(selectedPropertyNames);
 		result.append(')');
 		return result.toString();
 	}

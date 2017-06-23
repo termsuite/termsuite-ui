@@ -587,6 +587,15 @@ public class TermsuiteuiPackageImpl extends EPackageImpl implements TermsuiteuiP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getETerminoViewerConfig_SelectedPropertyNames() {
+		return (EAttribute)eTerminoViewerConfigEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getEResource() {
 		return eResourceEClass;
 	}
@@ -925,6 +934,7 @@ public class TermsuiteuiPackageImpl extends EPackageImpl implements TermsuiteuiP
 		createEAttribute(eTerminoViewerConfigEClass, ETERMINO_VIEWER_CONFIG__SEARCH_STRING);
 		createEAttribute(eTerminoViewerConfigEClass, ETERMINO_VIEWER_CONFIG__SORTING_PROPERTY_NAME);
 		createEAttribute(eTerminoViewerConfigEClass, ETERMINO_VIEWER_CONFIG__SORTING_ASC);
+		createEAttribute(eTerminoViewerConfigEClass, ETERMINO_VIEWER_CONFIG__SELECTED_PROPERTY_NAMES);
 
 		eResourceEClass = createEClass(ERESOURCE);
 		createEAttribute(eResourceEClass, ERESOURCE__ID);
@@ -1044,6 +1054,7 @@ public class TermsuiteuiPackageImpl extends EPackageImpl implements TermsuiteuiP
 		initEAttribute(getETerminoViewerConfig_SearchString(), ecorePackage.getEString(), "searchString", "", 1, 1, ETerminoViewerConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getETerminoViewerConfig_SortingPropertyName(), ecorePackage.getEString(), "sortingPropertyName", null, 0, 1, ETerminoViewerConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getETerminoViewerConfig_SortingAsc(), ecorePackage.getEBoolean(), "sortingAsc", "false", 1, 1, ETerminoViewerConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getETerminoViewerConfig_SelectedPropertyNames(), ecorePackage.getEString(), "selectedPropertyNames", "", 0, -1, ETerminoViewerConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(eResourceEClass, EResource.class, "EResource", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getEResource_Id(), ecorePackage.getEString(), "id", null, 0, 1, EResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

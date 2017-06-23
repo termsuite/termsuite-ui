@@ -598,13 +598,22 @@ public interface TermsuiteuiPackage extends EPackage {
 	int ETERMINO_VIEWER_CONFIG__SORTING_ASC = 3;
 
 	/**
+	 * The feature id for the '<em><b>Selected Property Names</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ETERMINO_VIEWER_CONFIG__SELECTED_PROPERTY_NAMES = 4;
+
+	/**
 	 * The number of structural features of the '<em>ETermino Viewer Config</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ETERMINO_VIEWER_CONFIG_FEATURE_COUNT = 4;
+	int ETERMINO_VIEWER_CONFIG_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>ETermino Viewer Config</em>' class.
@@ -1381,6 +1390,17 @@ public interface TermsuiteuiPackage extends EPackage {
 	EAttribute getETerminoViewerConfig_SortingAsc();
 
 	/**
+	 * Returns the meta object for the attribute list '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig#getSelectedPropertyNames <em>Selected Property Names</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Selected Property Names</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig#getSelectedPropertyNames()
+	 * @see #getETerminoViewerConfig()
+	 * @generated
+	 */
+	EAttribute getETerminoViewerConfig_SelectedPropertyNames();
+
+	/**
 	 * Returns the meta object for class '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EResource <em>EResource</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2040,6 +2060,14 @@ public interface TermsuiteuiPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ETERMINO_VIEWER_CONFIG__SORTING_ASC = eINSTANCE.getETerminoViewerConfig_SortingAsc();
+
+		/**
+		 * The meta object literal for the '<em><b>Selected Property Names</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ETERMINO_VIEWER_CONFIG__SELECTED_PROPERTY_NAMES = eINSTANCE.getETerminoViewerConfig_SelectedPropertyNames();
 
 		/**
 		 * The meta object literal for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.EResourceImpl <em>EResource</em>}' class.

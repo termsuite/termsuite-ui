@@ -130,6 +130,7 @@
   <handlers xmi:id="_X6dicORQEeWfCbb369iF9g" elementId="fr.univnantes.termsuite.ui.handler.CollapaseAllHandler" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.CollapseAllHandler" command="_BXGjQOIsEeWihJy1yCPB5A"/>
   <handlers xmi:id="_f9ikwFZ7EeeezpBRMTiXXw" elementId="fr.univnantes.termsuite.ui.handler.Rename" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.RenameHandler" command="_VYHv8FZUEeejQOQ2nExhjw"/>
   <handlers xmi:id="_knru4FdbEeeqk5_QeLB1Ow" elementId="fr.univnantes.termsuite.ui.handler.ClearPreprocessingCache" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.ClearPreprocessingCacheHandler" command="_Xqm0cFdbEeeqk5_QeLB1Ow"/>
+  <handlers xmi:id="_0TqIMFgOEeeKTPPWqFeA1g" elementId="fr.univnantes.termsuite.ui.handler.SelectTerminologyPropertiesHandler" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.SelectTerminologyPropertiesHandler" command="_iwOtsFgOEeeKTPPWqFeA1g"/>
   <bindingTables xmi:id="_ZZiw8FITEeWJrZq1Fp2XFA" elementId="fr.univnantes.termsuite.ui.bindingtable.0" bindingContext="_aq_KsFITEeWJrZq1Fp2XFA">
     <bindings xmi:id="_0uye4J_zEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.keybinding.save" keySequence="M1+S" command="_GQqeAEyhEeWINr2AFtxMwQ">
       <tags>type:user</tags>
@@ -153,6 +154,10 @@
       <children xsi:type="menu:Menu" xmi:id="_YviJ8O9sEeW_3q2PUR_c0Q" elementId="fr.univnantes.termsuite.ui.menu.terminology.align" label="Align">
         <children xsi:type="menu:DynamicMenuContribution" xmi:id="_CsVtoO9uEeW_3q2PUR_c0Q" elementId="fr.univnantes.termsuite.ui.menu.terminology.align.dynamicmenucontribution" label="Align" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.menu.AlignMenuContribution"/>
       </children>
+    </menus>
+    <menus xmi:id="_dIvgwFgOEeeKTPPWqFeA1g" elementId="fr.univnantes.termsuite.ui.menu.TerminologyViewMenu" label="Terminology view menu">
+      <tags>ViewMenu</tags>
+      <children xsi:type="menu:HandledMenuItem" xmi:id="_haGBMFgOEeeKTPPWqFeA1g" elementId="fr.univnantes.termsuite.ui.handledmenuitem.SelectTerminologyProperties" tooltip="" command="_iwOtsFgOEeeKTPPWqFeA1g"/>
     </menus>
     <toolbar xmi:id="_mMEEMKASEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.toolbar.4">
       <children xsi:type="menu:HandledToolItem" xmi:id="_-DsRcOX_EeWuJP7LFnU52Q" elementId="fr.univnantes.termsuite.ui.handledtoolitem.TerminoCollapseAll" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/collapseall.png" command="_BXGjQOIsEeWihJy1yCPB5A"/>
@@ -185,6 +190,7 @@
     <parameters xmi:id="_ZwUfQFZUEeejQOQ2nExhjw" elementId="fr.univnantes.termsuite.ui.command.Rename.commandparameter.resource" name="Resource" optional="false"/>
   </commands>
   <commands xmi:id="_Xqm0cFdbEeeqk5_QeLB1Ow" elementId="fr.univnantes.termsuite.ui.command.ClearPreprocessingCache" commandName="Clear preprocessing cache" description="Clear *.json files of preprocessed corpora from nlp-cache"/>
+  <commands xmi:id="_iwOtsFgOEeeKTPPWqFeA1g" elementId="fr.univnantes.termsuite.ui.command.SelectTerminologyProperties" commandName="SelectTerminologyProperties" description="Select the properties to display in terminology viewer"/>
   <addons xmi:id="_jupbsUwBEeWIWrXS0l4jxg" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_jupbskwBEeWIWrXS0l4jxg" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_jupbs0wBEeWIWrXS0l4jxg" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

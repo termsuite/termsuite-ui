@@ -2,6 +2,7 @@
  */
 package fr.univnantes.termsuite.ui.model.termsuiteui;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -17,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig#getSearchString <em>Search String</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig#getSortingPropertyName <em>Sorting Property Name</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig#isSortingAsc <em>Sorting Asc</em>}</li>
+ *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig#getSelectedPropertyNames <em>Selected Property Names</em>}</li>
  * </ul>
  *
  * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getETerminoViewerConfig()
@@ -130,5 +132,21 @@ public interface ETerminoViewerConfig extends EObject {
 	 * @generated
 	 */
 	void setSortingAsc(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Selected Property Names</b></em>' attribute list.
+	 * The list contents are of type {@link java.lang.String}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Selected Property Names</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Selected Property Names</em>' attribute list.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getETerminoViewerConfig_SelectedPropertyNames()
+	 * @model default=""
+	 * @generated
+	 */
+	EList<String> getSelectedPropertyNames();
 
 } // ETerminoViewerConfig

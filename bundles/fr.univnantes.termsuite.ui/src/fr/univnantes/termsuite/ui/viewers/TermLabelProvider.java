@@ -108,7 +108,8 @@ public class TermLabelProvider extends ColumnLabelProvider implements IStyledLab
 		} else if(property.isDecimalNumber()) {
 			double v = (double)value;
 			return new StyledString(String.format("%.2f", v));
-		}
+		} else if(property.getRange().equals(Boolean.class))
+			return new StyledString(String.format("%d", (boolean)value ? 1 : 0));
 		else 
 			return new StyledString(String.format("%d", value));
 	}
