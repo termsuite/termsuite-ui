@@ -1,5 +1,7 @@
 package fr.univnantes.termsuite.ui.parts;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -17,10 +19,14 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+
+import com.google.common.collect.Lists;
 
 import fr.univnantes.termsuite.api.TerminologyStats;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
@@ -100,19 +106,30 @@ public abstract class StatsPart {
 
 	@PostConstruct
 	public void createControls(IEclipseContext context, final Composite parent, MPart part, EPartService partService) {
-		table = new Table(parent, SWT.BORDER);
+		table = new Table(parent, SWT.BORDER | SWT.MULTI);
 		column1 = new TableColumn(table, SWT.LEFT);
 		column1.setText("Terminology");
 		column1.setWidth(200);
 		column2 = new TableColumn(table, SWT.RIGHT);
 		column2.setWidth(100);
 		table.setHeaderVisible(true);
-		populateItemsAtStartup();
+		table.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Table table = (Table)e.getSource();
+				itemsSelected(Lists.newArrayList(table.getSelection()));
+			}
+
+		});
+
+		tableCreated();
 	}
 
-	protected void populateItemsAtStartup() {
+	protected void tableCreated() {
 		
 	}
 
-
+	protected void itemsSelected(List<TableItem> selection) {
+		
+	}
 }

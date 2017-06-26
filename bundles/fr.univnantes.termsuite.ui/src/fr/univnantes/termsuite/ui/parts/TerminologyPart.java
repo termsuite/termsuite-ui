@@ -26,6 +26,8 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -34,7 +36,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TreeColumn;
 
+import com.google.common.collect.Lists;
+
 import fr.univnantes.termsuite.api.TermSuite;
+import fr.univnantes.termsuite.framework.service.RelationService;
+import fr.univnantes.termsuite.framework.service.TermService;
 import fr.univnantes.termsuite.framework.service.TerminologyService;
 import fr.univnantes.termsuite.index.Terminology;
 import fr.univnantes.termsuite.model.IndexedCorpus;
@@ -51,6 +57,8 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
 import fr.univnantes.termsuite.ui.services.ETerminologyService;
 import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
 import fr.univnantes.termsuite.ui.util.PropertyUtil;
+import fr.univnantes.termsuite.ui.util.TermFilter;
+import fr.univnantes.termsuite.ui.util.VariationFilter;
 import fr.univnantes.termsuite.ui.util.treeviewer.TreePart;
 import fr.univnantes.termsuite.ui.viewers.TermLabelProvider;
 import fr.univnantes.termsuite.ui.viewers.TermSelectionListener;
@@ -251,6 +259,57 @@ public class TerminologyPart implements TreePart {
 				sync.asyncExec(() -> 
 					viewerConfig.setSearchString((String)((DelayableText)e.getSource()).getText()))
 			);
+	}
+	
+	
+	@Inject @Optional
+	private void clearFilters(@UIEventTopic(TermSuiteEvents.TERMINO_FILTER_CLEARED) Object nullValue) {
+		clearFilters();
+	}
+
+
+	@Inject @Optional
+	private void filterTerms(@UIEventTopic(TermSuiteEvents.NEW_VARIATION_FILTER) VariationFilter filter) {
+		clearFilters();
+		
+		viewer.addFilter(new ViewerFilter() {
+			@Override
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				if(element instanceof TermService) {
+					return ((TermService)element).variations().anyMatch(v-> filter.accept(v));
+				} else if(element instanceof RelationService) {
+					if(parentElement instanceof RelationService)
+						// order-2 variation. Keep it
+						return true;
+					else
+						return filter.accept((RelationService)element);
+				}
+				else 
+					return false;
+			}
+		});
+	}
+
+	@Inject @Optional
+	private void filterTerms(@UIEventTopic(TermSuiteEvents.NEW_TERM_FILTER) TermFilter filter) {
+		clearFilters();
+		
+		viewer.addFilter(new ViewerFilter() {
+			@Override
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				if(element instanceof TermService)
+					return filter.accept((TermService)element);
+				else if(element instanceof RelationService)
+					return true;
+				else return false;
+			}
+		});
+		
+	}
+
+	private void clearFilters() {
+		for(ViewerFilter v:Lists.newArrayList(viewer.getFilters()))
+			viewer.removeFilter(v);
 	}
 
 	@Inject @Optional

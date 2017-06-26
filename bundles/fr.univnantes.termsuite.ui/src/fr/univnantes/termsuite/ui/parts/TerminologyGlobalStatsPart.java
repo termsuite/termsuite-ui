@@ -58,7 +58,7 @@ public class TerminologyGlobalStatsPart extends StatsPart {
 	}
 
 	@Override
-	protected void populateItemsAtStartup() {
+	protected void tableCreated() {
 		nbTermsItem = createItem(table, "Terms");
 		nbWordsItem = createItem(table, "Words");
 		nbCompoundWordsItem = createItem(table, "Compound words");

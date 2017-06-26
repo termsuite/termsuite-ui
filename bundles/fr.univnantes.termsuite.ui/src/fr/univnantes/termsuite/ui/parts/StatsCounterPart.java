@@ -1,9 +1,12 @@
 package fr.univnantes.termsuite.ui.parts;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.eclipse.swt.widgets.TableItem;
 
 import com.google.common.collect.Lists;
 
@@ -27,6 +30,17 @@ public abstract class StatsCounterPart extends StatsPart {
 		Collections.sort(sortedEntries, (e1,e2) -> Integer.compare(e2.getValue(), e1.getValue()));
 		for(Map.Entry<String, Integer> e:sortedEntries) 
 			createItem(table, e.getKey()).setText(1, Integer.toString(e.getValue()));
+	}
+	
+	@Override
+	protected void itemsSelected(List<TableItem> itemsSelected) {
+		List<String> list = new ArrayList<>();
+		for(TableItem item:itemsSelected)
+			list.add(item.getText(0));
+		valuesSelected(list);
+	}
+	
+	protected void valuesSelected(List<String> values) {
 	}
 	
 }

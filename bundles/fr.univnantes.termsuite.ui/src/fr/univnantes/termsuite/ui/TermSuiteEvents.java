@@ -25,6 +25,9 @@ public class TermSuiteEvents {
 	public static final String ACTIVE_PIPELINE = "activePipeline";
 	public static final String ACTIVE_DOCUMENT = "activeDocument";
 	public static final String ACTIVE_LINGUISTIC_RESOURCE = "activeLinguisticResource";
+	public static final String NEW_TERM_FILTER = "newTermFilter";
+	public static final String NEW_VARIATION_FILTER = "newVariationFilter";
+	public static final String TERMINO_FILTER_CLEARED = "terminoFilterCleared";
 	
 
 }
