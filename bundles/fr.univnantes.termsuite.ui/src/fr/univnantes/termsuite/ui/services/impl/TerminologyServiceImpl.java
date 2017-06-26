@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Path;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -16,6 +17,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import fr.univnantes.termsuite.api.TermSuite;
+import fr.univnantes.termsuite.api.TerminologyStats;
+import fr.univnantes.termsuite.framework.service.TerminologyService;
 import fr.univnantes.termsuite.io.json.JsonOptions;
 import fr.univnantes.termsuite.io.json.JsonTerminologyIO;
 import fr.univnantes.termsuite.model.IndexedCorpus;
@@ -83,4 +87,24 @@ public class TerminologyServiceImpl implements ETerminologyService {
 		return termino;
 	}
 
+	/*
+	 * A five sec cache for ensuring that multiple notifications 
+	 * of active terminology change do not recompute multiple times the stats for nothing.
+	 */
+	private LoadingCache<ETerminology, TerminologyStats> statCache = CacheBuilder.newBuilder()
+			.expireAfterWrite(5, TimeUnit.SECONDS)
+			.build(new CacheLoader<ETerminology, TerminologyStats>() {
+				@Override
+				public TerminologyStats load(ETerminology terminology) throws Exception {
+					IndexedCorpus indexedCorpus = readTerminology(terminology);
+					TerminologyService terminologyService = TermSuite.getTerminologyService(indexedCorpus);
+					TerminologyStats stats = terminologyService.computeStats();
+					return stats;
+				}
+			});
+
+	@Override
+	public TerminologyStats getStats(ETerminology termino) {
+		return statCache.getUnchecked(termino);
+	}
 }

@@ -3,6 +3,7 @@ package fr.univnantes.termsuite.ui.services;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+import fr.univnantes.termsuite.api.TerminologyStats;
 import fr.univnantes.termsuite.index.TermIndex;
 import fr.univnantes.termsuite.model.IndexedCorpus;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
@@ -70,6 +71,8 @@ public interface ETerminologyService {
 	 * 			<code>true</code> if removed properly, <code>false</code> otherwise.
 	 */
 	public boolean removeTerminologyJson(ETerminology terminology);
+
+	public TerminologyStats getStats(ETerminology termino);
 
 
 }

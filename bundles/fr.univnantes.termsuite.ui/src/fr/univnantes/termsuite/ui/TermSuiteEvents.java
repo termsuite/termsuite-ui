@@ -21,6 +21,10 @@ public class TermSuiteEvents {
 	public static final String JOB_STARTED = "jobStarted";
 	public static final String OBJECT_RENAMED = "objectRenamed";
 	public static final String CACHE_CLEARED = "cacheCleared";
+	public static final String ACTIVE_TERMINOLOGY = "activeTerminology";
+	public static final String ACTIVE_PIPELINE = "activePipeline";
+	public static final String ACTIVE_DOCUMENT = "activeDocument";
+	public static final String ACTIVE_LINGUISTIC_RESOURCE = "activeLinguisticResource";
 	
 
 }
