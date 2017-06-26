@@ -4,7 +4,6 @@ import java.io.File;
 
 import javax.inject.Named;
 
-import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
@@ -112,10 +111,22 @@ public class OpenObjectHandler {
 		part.getTags().add(EPartService.REMOVE_ON_HIDE_TAG);
 		stack.getChildren().add(part);
 		partService.showPart(part, PartState.CREATE);
-		part.getContext().set(TermSuiteUI.INPUT_OBJECT,inputObject);
+		setInputObject(inputObject, part);
 		part.getContext().set(TermSuiteUI.EDITABLE,editable);
 		eventBroker.send(TermSuiteEvents.EDITOR_INITIATED, part.getObject());
 		partService.activate(part);
+	}
+
+	private void setInputObject(Object inputObject, MPart part) {
+		if(inputObject instanceof ETerminology)
+			part.getContext().set(ETerminology.class, (ETerminology)inputObject);
+		else if(inputObject instanceof ELinguisticResource)
+			part.getContext().set(ELinguisticResource.class, (ELinguisticResource)inputObject);
+		else if(inputObject instanceof EPipeline)
+			part.getContext().set(EPipeline.class, (EPipeline)inputObject);
+		else if(inputObject instanceof EDocument)
+			part.getContext().set(EDocument.class, (EDocument)inputObject);
+		part.getContext().set(TermSuiteUI.INPUT_OBJECT,inputObject);
 	}
 
 	@CanExecute

@@ -180,7 +180,8 @@ public class NavigatorPart implements TreePart {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-				selectionService.setSelection(selection.getFirstElement());
+				Object firstElement = selection.getFirstElement();
+				selectionService.setSelection(firstElement);
 			}
 		});
 

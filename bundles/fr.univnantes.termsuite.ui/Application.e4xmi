@@ -45,6 +45,7 @@
                   <children xsi:type="basic:Part" xmi:id="_fspIULquEeWR6Y3HPI61kQ" elementId="fr.univnantes.termsuite.ui.part.TermOutline" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.TermOutlinePart" label="Term" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/term-blue.png" tooltip="Term Outline"/>
                 </children>
                 <children xsi:type="basic:PartStack" xmi:id="_kso4IE6CEea04Oy4UTiG0w" elementId="fr.univnantes.termsuite.ui.partstack.1">
+                  <children xsi:type="basic:Part" xmi:id="_VgiIgFgqEeeKTPPWqFeA1g" elementId="fr.univnantes.termsuite.ui.part.TerminologyStats" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.TerminologyStatsPart" label="Terminology" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/javaassist_co.png" tooltip="Statistics about active terminology"/>
                   <children xsi:type="basic:Part" xmi:id="_6EY80PZyEeWhccLUnPjIRA" elementId="fr.univnantes.termsuite.ui.part.alignment" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.AlignmentResultsPart" label="Alignment Results" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/synced.gif" tooltip="Alignment Results"/>
                 </children>
               </children>
