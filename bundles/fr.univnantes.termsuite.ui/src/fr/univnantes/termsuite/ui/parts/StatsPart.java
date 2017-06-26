@@ -1,5 +1,6 @@
 package fr.univnantes.termsuite.ui.parts;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -7,14 +8,18 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.UIEvents;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 import fr.univnantes.termsuite.api.TerminologyStats;
@@ -47,11 +52,11 @@ public abstract class StatsPart {
 
 	protected abstract void newStatsComputed(ETerminology termino, TerminologyStats stats);
 
-	protected TableItem terminoNameItem;
+//	protected TableItem terminoNameItem;
 
 	protected void setTerminoHeader(ETerminology termino) {
-		terminoNameItem.setImage(1, TermsuiteImg.INSTANCE.getFlag(termino.getCorpus().getLanguage()));
-		terminoNameItem.setText(1, TerminologyPart.toPartLabel(termino));
+		column2.setImage(TermsuiteImg.INSTANCE.getFlag(termino.getCorpus().getLanguage()));
+		column2.setText(TerminologyPart.toPartLabel(termino));
 	}
 
 	@Inject @Optional
@@ -88,5 +93,26 @@ public abstract class StatsPart {
 		item.setText(0, label);
 		return item;
 	}
+	
+	protected TableColumn column1;
+	protected TableColumn column2;
+	protected Table table;
+
+	@PostConstruct
+	public void createControls(IEclipseContext context, final Composite parent, MPart part, EPartService partService) {
+		table = new Table(parent, SWT.BORDER);
+		column1 = new TableColumn(table, SWT.LEFT);
+		column1.setText("Terminology");
+		column1.setWidth(200);
+		column2 = new TableColumn(table, SWT.RIGHT);
+		column2.setWidth(100);
+		table.setHeaderVisible(true);
+		populateItemsAtStartup();
+	}
+
+	protected void populateItemsAtStartup() {
+		
+	}
+
 
 }

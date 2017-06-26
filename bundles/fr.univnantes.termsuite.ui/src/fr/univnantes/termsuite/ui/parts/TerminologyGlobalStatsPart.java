@@ -1,17 +1,6 @@
 
 package fr.univnantes.termsuite.ui.parts;
 
-import javax.annotation.PostConstruct;
-
-import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.ui.workbench.modeling.EPartService;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 import fr.univnantes.termsuite.api.TerminologyStats;
@@ -42,7 +31,7 @@ public class TerminologyGlobalStatsPart extends StatsPart {
 	private TableItem nbSemanticWithDico;
 
 	private void setAll(String str) {
-		TableItem[] allItems = new TableItem[]{terminoNameItem, nbTermsItem, nbVariationsItem, nbWordsItem, nbCompoundWordsItem, nbSingleWords, nbSize2Words, nbSize3Words, nbSize6Words, nbSize5Words, nbSize4Words, nbExtensions, nbMorphological, nbDerivations, nbGraphical, nbSemantic, nbPrefixations, nbInfered, nbSemanticDistribOnly, nbSemanticWithDico};
+		TableItem[] allItems = new TableItem[]{nbTermsItem, nbVariationsItem, nbWordsItem, nbCompoundWordsItem, nbSingleWords, nbSize2Words, nbSize3Words, nbSize6Words, nbSize5Words, nbSize4Words, nbExtensions, nbMorphological, nbDerivations, nbGraphical, nbSemantic, nbPrefixations, nbInfered, nbSemanticDistribOnly, nbSemanticWithDico};
 		for(TableItem tableItem:allItems)
 			tableItem.setText(1, str);
 	}
@@ -68,17 +57,8 @@ public class TerminologyGlobalStatsPart extends StatsPart {
 		nbSemanticDistribOnly.setText(1, Integer.toString(stats.getNbSemanticDistribOnly()));
 	}
 
-	@PostConstruct
-	public void createControls(IEclipseContext context, final Composite parent, MPart part, EPartService partService) {
-		Table table = new Table(parent, SWT.BORDER);
-		new TableColumn(table, SWT.LEFT).setWidth(200);
-		new TableColumn(table, SWT.RIGHT).setWidth(100);
-		terminoNameItem = createItem(table, "Terminology");
-		terminoNameItem.setFont(new Font( parent.getDisplay(), new FontData( parent.getFont().getFontData()[0].getName(), parent.getFont().getFontData()[0].getHeight(), SWT.BOLD )));
-		populateTable(table);
-	}
-
-	private void populateTable(Table table) {
+	@Override
+	protected void populateItemsAtStartup() {
 		nbTermsItem = createItem(table, "Terms");
 		nbWordsItem = createItem(table, "Words");
 		nbCompoundWordsItem = createItem(table, "Compound words");
@@ -99,7 +79,6 @@ public class TerminologyGlobalStatsPart extends StatsPart {
 		nbSemanticWithDico = createItem(table, "Semantic var. with dico");
 		nbSemanticDistribOnly = createItem(table, "Semantic var. distrib.");
 	}
-
 	
 	@Override
 	protected void newStatsComputed(ETerminology termino, TerminologyStats stats) {
