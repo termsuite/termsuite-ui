@@ -53,6 +53,7 @@
               </children>
             </children>
             <children xsi:type="basic:PartStack" xmi:id="_F2_XIKAOEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.partstack.bottom" containerData="2000">
+              <children xsi:type="basic:Part" xmi:id="_Ceqk8J9UEeWNAK8NjrsZxA" elementId="org.eclipse.e4.ui.progress.ProgressView" contributionURI="bundleclass://org.eclipse.e4.ui.progress/org.eclipse.e4.ui.progress.ProgressView" label="Progress" iconURI="platform:/plugin/org.eclipse.e4.ui.progress/icons/full/progress/pview.png"/>
               <children xsi:type="basic:Part" xmi:id="_COgdQLrYEeWR6Y3HPI61kQ" elementId="fr.univnantes.termsuite.ui.part.occurrences" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.OccurrencePart" label="Occurrences" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/gotoobj_tsk.png" tooltip="Occurrences of the selected term or document">
                 <handlers xmi:id="_NcaEoORPEeWfCbb369iF9g" elementId="fr.univnantes.termsuite.ui.handler.NextOccurrenceHandler" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.occurrences.NextOccurrenceHandler" command="_lkpP8ORPEeWfCbb369iF9g"/>
                 <handlers xmi:id="_TPdL4ORQEeWfCbb369iF9g" elementId="fr.univnantes.termsuite.ui.handler.PreviousOccurrenceHandler" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.occurrences.PreviousOccurrenceHandler" command="_ptTHYORPEeWfCbb369iF9g"/>
@@ -63,7 +64,6 @@
                   <children xsi:type="menu:HandledToolItem" xmi:id="_2VKxYORQEeWfCbb369iF9g" elementId="fr.univnantes.termsuite.ui.handledtoolitem.NextOccurrence" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/next_nav.gif" command="_lkpP8ORPEeWfCbb369iF9g"/>
                 </toolbar>
               </children>
-              <children xsi:type="basic:Part" xmi:id="_Ceqk8J9UEeWNAK8NjrsZxA" elementId="org.eclipse.e4.ui.progress.ProgressView" contributionURI="bundleclass://org.eclipse.e4.ui.progress/org.eclipse.e4.ui.progress.ProgressView" label="Progress" iconURI="platform:/plugin/org.eclipse.e4.ui.progress/icons/full/progress/pview.png"/>
             </children>
           </children>
         </children>
