@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.google.common.collect.Lists;
@@ -42,5 +43,11 @@ public abstract class StatsCounterPart extends StatsPart {
 	
 	protected void valuesSelected(List<String> values) {
 	}
+	
+	@Override
+	protected int getSelectionStyle() {
+		return SWT.MULTI;
+	}
+
 	
 }

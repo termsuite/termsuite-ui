@@ -1,10 +1,23 @@
 
 package fr.univnantes.termsuite.ui.parts;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TableItem;
 
+import com.google.common.collect.Maps;
+
 import fr.univnantes.termsuite.api.TerminologyStats;
+import fr.univnantes.termsuite.framework.service.RelationService;
+import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
+import fr.univnantes.termsuite.ui.util.TermFilter;
+import fr.univnantes.termsuite.ui.util.VariationFilter;
 
 public class TerminologyGlobalStatsPart extends StatsPart {
 
@@ -35,6 +48,7 @@ public class TerminologyGlobalStatsPart extends StatsPart {
 		for(TableItem tableItem:allItems)
 			tableItem.setText(1, str);
 	}
+	
 	private void setStats(TerminologyStats stats) {
 		nbTermsItem.setText(1, Integer.toString(stats.getNbTerms()));
 		nbVariationsItem.setText(1, Integer.toString(stats.getNbVariations()));
@@ -78,7 +92,46 @@ public class TerminologyGlobalStatsPart extends StatsPart {
 		nbSemantic = createItem(table, "Semantic variations");
 		nbSemanticWithDico = createItem(table, "Semantic var. with dico");
 		nbSemanticDistribOnly = createItem(table, "Semantic var. distrib.");
+		
+		setFilters();
 	}
+	
+	private void setFilters() {
+		termFilters.put(nbCompoundWordsItem, t -> t.isCompound());
+		termFilters.put(nbSingleWords, t -> t.isSingleWord());
+		termFilters.put(nbSize2Words, t -> t.getSwts().count() == 2);
+		termFilters.put(nbSize3Words, t -> t.getSwts().count() == 3);
+		termFilters.put(nbSize4Words, t -> t.getSwts().count() == 4);
+		termFilters.put(nbSize5Words, t -> t.getSwts().count() == 5);
+		termFilters.put(nbSize6Words, t -> t.getSwts().count() == 6);
+		variationFilters.put(nbInfered, RelationService::isInfered);
+		variationFilters.put(nbExtensions, RelationService::isExtension);
+		variationFilters.put(nbMorphological, RelationService::isMorphological);
+		variationFilters.put(nbDerivations, RelationService::isDerivation);
+		variationFilters.put(nbPrefixations, RelationService::isPrefixation);
+		variationFilters.put(nbGraphical, RelationService::isGraphical);
+		variationFilters.put(nbSemantic, RelationService::isSemantic);
+		variationFilters.put(nbSemanticWithDico, v -> v.isSemantic() && v.isDico());
+		variationFilters.put(nbSemanticDistribOnly, v -> v.isSemantic() && !v.isDico());
+	}
+
+	@Override
+	protected void itemsSelected(List<TableItem> selection) {
+		if(selection.isEmpty())
+			eventBroker.post(TermSuiteEvents.TERMINO_FILTER_CLEARED, null);
+		else {
+			TableItem selectedItem = selection.get(0);
+			if(termFilters.containsKey(selectedItem))
+				eventBroker.post(TermSuiteEvents.NEW_TERM_FILTER, termFilters.get(selectedItem));
+			else if(variationFilters.containsKey(selectedItem))
+				eventBroker.post(TermSuiteEvents.NEW_VARIATION_FILTER, variationFilters.get(selectedItem));
+		}
+	}
+	
+	@Inject private IEventBroker eventBroker;
+	
+	private Map<TableItem, TermFilter> termFilters = Maps.newConcurrentMap();
+	private Map<TableItem, VariationFilter> variationFilters = Maps.newConcurrentMap();
 	
 	@Override
 	protected void newStatsComputed(ETerminology termino, TerminologyStats stats) {
@@ -89,5 +142,10 @@ public class TerminologyGlobalStatsPart extends StatsPart {
 	protected void computingNewStats(ETerminology termino) {
 		setTerminoHeader(termino);
 		setAll("-");
+	}
+
+	@Override
+	protected int getSelectionStyle() {
+		return SWT.SINGLE;
 	}
 }

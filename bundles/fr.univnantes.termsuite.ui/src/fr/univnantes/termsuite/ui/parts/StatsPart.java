@@ -106,7 +106,7 @@ public abstract class StatsPart {
 
 	@PostConstruct
 	public void createControls(IEclipseContext context, final Composite parent, MPart part, EPartService partService) {
-		table = new Table(parent, SWT.BORDER | SWT.MULTI);
+		table = new Table(parent, SWT.BORDER | getSelectionStyle());
 		column1 = new TableColumn(table, SWT.LEFT);
 		column1.setText("Terminology");
 		column1.setWidth(200);
@@ -124,6 +124,9 @@ public abstract class StatsPart {
 
 		tableCreated();
 	}
+	
+
+	protected abstract int getSelectionStyle();
 
 	protected void tableCreated() {
 		
@@ -132,4 +135,6 @@ public abstract class StatsPart {
 	protected void itemsSelected(List<TableItem> selection) {
 		
 	}
+	
+
 }

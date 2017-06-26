@@ -147,6 +147,19 @@ public class TerminologyPart implements TreePart {
         
 		for(String pName:viewerConfig.getSelectedPropertyNames()) 
 			createColumn(PropertyUtil.forName(pName));
+		viewerConfig.eAdapters().add(new AdapterImpl(){
+			@Override
+			public void notifyChanged(Notification msg) {
+				if(msg.getFeatureID(ETerminoViewerConfig.class) == TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SEARCH_STRING
+					&& msg.getNewValue() != null && !msg.getNewValue().toString().isEmpty())
+					/*
+					 * This is a non empty search string filter. Expand all nodes
+					 * in order to make selected variant appear.
+					 */
+					viewer.expandToLevel(1);
+
+			}
+		});
 		
 		// attach a selection listener to our jface viewer
 		TermSelectionListener listener = ContextInjectionFactory.make(TermSelectionListener.class, context);
@@ -292,6 +305,7 @@ public class TerminologyPart implements TreePart {
 					return false;
 			}
 		});
+		viewer.expandToLevel(1);
 	}
 
 	@Inject @Optional
