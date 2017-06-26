@@ -134,6 +134,7 @@
   <handlers xmi:id="_f9ikwFZ7EeeezpBRMTiXXw" elementId="fr.univnantes.termsuite.ui.handler.Rename" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.RenameHandler" command="_VYHv8FZUEeejQOQ2nExhjw"/>
   <handlers xmi:id="_knru4FdbEeeqk5_QeLB1Ow" elementId="fr.univnantes.termsuite.ui.handler.ClearPreprocessingCache" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.ClearPreprocessingCacheHandler" command="_Xqm0cFdbEeeqk5_QeLB1Ow"/>
   <handlers xmi:id="_0TqIMFgOEeeKTPPWqFeA1g" elementId="fr.univnantes.termsuite.ui.handler.SelectTerminologyPropertiesHandler" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.SelectTerminologyPropertiesHandler" command="_iwOtsFgOEeeKTPPWqFeA1g"/>
+  <handlers xmi:id="_4wQ_8FqLEeemQZ2MBb8WLQ" elementId="fr.univnantes.termsuite.ui.handler.ClearFilters" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.ClearFiltersHandler" command="_16d3gFqLEeemQZ2MBb8WLQ"/>
   <bindingTables xmi:id="_ZZiw8FITEeWJrZq1Fp2XFA" elementId="fr.univnantes.termsuite.ui.bindingtable.0" bindingContext="_aq_KsFITEeWJrZq1Fp2XFA">
     <bindings xmi:id="_0uye4J_zEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.keybinding.save" keySequence="M1+S" command="_GQqeAEyhEeWINr2AFtxMwQ">
       <tags>type:user</tags>
@@ -164,6 +165,7 @@
     </menus>
     <toolbar xmi:id="_mMEEMKASEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.toolbar.4">
       <children xsi:type="menu:HandledToolItem" xmi:id="_-DsRcOX_EeWuJP7LFnU52Q" elementId="fr.univnantes.termsuite.ui.handledtoolitem.TerminoCollapseAll" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/collapseall.png" command="_BXGjQOIsEeWihJy1yCPB5A"/>
+      <children xsi:type="menu:HandledToolItem" xmi:id="_tCJzAFqLEeemQZ2MBb8WLQ" elementId="fr.univnantes.termsuite.ui.handledtoolitem.ClearFilters" label="Clear filters" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/clear_co.png" tooltip="Clear active filters" command="_16d3gFqLEeemQZ2MBb8WLQ"/>
     </toolbar>
   </descriptors>
   <commands xmi:id="_GQqeAEyhEeWINr2AFtxMwQ" elementId="fr.univnantes.termsuite.ui.commands.save" commandName="Save"/>
@@ -194,6 +196,7 @@
   </commands>
   <commands xmi:id="_Xqm0cFdbEeeqk5_QeLB1Ow" elementId="fr.univnantes.termsuite.ui.command.ClearPreprocessingCache" commandName="Clear preprocessing cache" description="Clear *.json files of preprocessed corpora from nlp-cache"/>
   <commands xmi:id="_iwOtsFgOEeeKTPPWqFeA1g" elementId="fr.univnantes.termsuite.ui.command.SelectTerminologyProperties" commandName="SelectTerminologyProperties" description="Select the properties to display in terminology viewer"/>
+  <commands xmi:id="_16d3gFqLEeemQZ2MBb8WLQ" elementId="fr.univnantes.termsuite.ui.command.ClearFilters" commandName="Clear filters" description="Clear active filters"/>
   <addons xmi:id="_jupbsUwBEeWIWrXS0l4jxg" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_jupbskwBEeWIWrXS0l4jxg" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_jupbs0wBEeWIWrXS0l4jxg" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

@@ -185,6 +185,10 @@ public class TerminologyPart implements TreePart {
 	}
 
 
+	public ETerminoViewerConfig getViewerConfig() {
+		return viewerConfig;
+	}
+	
 	/*
 	 * Good link for TreeViewerColumn applications :
 	 * 
