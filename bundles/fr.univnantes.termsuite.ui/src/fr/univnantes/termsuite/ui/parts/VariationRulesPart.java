@@ -1,17 +1,16 @@
 package fr.univnantes.termsuite.ui.parts;
 
-import fr.univnantes.termsuite.api.TerminologyStats;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
+import java.util.Map;
 
-public class VariationRulesPart extends StatsPart {
+import fr.univnantes.termsuite.api.TerminologyStats;
+
+public class VariationRulesPart extends StatsCounterPart {
 
 	public static final String ID = "fr.univnantes.termsuite.ui.part.VariationRules";
 
 	@Override
-	protected void computingNewStats(ETerminology termino) {
+	protected Map<String, Integer> getCounters(TerminologyStats stats) {
+		return stats.getRuleDistribution();
 	}
 
-	@Override
-	protected void newStatsComputed(ETerminology termino, TerminologyStats stats) {
-	}
 }

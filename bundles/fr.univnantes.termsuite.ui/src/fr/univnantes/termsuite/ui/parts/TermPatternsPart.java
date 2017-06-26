@@ -1,22 +1,14 @@
 package fr.univnantes.termsuite.ui.parts;
 
-import fr.univnantes.termsuite.api.TerminologyStats;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
+import java.util.Map;
 
-public class TermPatternsPart extends StatsPart {
+import fr.univnantes.termsuite.api.TerminologyStats;
+
+public class TermPatternsPart extends StatsCounterPart {
 	public static final String ID = "fr.univnantes.termsuite.ui.part.TermPatternsPart";
 
 	@Override
-	protected void computingNewStats(ETerminology termino) {
-		// TODO Auto-generated method stub
-		
+	protected Map<String, Integer> getCounters(TerminologyStats stats) {
+		return stats.getPatternDistribution();
 	}
-
-	@Override
-	protected void newStatsComputed(ETerminology termino, TerminologyStats stats) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
 }

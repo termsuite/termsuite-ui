@@ -2,10 +2,8 @@
 package fr.univnantes.termsuite.ui.parts;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.swt.SWT;
@@ -23,9 +21,6 @@ public class TerminologyGlobalStatsPart extends StatsPart {
 
 	public static final String ID = "fr.univnantes.termsuite.ui.part.TerminologyStats";
 	
-	@Inject private UISynchronize sync;
-	
-	private TableItem terminoName;
 	private TableItem nbTermsItem;
 	private TableItem nbVariationsItem;
 	private TableItem nbWordsItem;
@@ -47,7 +42,7 @@ public class TerminologyGlobalStatsPart extends StatsPart {
 	private TableItem nbSemanticWithDico;
 
 	private void setAll(String str) {
-		TableItem[] allItems = new TableItem[]{terminoName, nbTermsItem, nbVariationsItem, nbWordsItem, nbCompoundWordsItem, nbSingleWords, nbSize2Words, nbSize3Words, nbSize6Words, nbSize5Words, nbSize4Words, nbExtensions, nbMorphological, nbDerivations, nbGraphical, nbSemantic, nbPrefixations, nbInfered, nbSemanticDistribOnly, nbSemanticWithDico};
+		TableItem[] allItems = new TableItem[]{terminoNameItem, nbTermsItem, nbVariationsItem, nbWordsItem, nbCompoundWordsItem, nbSingleWords, nbSize2Words, nbSize3Words, nbSize6Words, nbSize5Words, nbSize4Words, nbExtensions, nbMorphological, nbDerivations, nbGraphical, nbSemantic, nbPrefixations, nbInfered, nbSemanticDistribOnly, nbSemanticWithDico};
 		for(TableItem tableItem:allItems)
 			tableItem.setText(1, str);
 	}
@@ -72,16 +67,18 @@ public class TerminologyGlobalStatsPart extends StatsPart {
 		nbSemanticWithDico.setText(1, Integer.toString(stats.getNbSemanticWithDico()));
 		nbSemanticDistribOnly.setText(1, Integer.toString(stats.getNbSemanticDistribOnly()));
 	}
-	
 
 	@PostConstruct
 	public void createControls(IEclipseContext context, final Composite parent, MPart part, EPartService partService) {
 		Table table = new Table(parent, SWT.BORDER);
 		new TableColumn(table, SWT.LEFT).setWidth(200);
 		new TableColumn(table, SWT.RIGHT).setWidth(100);
-		terminoName = createItem(table, "Terminology");
-		terminoName.setFont(new Font( parent.getDisplay(), new FontData( parent.getFont().getFontData()[0].getName(), parent.getFont().getFontData()[0].getHeight(), SWT.BOLD )));
-		
+		terminoNameItem = createItem(table, "Terminology");
+		terminoNameItem.setFont(new Font( parent.getDisplay(), new FontData( parent.getFont().getFontData()[0].getName(), parent.getFont().getFontData()[0].getHeight(), SWT.BOLD )));
+		populateTable(table);
+	}
+
+	private void populateTable(Table table) {
 		nbTermsItem = createItem(table, "Terms");
 		nbWordsItem = createItem(table, "Words");
 		nbCompoundWordsItem = createItem(table, "Compound words");
@@ -103,23 +100,15 @@ public class TerminologyGlobalStatsPart extends StatsPart {
 		nbSemanticDistribOnly = createItem(table, "Semantic var. distrib.");
 	}
 
-	private TableItem createItem(Table table, String label) {
-		TableItem item = new TableItem(table, SWT.NONE | SWT.BOLD);
-		item.setText(0, label);
-		return item;
-	}
 	
 	@Override
 	protected void newStatsComputed(ETerminology termino, TerminologyStats stats) {
-		terminoName.setText(1, TerminologyPart.toPartLabel(termino));
-		terminoName.setImage(1, TermsuiteImg.INSTANCE.getFlag(termino.getCorpus().getLanguage()));
-		
+		setTerminoHeader(termino);
 		setStats(stats);
 	}
 	@Override
 	protected void computingNewStats(ETerminology termino) {
+		setTerminoHeader(termino);
 		setAll("-");
-		terminoName.setText(1, TerminologyPart.toPartLabel(termino));
-		terminoName.setImage(1, TermsuiteImg.INSTANCE.getFlag(termino.getCorpus().getLanguage()));
 	}
 }
