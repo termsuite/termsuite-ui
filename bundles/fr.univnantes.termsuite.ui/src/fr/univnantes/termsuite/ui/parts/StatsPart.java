@@ -3,6 +3,10 @@ package fr.univnantes.termsuite.ui.parts;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
@@ -22,14 +26,16 @@ public abstract class StatsPart {
 
 	private void updateActiveTerminology(ETerminology termino) {
 		sync.asyncExec(() -> computingNewStats(termino));
-		new Thread(){
-			public void run() {
+		new Job("Computing statistics for terminology " + TerminologyPart.toPartLabel(termino)){
+			public IStatus run(IProgressMonitor monitor) {
 				TerminologyStats stats = eTerminologyService.getStats(termino);
-				if(stats != null)
+				if(stats != null) {
 					sync.asyncExec(() -> newStatsComputed(termino, stats));
+				}
+				return Status.OK_STATUS;
 			}
 
-		}.start();
+		}.schedule();
 	}
 
 	protected abstract void computingNewStats(ETerminology termino);
