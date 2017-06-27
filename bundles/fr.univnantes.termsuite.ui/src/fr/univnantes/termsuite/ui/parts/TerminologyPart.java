@@ -281,54 +281,21 @@ public class TerminologyPart implements TreePart {
 	
 	@Inject @Optional
 	private void clearFilters(@UIEventTopic(TermSuiteEvents.TERMINO_FILTER_CLEARED) Object nullValue) {
-		clearFilters();
+		viewer.setFilters(null, null);
 	}
 
 
 	@Inject @Optional
 	private void filterTerms(@UIEventTopic(TermSuiteEvents.NEW_VARIATION_FILTER) VariationFilter filter) {
-		clearFilters();
-		
-		viewer.addFilter(new ViewerFilter() {
-			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if(element instanceof TermService) {
-					return ((TermService)element).variations().anyMatch(v-> filter.accept(v));
-				} else if(element instanceof RelationService) {
-					if(parentElement instanceof RelationService)
-						// order-2 variation. Keep it
-						return true;
-					else
-						return filter.accept((RelationService)element);
-				}
-				else 
-					return false;
-			}
-		});
+		viewer.setFilters(null, filter);
 		viewer.expandToLevel(1);
 	}
 
 	@Inject @Optional
 	private void filterTerms(@UIEventTopic(TermSuiteEvents.NEW_TERM_FILTER) TermFilter filter) {
-		clearFilters();
-		
-		viewer.addFilter(new ViewerFilter() {
-			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if(element instanceof TermService)
-					return filter.accept((TermService)element);
-				else if(element instanceof RelationService)
-					return true;
-				else return false;
-			}
-		});
-		
+		viewer.setFilters(filter, null);
 	}
 
-	private void clearFilters() {
-		for(ViewerFilter v:Lists.newArrayList(viewer.getFilters()))
-			viewer.removeFilter(v);
-	}
 
 	@Inject @Optional
 	private void init(@UIEventTopic(TermSuiteEvents.EDITOR_INITIATED) Object part, MPart mPart) {

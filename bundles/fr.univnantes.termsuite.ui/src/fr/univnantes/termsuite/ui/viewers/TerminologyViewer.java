@@ -11,6 +11,8 @@ import com.google.common.collect.ComparisonChain;
 
 import fr.univnantes.termsuite.framework.service.RelationService;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
+import fr.univnantes.termsuite.ui.util.TermFilter;
+import fr.univnantes.termsuite.ui.util.VariationFilter;
 import fr.univnantes.termsuite.ui.util.jface.ExpandCollapseDoubleClickListener;
 
 /**
@@ -22,6 +24,8 @@ import fr.univnantes.termsuite.ui.util.jface.ExpandCollapseDoubleClickListener;
  */
 public class TerminologyViewer extends TreeViewer {
 
+	private TerminologyContentProvider contentProvider;
+	
 	private ViewerComparator variationComparator = new ViewerComparator() {
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if(e1 instanceof RelationService && e2 instanceof RelationService) {
@@ -49,11 +53,14 @@ public class TerminologyViewer extends TreeViewer {
 		getTree().setLinesVisible(true);
 		getTree().setHeaderVisible(true);
 		setComparator(variationComparator);
-		setContentProvider(new TerminologyContentProvider(config));
-
+		contentProvider = new TerminologyContentProvider(config);
+		setContentProvider(contentProvider);
 		addDoubleClickListener(new ExpandCollapseDoubleClickListener(this));
-
 	}
-	
-	
+
+
+	public void setFilters(TermFilter termFilter, VariationFilter variationFilter) {
+		contentProvider.setFilters(termFilter, variationFilter);
+		refresh();
+	}
 }

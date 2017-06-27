@@ -2,10 +2,14 @@ package fr.univnantes.termsuite.ui.viewers;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+
+import com.google.common.base.Stopwatch;
 
 import fr.univnantes.termsuite.api.TermOrdering;
 import fr.univnantes.termsuite.framework.service.RelationService;
@@ -13,14 +17,23 @@ import fr.univnantes.termsuite.framework.service.TermService;
 import fr.univnantes.termsuite.framework.service.TerminologyService;
 import fr.univnantes.termsuite.model.TermProperty;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
+import fr.univnantes.termsuite.ui.util.TermFilter;
+import fr.univnantes.termsuite.ui.util.VariationFilter;
 
 public class TerminologyContentProvider implements ITreeContentProvider {
 
 	private ETerminoViewerConfig viewerConfig;
+	private Optional<TermFilter> termFilter = Optional.empty();
+	private Optional<VariationFilter> variationFilter = Optional.empty();
 
 	public TerminologyContentProvider(ETerminoViewerConfig viewerConfig) {
 		super();
 		this.viewerConfig = viewerConfig;
+	}
+	
+	public void setFilters(TermFilter termFilter, VariationFilter variationFilter) {
+		this.termFilter = Optional.ofNullable(termFilter);
+		this.variationFilter = Optional.ofNullable(variationFilter);
 	}
 
 	public boolean isMatchingTerm(Object termOrVariant) {
@@ -58,14 +71,26 @@ public class TerminologyContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		return this.terminologyService.terms()
-			.filter(this::isMatchingTerm)
+		Stopwatch sw = Stopwatch.createStarted();
+		Stream<TermService> stream = this.terminologyService.terms()
+			.filter(this::isMatchingTerm);
+		
+		if(termFilter.isPresent())
+			stream = stream.filter(termFilter.get()::accept);
+
+		if(variationFilter.isPresent())
+			stream = stream.filter(t -> t.variations().anyMatch(variationFilter.get()::accept));
+
+		
+		Object[] array = stream
 			.sorted(TermOrdering.natural()
 					.addSortingProperty(asTermProperty(), viewerConfig.isSortingAsc())
 					.toTermServiceComparator())
 			.limit(viewerConfig.getNbDisplayedTerms())
 			.collect(toList())
 			.toArray();
+		sw.stop();
+		return array;
 	}
 
 	private TermProperty asTermProperty() {
@@ -78,6 +103,7 @@ public class TerminologyContentProvider implements ITreeContentProvider {
 			TermService t = (TermService)parentElement;
 			return t.variations()
 					.filter(this::isMatchingTerm)
+					.filter(v -> !variationFilter.isPresent() || variationFilter.get().accept(v))
 					.collect(toList())
 					.toArray();
 		} else if (parentElement instanceof RelationService) {
@@ -86,7 +112,6 @@ public class TerminologyContentProvider implements ITreeContentProvider {
 					.filter(this::isMatchingTerm)
 					.collect(toList())
 					.toArray();
-
 		}
 		return null;
 	}

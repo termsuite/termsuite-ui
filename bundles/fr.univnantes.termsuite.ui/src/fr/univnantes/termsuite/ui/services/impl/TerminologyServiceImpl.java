@@ -93,6 +93,7 @@ public class TerminologyServiceImpl implements ETerminologyService {
 	 */
 	private LoadingCache<ETerminology, TerminologyStats> statCache = CacheBuilder.newBuilder()
 			.expireAfterWrite(5, TimeUnit.SECONDS)
+			.concurrencyLevel(1)
 			.build(new CacheLoader<ETerminology, TerminologyStats>() {
 				@Override
 				public TerminologyStats load(ETerminology terminology) throws Exception {

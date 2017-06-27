@@ -39,7 +39,7 @@ public class ETerminoViewerConfigImpl extends MinimalEObjectImpl.Container imple
 	 * @generated
 	 * @ordered
 	 */
-	protected static final int NB_DISPLAYED_TERMS_EDEFAULT = 500;
+	protected static final int NB_DISPLAYED_TERMS_EDEFAULT = 100;
 
 	/**
 	 * The cached value of the '{@link #getNbDisplayedTerms() <em>Nb Displayed Terms</em>}' attribute.

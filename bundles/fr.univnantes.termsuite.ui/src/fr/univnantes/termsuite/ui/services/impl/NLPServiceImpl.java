@@ -51,6 +51,7 @@ import fr.univnantes.termsuite.ui.services.NLPService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.services.TaggerService;
 import fr.univnantes.termsuite.ui.util.Jobs;
+import fr.univnantes.termsuite.ui.util.LangUtil;
 
 public class NLPServiceImpl implements NLPService {
 
@@ -123,7 +124,7 @@ public class NLPServiceImpl implements NLPService {
 			int totalWork = 10000;
 			SubMonitor subMonitor = SubMonitor.convert(monitor, totalWork);
 			TermSuite.terminoExtractor()
-					.setOptions(toExtractorOptions(pipeline))
+					.setOptions(toExtractorOptions(pipeline, corpus.getLanguage()))
 					.setListener(new WorkbenchPipelineListener(subMonitor, sync, totalWork))
 					.setResourceConfig(resourceService.getResourceConfig())
 					.execute(preparedCorpus);
@@ -161,8 +162,8 @@ public class NLPServiceImpl implements NLPService {
 
 
 
-	private ExtractorOptions toExtractorOptions(EPipeline pipeline) {
-		ExtractorOptions options = new ExtractorOptions();
+	private ExtractorOptions toExtractorOptions(EPipeline pipeline, ELang lang) {
+		ExtractorOptions options = TermSuite.getDefaultExtractorConfig(LangUtil.getTermsuiteLang(lang));
 		if(pipeline.getFilter() != null) 
 			options.setPostFilterConfig(toTerminoFilterOptions(pipeline.getFilter()));
 		else

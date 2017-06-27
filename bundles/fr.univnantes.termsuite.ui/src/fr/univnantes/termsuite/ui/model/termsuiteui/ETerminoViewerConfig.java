@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.EObject;
 public interface ETerminoViewerConfig extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Nb Displayed Terms</b></em>' attribute.
-	 * The default value is <code>"500"</code>.
+	 * The default value is <code>"100"</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Nb Displayed Terms</em>' attribute isn't clear,
@@ -38,7 +38,7 @@ public interface ETerminoViewerConfig extends EObject {
 	 * @return the value of the '<em>Nb Displayed Terms</em>' attribute.
 	 * @see #setNbDisplayedTerms(int)
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getETerminoViewerConfig_NbDisplayedTerms()
-	 * @model default="500"
+	 * @model default="100"
 	 * @generated
 	 */
 	int getNbDisplayedTerms();

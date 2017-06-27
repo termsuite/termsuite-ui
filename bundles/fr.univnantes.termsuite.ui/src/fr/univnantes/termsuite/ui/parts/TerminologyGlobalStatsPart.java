@@ -99,11 +99,11 @@ public class TerminologyGlobalStatsPart extends StatsPart {
 	private void setFilters() {
 		termFilters.put(nbCompoundWordsItem, t -> t.isCompound());
 		termFilters.put(nbSingleWords, t -> t.isSingleWord());
-		termFilters.put(nbSize2Words, t -> t.getSwts().count() == 2);
-		termFilters.put(nbSize3Words, t -> t.getSwts().count() == 3);
-		termFilters.put(nbSize4Words, t -> t.getSwts().count() == 4);
-		termFilters.put(nbSize5Words, t -> t.getSwts().count() == 5);
-		termFilters.put(nbSize6Words, t -> t.getSwts().count() == 6);
+		termFilters.put(nbSize2Words, t -> t.getSwtSize() == 2);
+		termFilters.put(nbSize3Words, t -> t.getSwtSize() == 3);
+		termFilters.put(nbSize4Words, t -> t.getSwtSize() == 4);
+		termFilters.put(nbSize5Words, t -> t.getSwtSize() == 5);
+		termFilters.put(nbSize6Words, t -> t.getSwtSize() == 6);
 		variationFilters.put(nbInfered, RelationService::isInfered);
 		variationFilters.put(nbExtensions, RelationService::isExtension);
 		variationFilters.put(nbMorphological, RelationService::isMorphological);
