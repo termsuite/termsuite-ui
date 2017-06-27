@@ -31,6 +31,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -88,15 +89,15 @@ public class TerminologyPart implements TreePart {
 	private DelayableText numOfTermsToShow;
 	private TreeColumnLayout layout;
 	private Label totalDisplayedTerms;
-	private DataBindingContext dbc = new DataBindingContext();
-
+	private DelayableText searchText;
+	
 	@PostConstruct
 	public void createControls(final IEclipseContext context, 
 			final ESelectionService selectionService,
 			final EMenuService menuService,
 			final EPartService partService,
 			final Composite parent, MPart part) {
-		parent.setLayout(new GridLayout(6, false));
+		parent.setLayout(new GridLayout(7, false));
 
 		viewerConfig = createDefaultViewerConfig();
 		context.set(ETerminoViewerConfig.class, viewerConfig);
@@ -131,10 +132,22 @@ public class TerminologyPart implements TreePart {
 	    
 		// populate viewer
 	    Composite container = new Composite(parent, SWT.None);
-	    GridDataFactory.fillDefaults().span(6, 1).grab(true, true).applyTo(container);
+	    GridDataFactory.fillDefaults().span(7, 1).grab(true, true).applyTo(container);
 		createViewer(container);
 		
-		viewer.getNbTermsDisplayed().addChangeListener(e -> totalDisplayedTerms.setText(Integer.toString(viewer.getNbTermsDisplayed().getValue())));
+		viewer.getNbTermsDisplayed().addChangeListener(e -> {
+			ETerminology eTerminology = context.get(ETerminology.class);
+			totalDisplayedTerms.setText(getTotalText(
+					viewer.getNbTermsDisplayed().getValue(),
+					eTerminologyService.readTerminology(eTerminology).getTerminology().getTerms().size()));
+		});
+	}
+
+	private String getTotalText(int nbDisplay, int nbTotal) {
+		return String.format(
+				"%d - Number of terms in terminology: %d", 
+				nbDisplay, 
+				nbTotal);
 	}
 	
 	private void createViewer(Composite container) {
@@ -265,15 +278,22 @@ public class TerminologyPart implements TreePart {
 	    label.setText("terms on ");
 		GridDataFactory.fillDefaults().grab(false, false).applyTo(label);
 		totalDisplayedTerms = new Label(infoContainer, SWT.NONE);
-		totalDisplayedTerms.setText("100000");
+		totalDisplayedTerms.setText(getTotalText(100000,100000));
 		GridDataFactory.fillDefaults().grab(false, false).applyTo(totalDisplayedTerms);
-
+		Button clearButton = new Button(infoContainer, SWT.PUSH);
+		clearButton.setImage(TermSuiteUI.getImg(TermSuiteUI.IMG_CLEAR_CO).createImage());
+		clearButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				clearFilters(null);
+			}
+		});
 		
 		// The search filter
-	    Label searchLabel = new Label(infoContainer, SWT.NONE);
+		Label searchLabel = new Label(infoContainer, SWT.NONE);
 	    searchLabel.setText("Search:");
 		GridDataFactory.fillDefaults().grab(false, false).applyTo(searchLabel);
-		final DelayableText searchText = new DelayableText(1000, infoContainer, SWT.SEARCH | SWT.ICON_SEARCH | SWT.CANCEL | SWT.BORDER);
+		searchText = new DelayableText(1000, infoContainer, SWT.SEARCH | SWT.ICON_SEARCH | SWT.CANCEL | SWT.BORDER);
 		searchText.setMessage("Search");
 		GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).grab(true, false).applyTo(searchText);
 		searchText.addDelayedModificationListener(e -> 
@@ -286,6 +306,7 @@ public class TerminologyPart implements TreePart {
 	@Inject @Optional
 	private void clearFilters(@UIEventTopic(TermSuiteEvents.TERMINO_FILTER_CLEARED) Object nullValue) {
 		viewer.setFilters(null, null);
+		searchText.setText("");
 	}
 
 
