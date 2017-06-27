@@ -3,6 +3,7 @@ package fr.univnantes.termsuite.ui.parts;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
@@ -26,8 +27,6 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -36,11 +35,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TreeColumn;
 
-import com.google.common.collect.Lists;
-
 import fr.univnantes.termsuite.api.TermSuite;
-import fr.univnantes.termsuite.framework.service.RelationService;
-import fr.univnantes.termsuite.framework.service.TermService;
 import fr.univnantes.termsuite.framework.service.TerminologyService;
 import fr.univnantes.termsuite.index.Terminology;
 import fr.univnantes.termsuite.model.IndexedCorpus;
@@ -91,6 +86,9 @@ public class TerminologyPart implements TreePart {
 	private UISynchronize sync;
 
 	private DelayableText numOfTermsToShow;
+	private TreeColumnLayout layout;
+	private Label totalDisplayedTerms;
+	private DataBindingContext dbc = new DataBindingContext();
 
 	@PostConstruct
 	public void createControls(final IEclipseContext context, 
@@ -98,7 +96,7 @@ public class TerminologyPart implements TreePart {
 			final EMenuService menuService,
 			final EPartService partService,
 			final Composite parent, MPart part) {
-		parent.setLayout(new GridLayout(4, false));
+		parent.setLayout(new GridLayout(6, false));
 
 		viewerConfig = createDefaultViewerConfig();
 		context.set(ETerminoViewerConfig.class, viewerConfig);
@@ -127,17 +125,18 @@ public class TerminologyPart implements TreePart {
 			}
 		});
 
+		
 		// populate headers
 	    createFilterHeader(parent);
 	    
 		// populate viewer
 	    Composite container = new Composite(parent, SWT.None);
-	    GridDataFactory.fillDefaults().span(4, 1).grab(true, true).applyTo(container);
+	    GridDataFactory.fillDefaults().span(6, 1).grab(true, true).applyTo(container);
 		createViewer(container);
+		
+		viewer.getNbTermsDisplayed().addChangeListener(e -> totalDisplayedTerms.setText(Integer.toString(viewer.getNbTermsDisplayed().getValue())));
 	}
 	
-	private TreeColumnLayout layout;
-
 	private void createViewer(Composite container) {
 		
 		layout = new TreeColumnLayout(true);
@@ -186,7 +185,7 @@ public class TerminologyPart implements TreePart {
 		viewerConfig.setSortingPropertyName(TermProperty.RANK.getJsonField());
 		viewerConfig.setSortingAsc(true);
 		viewerConfig.setSearchString("");
-		viewerConfig.setNbDisplayedTerms(1000);
+		viewerConfig.setNbDisplayedTerms(100);
 		viewerConfig.getSelectedPropertyNames().add(TermProperty.RANK.getPropertyName());
 		viewerConfig.getSelectedPropertyNames().add(TermProperty.PILOT.getPropertyName());
 		viewerConfig.getSelectedPropertyNames().add(TermProperty.PATTERN.getPropertyName());
@@ -246,12 +245,11 @@ public class TerminologyPart implements TreePart {
 		viewerConfig.setSortingAsc(!desc);
 
 	}
-	
 	private void createFilterHeader(Composite infoContainer) {
 		// maxNumOfterm filter
-	    Label nbTermsLimit = new Label(infoContainer, SWT.NONE);
-	    nbTermsLimit.setText("Nb terms limit:");
-		GridDataFactory.fillDefaults().grab(false, false).applyTo(nbTermsLimit);
+	    Label label = new Label(infoContainer, SWT.NONE);
+	    label.setText("Showing");
+		GridDataFactory.fillDefaults().grab(false, false).applyTo(label);
 		numOfTermsToShow = new DelayableText(500, infoContainer, SWT.NONE);
 		numOfTermsToShow.setText(Integer.toString(viewerConfig.getNbDisplayedTerms()));
 		GridDataFactory.fillDefaults().hint(50, SWT.DEFAULT).grab(false, false).applyTo(numOfTermsToShow);
@@ -263,6 +261,12 @@ public class TerminologyPart implements TreePart {
 				} catch(NumberFormatException nfe) {}
 			});
 		});
+		label = new Label(infoContainer, SWT.NONE);
+	    label.setText("terms on ");
+		GridDataFactory.fillDefaults().grab(false, false).applyTo(label);
+		totalDisplayedTerms = new Label(infoContainer, SWT.NONE);
+		totalDisplayedTerms.setText("100000");
+		GridDataFactory.fillDefaults().grab(false, false).applyTo(totalDisplayedTerms);
 
 		
 		// The search filter

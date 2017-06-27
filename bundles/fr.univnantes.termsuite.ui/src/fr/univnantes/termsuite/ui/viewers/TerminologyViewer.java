@@ -1,5 +1,6 @@
 package fr.univnantes.termsuite.ui.viewers;
 
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -62,5 +63,10 @@ public class TerminologyViewer extends TreeViewer {
 	public void setFilters(TermFilter termFilter, VariationFilter variationFilter) {
 		contentProvider.setFilters(termFilter, variationFilter);
 		refresh();
+	}
+
+
+	public WritableValue<Integer> getNbTermsDisplayed() {
+		return contentProvider.getNbTermsDisplayed();
 	}
 }

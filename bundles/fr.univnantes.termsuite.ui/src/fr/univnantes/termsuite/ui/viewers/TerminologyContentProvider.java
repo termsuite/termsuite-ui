@@ -3,9 +3,11 @@ package fr.univnantes.termsuite.ui.viewers;
 import static java.util.stream.Collectors.toList;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -22,6 +24,8 @@ import fr.univnantes.termsuite.ui.util.VariationFilter;
 
 public class TerminologyContentProvider implements ITreeContentProvider {
 
+	private WritableValue<Integer> nbTermsDisplayed;
+
 	private ETerminoViewerConfig viewerConfig;
 	private Optional<TermFilter> termFilter = Optional.empty();
 	private Optional<VariationFilter> variationFilter = Optional.empty();
@@ -29,6 +33,7 @@ public class TerminologyContentProvider implements ITreeContentProvider {
 	public TerminologyContentProvider(ETerminoViewerConfig viewerConfig) {
 		super();
 		this.viewerConfig = viewerConfig;
+		nbTermsDisplayed = new WritableValue<>();
 	}
 	
 	public void setFilters(TermFilter termFilter, VariationFilter variationFilter) {
@@ -81,14 +86,19 @@ public class TerminologyContentProvider implements ITreeContentProvider {
 		if(variationFilter.isPresent())
 			stream = stream.filter(t -> t.variations().anyMatch(variationFilter.get()::accept));
 
-		
+		AtomicInteger cnt = new AtomicInteger(0);
 		Object[] array = stream
+			.map(t -> {
+				cnt.incrementAndGet();
+				return t;
+			})
 			.sorted(TermOrdering.natural()
 					.addSortingProperty(asTermProperty(), viewerConfig.isSortingAsc())
 					.toTermServiceComparator())
 			.limit(viewerConfig.getNbDisplayedTerms())
 			.collect(toList())
 			.toArray();
+		nbTermsDisplayed.setValue(cnt.get());
 		sw.stop();
 		return array;
 	}
@@ -139,6 +149,9 @@ public class TerminologyContentProvider implements ITreeContentProvider {
 					.isPresent();
 		} else
 			return false;
-
+	}
+	
+	public WritableValue<Integer> getNbTermsDisplayed() {
+		return nbTermsDisplayed;
 	}
 }
