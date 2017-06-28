@@ -128,7 +128,6 @@
   <handlers xmi:id="_Vo7PIMULEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.handler.SaveAll" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.SaveAllHandler" command="_RIfJ0MULEeWcSafn8uq1Yw"/>
   <handlers xmi:id="_wlcJ0MUUEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.handler.RunPipeline" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.RunPipelineHandler" command="_zpB2oMUUEeWcSafn8uq1Yw"/>
   <handlers xmi:id="_dQ1y4MakEeWpYeBiwS_H7Q" elementId="fr.univnantes.termsuite.ui.handler.preferences" contributionURI="bundleclass://com.opcoach.e4.preferences/com.opcoach.e4.preferences.handlers.E4PreferencesHandler" command="_XCv48MakEeWpYeBiwS_H7Q"/>
-  <handlers xmi:id="_vV23QMm0EeWMTIcqIQJn_g" elementId="fr.univnantes.termsuite.ui.handler.0" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.UpdateHandler" command="_qzb08Mm0EeWMTIcqIQJn_g"/>
   <handlers xmi:id="_hmTyUMwKEeWh7K416TAaxg" elementId="fr.univnantes.termsuite.ui.handler.About" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.AboutHandler" command="_cgtKcMwKEeWh7K416TAaxg"/>
   <handlers xmi:id="_X6dicORQEeWfCbb369iF9g" elementId="fr.univnantes.termsuite.ui.handler.CollapaseAllHandler" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.CollapseAllHandler" command="_BXGjQOIsEeWihJy1yCPB5A"/>
   <handlers xmi:id="_f9ikwFZ7EeeezpBRMTiXXw" elementId="fr.univnantes.termsuite.ui.handler.Rename" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.RenameHandler" command="_VYHv8FZUEeejQOQ2nExhjw"/>
@@ -193,7 +192,6 @@
     <parameters xmi:id="_54UncFWZEeefSMCel-Yjlw" elementId="fr.univnantes.termsuite.ui.command.RunPipeline.commandparameter.pipelinename" name="Pipeline Name" optional="false"/>
   </commands>
   <commands xmi:id="_XCv48MakEeWpYeBiwS_H7Q" elementId="fr.univnantes.termsuite.ui.command.preferences" commandName="Preferences" description="Show the preferences dialog"/>
-  <commands xmi:id="_qzb08Mm0EeWMTIcqIQJn_g" elementId="fr.univnantes.termsuite.ui.command.update" commandName="Update" description="Checks for updates and installs them"/>
   <commands xmi:id="_cgtKcMwKEeWh7K416TAaxg" elementId="fr.univnantes.termsuite.ui.command.About" commandName="About" description="Shows information about TermSuite"/>
   <commands xmi:id="_BXGjQOIsEeWihJy1yCPB5A" elementId="fr.univnantes.termsuite.ui.command.collapseall" commandName="Collapse all"/>
   <commands xmi:id="_lkpP8ORPEeWfCbb369iF9g" elementId="fr.univnantes.termsuite.ui.command.NextOccurrence" commandName="Next occurrence" description="Browse to next occurrence"/>
