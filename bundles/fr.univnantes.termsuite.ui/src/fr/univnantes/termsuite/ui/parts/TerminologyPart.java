@@ -308,6 +308,13 @@ public class TerminologyPart implements TreePart {
 		viewer.setFilters(null, null);
 		searchText.setText("");
 	}
+	
+	@Inject @Optional
+	private void clearFilters(@UIEventTopic(TermSuiteEvents.TERMINOLOGY_MODIFIED) ETerminology terminology, ETerminologyService eTerminologyService) {
+		if(context.get(ETerminology.class).equals(terminology)) 
+			viewer.refresh();
+	}
+
 
 
 	@Inject @Optional

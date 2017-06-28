@@ -28,6 +28,5 @@ public class TermSuiteEvents {
 	public static final String NEW_TERM_FILTER = "newTermFilter";
 	public static final String NEW_VARIATION_FILTER = "newVariationFilter";
 	public static final String TERMINO_FILTER_CLEARED = "terminoFilterCleared";
-	
-
+	public static final String TERMINOLOGY_MODIFIED = "terminologyModified";
 }

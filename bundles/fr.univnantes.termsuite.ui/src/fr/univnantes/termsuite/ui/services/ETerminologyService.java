@@ -74,5 +74,7 @@ public interface ETerminologyService {
 
 	public TerminologyStats getStats(ETerminology termino);
 
+	public void invalidateCaches(ETerminology terminology);
+
 
 }

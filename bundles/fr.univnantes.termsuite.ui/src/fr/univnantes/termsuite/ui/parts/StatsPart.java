@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
 import fr.univnantes.termsuite.api.TerminologyStats;
@@ -38,7 +39,10 @@ public abstract class StatsPart {
 	@Inject private ETerminologyService eTerminologyService;
 	@Inject private UISynchronize sync;
 
+	private ETerminology activeTermino;
+	
 	private void updateActiveTerminology(ETerminology termino) {
+		this.activeTermino = termino;
 		sync.asyncExec(() -> setTerminoHeader(termino));
 		sync.asyncExec(() -> computingNewStats(termino));
 		new Job("Computing statistics for terminology " + TerminologyPart.toPartLabel(termino)){
@@ -125,7 +129,12 @@ public abstract class StatsPart {
 		tableCreated();
 	}
 	
-
+	@Inject @Optional
+	private void updatedTermino(@UIEventTopic(TermSuiteEvents.TERMINOLOGY_MODIFIED) ETerminology terminology) {
+		if(Objects.equal(activeTermino, terminology)) 
+			updateActiveTerminology(terminology);
+	}
+	
 	protected abstract int getSelectionStyle();
 
 	protected void tableCreated() {

@@ -32,6 +32,7 @@ public class TerminologyServiceImpl implements ETerminologyService {
 
 	@Inject
 	private IEclipseContext context;
+	
 
 	private LoadingCache<ETerminology, IndexedCorpus> terminoCache = CacheBuilder.newBuilder().maximumSize(1).recordStats()
 			.build(new CacheLoader<ETerminology, IndexedCorpus>() {
@@ -53,13 +54,13 @@ public class TerminologyServiceImpl implements ETerminologyService {
 
 	@Override
 	public void saveTerminologyJson(ETerminology terminology, IndexedCorpus termIndex, boolean withOccurrences, boolean withContexts) throws IOException {
-		FileOutputStream fos = new FileOutputStream(getPath(terminology).toFile());
+		FileOutputStream fos;
+		fos = new FileOutputStream(getPath(terminology).toFile());
 		Writer writer2 = new OutputStreamWriter(fos, "UTF-8");
 		JsonTerminologyIO.save(
 				writer2, 
 				termIndex, 
 				new JsonOptions().withOccurrences(withOccurrences).withContexts(withContexts));
-		writer2.flush();
 		IOUtil.closeSilently(fos, writer2);
 	}
 
@@ -107,5 +108,11 @@ public class TerminologyServiceImpl implements ETerminologyService {
 	@Override
 	public TerminologyStats getStats(ETerminology termino) {
 		return statCache.getUnchecked(termino);
+	}
+
+	@Override
+	public void invalidateCaches(ETerminology terminology) {
+		terminoCache.invalidate(terminology);
+		statCache.invalidate(terminology);
 	}
 }

@@ -74,7 +74,7 @@ public class TSVOptionsDialog extends Dialog {
         				.map(TsvPropertyConfig::getProperty)
         				.collect(Collectors.toList());
         		
-				SelectPropertyDialog dialog = new SelectPropertyDialog(parent.getShell(), properties2);
+				SelectPropertyDialog dialog = new SelectPropertyDialog(parent.getShell(), properties2, p->true);
 				if(dialog.open() == Dialog.OK) {
 					tsvOptions.setProperties(dialog.getSelectedProperties());
 					fillPropertyList();

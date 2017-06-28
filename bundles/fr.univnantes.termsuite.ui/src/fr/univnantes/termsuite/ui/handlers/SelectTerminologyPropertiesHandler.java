@@ -35,7 +35,7 @@ public class SelectTerminologyPropertiesHandler {
 				.stream()
 				.map(s -> PropertyUtil.forName(s)).collect(Collectors.toList());
 		
-		SelectPropertyDialog dialog = new SelectPropertyDialog(shell, selectedProperties);
+		SelectPropertyDialog dialog = new SelectPropertyDialog(shell, selectedProperties, p-> true);
 		if(dialog.open() == Dialog.OK) {
 			List<String> propertyNames = dialog.getSelectedPropertyNames();
 			viewerList.retainAll(propertyNames);
