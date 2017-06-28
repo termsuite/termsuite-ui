@@ -43,19 +43,22 @@ public abstract class StatsPart {
 	
 	private void updateActiveTerminology(ETerminology termino) {
 		this.activeTermino = termino;
-		sync.asyncExec(() -> setTerminoHeader(termino));
-		sync.asyncExec(() -> computingNewStats(termino));
-		new Job("Computing statistics for terminology " + TerminologyPart.toPartLabel(termino)){
-			public IStatus run(IProgressMonitor monitor) {
-				TerminologyStats stats = eTerminologyService.getStats(termino);
-				if(stats != null) {
-					sync.asyncExec(() -> setTerminoHeader(termino));
-					sync.asyncExec(() -> newStatsComputed(termino, stats));
+		sync.asyncExec(() -> {
+			setTerminoHeader(termino);
+			new Job("Computing statistics for terminology " + TerminologyPart.toPartLabel(termino)){
+				public IStatus run(IProgressMonitor monitor) {
+					TerminologyStats stats = eTerminologyService.getStats(termino);
+					if(stats != null) {
+						sync.asyncExec(() -> {
+							setTerminoHeader(termino);	
+							newStatsComputed(termino, stats);
+						});
+					}
+					return Status.OK_STATUS;
 				}
-				return Status.OK_STATUS;
-			}
-
-		}.schedule();
+				
+			}.schedule();
+		});
 	}
 
 	protected abstract void computingNewStats(ETerminology termino);
@@ -82,7 +85,7 @@ public abstract class StatsPart {
 
 	
 	private void processActivePart(MPart part) {
-		if(part != null &&  part.getContext().get(ETerminology.class) != null) 
+		if(part != null && part instanceof TerminologyPart && part.getContext().get(ETerminology.class) != null) 
 			updateActiveTerminology(part.getContext().get(ETerminology.class));
 	}
 
