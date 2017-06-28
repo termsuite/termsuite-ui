@@ -64,6 +64,7 @@ public class FilterTerminologyHandler {
 						}
 					}
 					super.done(event);
+		            event.getJob().removeJobChangeListener(this);
 				}
 			});
 			job.schedule();

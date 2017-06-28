@@ -109,6 +109,7 @@ public class NLPServiceImpl implements NLPService {
 									corpus, 
 									IndexedCorpusIO.fromJson(preprocessedCorpusPath));
 						}
+			            event.getJob().removeJobChangeListener(this);
 					}
 				});
 				preprocessCorpusJob.schedule();
@@ -147,6 +148,8 @@ public class NLPServiceImpl implements NLPService {
 					eventBroker.post(TermSuiteEvents.NEW_TERMINOLOGY, terminology);
 				} catch(IOException e) {
 					context.get(ILoggerProvider.class).getClassLogger(this.getClass()).error(e, "Could not save corpus after terminology creation: " + e.getMessage());
+				} finally {
+		            event.getJob().removeJobChangeListener(this);
 				}
 			}
 		});
