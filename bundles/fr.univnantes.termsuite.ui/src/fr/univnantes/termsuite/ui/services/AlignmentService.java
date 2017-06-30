@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import fr.univnantes.termsuite.alignment.TranslationCandidate;
-import fr.univnantes.termsuite.model.Term;
+import fr.univnantes.termsuite.framework.service.TermService;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EBilingualDictionary;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
@@ -90,5 +90,5 @@ public interface AlignmentService {
 	 * @param targetTerminology
 	 * @return
 	 */
-	public List<TranslationCandidate> align(Term term, ETerminology sourceTerminology, ETerminology targetTerminology);
+	public List<TranslationCandidate> align(TermService term, ETerminology sourceTerminology, ETerminology targetTerminology);
 }

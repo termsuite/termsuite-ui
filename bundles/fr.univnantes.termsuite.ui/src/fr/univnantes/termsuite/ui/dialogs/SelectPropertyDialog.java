@@ -27,13 +27,14 @@ public class SelectPropertyDialog extends Dialog {
 	
 	private Predicate<Property<?>> selectableProperties;
 	private boolean onlyOneAllowed;
-	private List<Property<?>> selectedProperies;
+	private List<Property<?>> initiallySelectedProperies;
+	private List<Property<?>> selectedProperties = null;
 	
 	public SelectPropertyDialog(Shell parent, List<Property<?>> selectedProperies, Predicate<Property<?>> selectableProperties, boolean onlyOneAllowed) {
 		super(parent);
 		this.onlyOneAllowed = onlyOneAllowed;
 		this.selectableProperties = selectableProperties;
-		this.selectedProperies = selectedProperies;
+		this.initiallySelectedProperies = selectedProperies;
 	}
 	
 	@Override
@@ -86,8 +87,8 @@ public class SelectPropertyDialog extends Dialog {
 			item.setText(2, p.isNumeric() ? "Numeric" : p.getRange().equals(Boolean.class) ? "Boolean" : "String");
 			item.setText(3, p.getDescription());
 			item.setData(p);
-			item.setChecked(selectedProperies.contains(p));
-			if(selectedProperies.size() == 1 && selectedProperies.get(0).equals(p))
+			item.setChecked(initiallySelectedProperies.contains(p));
+			if(initiallySelectedProperies.size() == 1 && initiallySelectedProperies.get(0).equals(p))
 				table.setSelection(item);
 		}
 	}
@@ -98,7 +99,7 @@ public class SelectPropertyDialog extends Dialog {
 	}
 
 	
-	public List<Property<?>> getSelectedProperties() {
+	private List<Property<?>> setSelectedProperties() {
 		List<Property<?>> l = new ArrayList<>();
 		if(onlyOneAllowed && table.getSelection().length == 1) {
 			l.add((Property<?>)table.getSelection()[0].getData());
@@ -109,6 +110,16 @@ public class SelectPropertyDialog extends Dialog {
 			}
 		}
 		return l;
+	}
+	
+	@Override
+	protected void okPressed() {
+		selectedProperties = setSelectedProperties();
+		super.okPressed();
+	}
+	
+	public List<Property<?>> getSelectedProperties() {
+		return selectedProperties;
 	}
 
 	public List<String> getSelectedPropertyNames() {

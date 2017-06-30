@@ -29,8 +29,8 @@ import com.google.common.collect.Sets;
 import fr.univnantes.termsuite.alignment.BilingualAlignmentService;
 import fr.univnantes.termsuite.alignment.TranslationCandidate;
 import fr.univnantes.termsuite.api.TermSuite;
+import fr.univnantes.termsuite.framework.service.TermService;
 import fr.univnantes.termsuite.metrics.Cosine;
-import fr.univnantes.termsuite.model.Term;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.exceptions.DictionaryException;
@@ -184,7 +184,7 @@ public class AlignmentServiceImpl implements AlignmentService {
 
 
 	@Override
-	public List<TranslationCandidate> align(Term term, ETerminology sourceTerminology, ETerminology targetTerminology) {
+	public List<TranslationCandidate> align(TermService term, ETerminology sourceTerminology, ETerminology targetTerminology) {
 		
 		EBilingualDictionary dico = getDictionary(
 				sourceTerminology.getCorpus().getLanguage(), 
@@ -207,7 +207,7 @@ public class AlignmentServiceImpl implements AlignmentService {
 					.setDistance(Cosine.class)
 					.create();
 			
-			return aligner.align(term, 20, 2);
+			return aligner.align(term.getTerm(), 20, 2);
 		}
 	}
 

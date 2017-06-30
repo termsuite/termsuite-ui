@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import com.google.common.collect.ComparisonChain;
 
 import fr.univnantes.termsuite.framework.service.RelationService;
+import fr.univnantes.termsuite.model.RelationProperty;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
 import fr.univnantes.termsuite.ui.util.TermFilter;
 import fr.univnantes.termsuite.ui.util.VariationFilter;
@@ -34,8 +35,9 @@ public class TerminologyViewer extends TreeViewer {
 				RelationService v2 = (RelationService) e2;
 				return ComparisonChain.start()
 						.compare(
-								v2.getVariantScore(),
-								v1.getVariantScore())
+								v2.isPropertySet(RelationProperty.VARIANT_SCORE) ? v2.getVariantScore() : 0,
+								v1.isPropertySet(RelationProperty.VARIANT_SCORE) ? v1.getVariantScore() : 0
+						)
 						.result();
 			} else
 				return 0;
