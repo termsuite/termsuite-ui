@@ -34,7 +34,20 @@ public class TerminologyServiceImpl implements ETerminologyService {
 	private IEclipseContext context;
 	
 
-	private LoadingCache<ETerminology, IndexedCorpus> terminoCache = CacheBuilder.newBuilder().maximumSize(1).recordStats()
+	private LoadingCache<ETerminology, TerminologyService> terminoServiceCache = CacheBuilder
+			.newBuilder()
+			.maximumSize(1)
+			.recordStats()
+			.build(new CacheLoader<ETerminology, TerminologyService>() {
+				public TerminologyService load(ETerminology terminology) throws IOException {
+					return TermSuite.getTerminologyService(terminoCache.getUnchecked(terminology));
+				}
+			});
+	
+	private LoadingCache<ETerminology, IndexedCorpus> terminoCache = CacheBuilder
+			.newBuilder()
+			.maximumSize(1)
+			.recordStats()
 			.build(new CacheLoader<ETerminology, IndexedCorpus>() {
 				public IndexedCorpus load(ETerminology terminology) throws IOException {
 					FileInputStream fis = new FileInputStream(getPath(terminology).toFile());
@@ -98,8 +111,7 @@ public class TerminologyServiceImpl implements ETerminologyService {
 			.build(new CacheLoader<ETerminology, TerminologyStats>() {
 				@Override
 				public TerminologyStats load(ETerminology terminology) throws Exception {
-					IndexedCorpus indexedCorpus = readTerminology(terminology);
-					TerminologyService terminologyService = TermSuite.getTerminologyService(indexedCorpus);
+					TerminologyService terminologyService = getTerminologyService(terminology);
 					TerminologyStats stats = terminologyService.computeStats();
 					return stats;
 				}
@@ -113,6 +125,12 @@ public class TerminologyServiceImpl implements ETerminologyService {
 	@Override
 	public void invalidateCaches(ETerminology terminology) {
 		terminoCache.invalidate(terminology);
+		terminoServiceCache.invalidate(terminology);
 		statCache.invalidate(terminology);
+	}
+
+	@Override
+	public TerminologyService getTerminologyService(ETerminology terminology) {
+		return terminoServiceCache.getUnchecked(terminology);
 	}
 }

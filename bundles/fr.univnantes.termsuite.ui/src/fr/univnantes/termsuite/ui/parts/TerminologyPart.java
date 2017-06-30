@@ -25,6 +25,9 @@ import org.eclipse.jface.viewers.ColumnLayoutData;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
@@ -37,6 +40,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TreeColumn;
 
 import fr.univnantes.termsuite.api.TermSuite;
+import fr.univnantes.termsuite.framework.service.RelationService;
+import fr.univnantes.termsuite.framework.service.TermService;
 import fr.univnantes.termsuite.framework.service.TerminologyService;
 import fr.univnantes.termsuite.index.Terminology;
 import fr.univnantes.termsuite.model.IndexedCorpus;
@@ -140,6 +145,19 @@ public class TerminologyPart implements TreePart {
 			totalDisplayedTerms.setText(getTotalText(
 					viewer.getNbTermsDisplayed().getValue(),
 					eTerminologyService.readTerminology(eTerminology).getTerminology().getTerms().size()));
+		});
+		viewer.addSelectionChangedListener(e -> {
+			IStructuredSelection selection = (IStructuredSelection)e.getSelection();
+			if(!selection.isEmpty()) {
+				Object el = selection.getFirstElement();
+				if(el instanceof TermService) {
+					selectionService.setSelection(el);
+					termSuiteSelectionService.setActiveTerm((TermService)el);
+				} if(el instanceof RelationService) {
+					selectionService.setSelection(((RelationService)el).getTo());
+					termSuiteSelectionService.setActiveTerm(((RelationService)el).getTo());
+				}
+			}
 		});
 	}
 
@@ -347,7 +365,7 @@ public class TerminologyPart implements TreePart {
 			final IndexedCorpus indexedCorpus = eTerminologyService.readTerminology(terminology);
 			context.set(IndexedCorpus.class, indexedCorpus);
 			context.set(Terminology.class, indexedCorpus.getTerminology());
-			final TerminologyService terminologyService = TermSuite.getTerminologyService(indexedCorpus.getTerminology());
+			final TerminologyService terminologyService = eTerminologyService.getTerminologyService(terminology);
 			context.set(TerminologyService.class, terminologyService);
 			Job job = Job.create("Open terminology", monitor -> {
 				sync.asyncExec(() -> viewer.setInput(terminologyService));

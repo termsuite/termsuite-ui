@@ -23,6 +23,7 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.e4.ui.workbench.modeling.IPartListener;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -39,7 +40,9 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
@@ -53,7 +56,9 @@ import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.handlers.OpenObjectHandler;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.ETerminologyService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
 import fr.univnantes.termsuite.ui.util.CommandUtil;
@@ -204,15 +209,19 @@ public class OccurrencePart implements TreePart {
 	}
 
 
+	private Label emptyOccStoreLabel;
 	private TreeViewer viewer;
 
 	@PostConstruct
 	public void createControls(ILoggerProvider loggerProvider, IEclipseContext context, final Composite parent, MPart part) {
-		
 		this.logger = loggerProvider.getClassLogger(this.getClass());
 		
+//		emptyOccStoreLabel = new Label(parent, SWT.NONE);
+//		GridDataFactory.fillDefaults().grab(true, true).exclude(true).applyTo(emptyOccStoreLabel);
+//		emptyOccStoreLabel.setVisible(false);
 		
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+//		GridDataFactory.fillDefaults().grab(true, true).exclude(true).applyTo(viewer.getControl());
 		context.set(TreeViewer.class, viewer);
 		
 		viewer.getTree().setLinesVisible(true);
@@ -363,6 +372,20 @@ public class OccurrencePart implements TreePart {
 	}
 
 
+	@Inject
+	void activePartChanged(@Named(IServiceConstants.ACTIVE_PART) MPart part, ETerminologyService eTerminologyService) {
+		if(part != null && part.getObject() instanceof TerminologyPart && part.getContext().get(ETerminology.class) != null) {
+			ETerminology eTerminology = part.getContext().get(ETerminology.class);
+			if(eTerminologyService.readTerminology(eTerminology).getOccurrenceStore().size() == 0) {
+//				emptyOccStoreLabel.setText("Occurrence store for terminology " + TerminologyPart.toPartLabel(eTerminology) + " is empty.");
+//				emptyOccStoreLabel.setVisible(true);
+//				viewer.getControl().setVisible(false);
+			} else {
+//				emptyOccStoreLabel.setVisible(false);
+//				viewer.getControl().setVisible(true);
+			}
+		}
+	}
 
 	@Override
 	public TreeViewer getTreeViewer() {

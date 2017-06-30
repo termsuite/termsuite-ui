@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import fr.univnantes.termsuite.api.TerminologyStats;
+import fr.univnantes.termsuite.framework.service.TerminologyService;
 import fr.univnantes.termsuite.index.TermIndex;
 import fr.univnantes.termsuite.model.IndexedCorpus;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
@@ -75,6 +76,8 @@ public interface ETerminologyService {
 	public TerminologyStats getStats(ETerminology termino);
 
 	public void invalidateCaches(ETerminology terminology);
+
+	public TerminologyService getTerminologyService(ETerminology eTerminology);
 
 
 }
