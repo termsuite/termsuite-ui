@@ -164,8 +164,8 @@ public class FilterTerminologyDialog extends Dialog {
 		SelectPropertyDialog dialog = new SelectPropertyDialog(
 				getParentShell(), 
 				Lists.newArrayList(filterOptions.getFilterProperty()), 
-				p -> p instanceof TermProperty && p.isNumeric());
-		dialog.setSingleSelection();
+				p -> p instanceof TermProperty && p.isNumeric(),
+				true);
 		if(dialog.open() == Dialog.OK && dialog.getSelectedProperties().size() == 1) {
 			TermProperty p = (TermProperty)dialog.getSelectedProperties().iterator().next();
 			propertyName.setText(p.getPropertyName());
