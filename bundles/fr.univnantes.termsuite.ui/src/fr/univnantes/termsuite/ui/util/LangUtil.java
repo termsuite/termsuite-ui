@@ -21,6 +21,7 @@ public class LangUtil {
 		countries.put(ELang.FR, "France");
 		countries.put(ELang.EN, "United-Kingdom");
 		countries.put(ELang.DE, "Germany");
+		countries.put(ELang.IT, "Italy");
 		countries.put(ELang.ES, "Spain");
 //		countries.put(ELang.LV, "Latvia");
 		countries.put(ELang.RU, "Russia");
@@ -30,6 +31,7 @@ public class LangUtil {
 		
 		tsLangs.put(ELang.FR, Lang.FR);
 		tsLangs.put(ELang.EN, Lang.EN);
+		tsLangs.put(ELang.IT, Lang.IT);
 		tsLangs.put(ELang.ES, Lang.ES);
 		tsLangs.put(ELang.DE, Lang.DE);
 		tsLangs.put(ELang.RU, Lang.RU);
