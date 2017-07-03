@@ -72,7 +72,7 @@ public class LifeCycleManager {
 		Preferences preferences = ConfigurationScope.INSTANCE.getNode(TermSuiteUI.PLUGIN_ID);
 		if(preferences.get(TermSuiteUIPreferences.OUTPUT_DIRECTORY, "").equals("")) {
 			String outputDirectoryDefault = WorkspaceUtil.getLocation(TermSuiteUIPreferences.OUTPUT_DIRECTORY_DEFAULT);
-			logger.info("Setting output directory to: {}", outputDirectoryDefault);
+			logger.info("Setting output directory to: {0}", outputDirectoryDefault);
 			preferences.put(TermSuiteUIPreferences.OUTPUT_DIRECTORY, outputDirectoryDefault);
 			Paths.get(outputDirectoryDefault).toFile().mkdirs();
 			preferences.flush();
@@ -167,7 +167,8 @@ public class LifeCycleManager {
 		JoranConfigurator configurator = new JoranConfigurator();  
 		configurator.setContext(loggerContext);  
 		try {  
-		  configurator.doConfigure(getClass().getResourceAsStream("/logback.xml"));  
+			configurator.doConfigure(getClass().getResourceAsStream("/logback.xml")); 
+			logger.info("Logging has been {0} configured", "correctly");
 		} catch (JoranException e) {
 			logger.error(e);
 		}
