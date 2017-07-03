@@ -9,6 +9,7 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 
 import fr.univnantes.termsuite.api.TerminologyStats;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
+import fr.univnantes.termsuite.ui.util.BrokerUtil;
 import fr.univnantes.termsuite.ui.util.TermFilter;
 
 public class TermPatternsPart extends StatsCounterPart {
@@ -27,7 +28,9 @@ public class TermPatternsPart extends StatsCounterPart {
 			eventBroker.post(TermSuiteEvents.TERMINO_FILTER_CLEARED, null);
 		} else {
 			TermFilter filter = t -> values.contains(t.getPattern());
-			eventBroker.post(TermSuiteEvents.NEW_TERM_FILTER, filter);
+			eventBroker.post(
+					TermSuiteEvents.NEW_TERM_FILTER, 
+					BrokerUtil.toParamMap(filter, activeTermino));
 		}
 	}
 }

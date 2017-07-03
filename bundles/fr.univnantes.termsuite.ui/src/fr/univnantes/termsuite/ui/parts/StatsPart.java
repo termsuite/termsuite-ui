@@ -39,7 +39,7 @@ public abstract class StatsPart {
 	@Inject private ETerminologyService eTerminologyService;
 	@Inject private UISynchronize sync;
 
-	private ETerminology activeTermino;
+	protected ETerminology activeTermino;
 	
 	private void updateActiveTerminology(ETerminology termino) {
 		this.activeTermino = termino;

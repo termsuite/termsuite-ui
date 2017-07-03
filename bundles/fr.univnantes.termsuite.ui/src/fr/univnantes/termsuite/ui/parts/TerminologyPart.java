@@ -1,9 +1,11 @@
 package fr.univnantes.termsuite.ui.parts;
 
+import java.util.Map;
+import java.util.Objects;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
@@ -25,9 +27,7 @@ import org.eclipse.jface.viewers.ColumnLayoutData;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
@@ -39,7 +39,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TreeColumn;
 
-import fr.univnantes.termsuite.api.TermSuite;
 import fr.univnantes.termsuite.framework.service.RelationService;
 import fr.univnantes.termsuite.framework.service.TermService;
 import fr.univnantes.termsuite.framework.service.TerminologyService;
@@ -57,6 +56,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
 import fr.univnantes.termsuite.ui.services.ETerminologyService;
 import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
+import fr.univnantes.termsuite.ui.util.BrokerUtil;
 import fr.univnantes.termsuite.ui.util.PropertyUtil;
 import fr.univnantes.termsuite.ui.util.TermFilter;
 import fr.univnantes.termsuite.ui.util.VariationFilter;
@@ -336,14 +336,24 @@ public class TerminologyPart implements TreePart {
 
 
 	@Inject @Optional
-	private void filterTerms(@UIEventTopic(TermSuiteEvents.NEW_VARIATION_FILTER) VariationFilter filter) {
-		viewer.setFilters(null, filter);
-		viewer.expandToLevel(1);
+	private void filterVariations(@UIEventTopic(TermSuiteEvents.NEW_VARIATION_FILTER) Map<Class<?>, Object> params) {
+		// Make sure the filter was set for this editor's terminology
+		if(Objects.equals(
+				BrokerUtil.get(params, ETerminology.class),
+				context.get(ETerminology.class))) {
+			viewer.setFilters(null, BrokerUtil.get(params, VariationFilter.class));
+			viewer.expandToLevel(1);
+		}
 	}
 
 	@Inject @Optional
-	private void filterTerms(@UIEventTopic(TermSuiteEvents.NEW_TERM_FILTER) TermFilter filter) {
-		viewer.setFilters(filter, null);
+	private void filterTerms(@UIEventTopic(TermSuiteEvents.NEW_TERM_FILTER) Map<Class<?>, Object> params) {
+		// Make sure the filter was set for this editor's terminology
+		if(Objects.equals(
+				BrokerUtil.get(params, ETerminology.class),
+				context.get(ETerminology.class))) {
+			viewer.setFilters(BrokerUtil.get(params, TermFilter.class), null);
+		}
 	}
 
 

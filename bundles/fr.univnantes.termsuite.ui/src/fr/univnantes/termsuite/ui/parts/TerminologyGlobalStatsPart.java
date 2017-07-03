@@ -16,6 +16,7 @@ import fr.univnantes.termsuite.api.TerminologyStats;
 import fr.univnantes.termsuite.framework.service.RelationService;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
+import fr.univnantes.termsuite.ui.util.BrokerUtil;
 import fr.univnantes.termsuite.ui.util.TermFilter;
 import fr.univnantes.termsuite.ui.util.VariationFilter;
 
@@ -122,9 +123,13 @@ public class TerminologyGlobalStatsPart extends StatsPart {
 		else {
 			TableItem selectedItem = selection.get(0);
 			if(termFilters.containsKey(selectedItem))
-				eventBroker.post(TermSuiteEvents.NEW_TERM_FILTER, termFilters.get(selectedItem));
+				eventBroker.post(
+						TermSuiteEvents.NEW_TERM_FILTER, 
+						BrokerUtil.toParamMap(termFilters.get(selectedItem), activeTermino));
 			else if(variationFilters.containsKey(selectedItem))
-				eventBroker.post(TermSuiteEvents.NEW_VARIATION_FILTER, variationFilters.get(selectedItem));
+				eventBroker.post(
+						TermSuiteEvents.NEW_VARIATION_FILTER, 
+						BrokerUtil.toParamMap(variationFilters.get(selectedItem), activeTermino));
 		}
 	}
 	
