@@ -132,7 +132,8 @@ public abstract class StatsPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Table table = (Table)e.getSource();
-				itemsSelected(Lists.newArrayList(table.getSelection()));
+				if(activeTermino != null)
+					itemsSelected(Lists.newArrayList(table.getSelection()));
 			}
 
 		});
