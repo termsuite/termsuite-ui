@@ -41,15 +41,21 @@ public abstract class StatsPart {
 
 	protected ETerminology activeTermino;
 	
+	private Job updatingJob = null;
+	
 	private void updateActiveTerminology(ETerminology termino) {
 		this.activeTermino = termino;
 		sync.asyncExec(() -> {
 			setTerminoHeader(termino);
 			computingNewStats(termino);
-			new Job("Computing statistics for terminology " + TerminologyPart.toPartLabel(termino)){
+			if(updatingJob != null)
+				updatingJob.cancel();
+			updatingJob = new Job("Computing statistics for terminology " + TerminologyPart.toPartLabel(termino)){
 				public IStatus run(IProgressMonitor monitor) {
 					TerminologyStats stats = eTerminologyService.getStats(termino);
-					if(stats != null) {
+					if(monitor.isCanceled())
+						return Status.CANCEL_STATUS;
+					else if(stats != null) {
 						sync.asyncExec(() -> {
 							setTerminoHeader(termino);	
 							newStatsComputed(termino, stats);
@@ -58,7 +64,8 @@ public abstract class StatsPart {
 					return Status.OK_STATUS;
 				}
 				
-			}.schedule();
+			};
+			updatingJob.schedule();
 		});
 	}
 
@@ -86,7 +93,7 @@ public abstract class StatsPart {
 
 	
 	private void processActivePart(MPart part) {
-		if(part != null && part instanceof TerminologyPart && part.getContext().get(ETerminology.class) != null) 
+		if(part != null && part.getObject() instanceof TerminologyPart && part.getContext().get(ETerminology.class) != null) 
 			updateActiveTerminology(part.getContext().get(ETerminology.class));
 	}
 
@@ -95,11 +102,11 @@ public abstract class StatsPart {
 		processActivePart(part);
 	}
 
-	@Inject
-	void selectionChanged(@Named(IServiceConstants.ACTIVE_SELECTION) Object o) {
-		if(o != null && o instanceof ETerminology)
-			updateActiveTerminology((ETerminology) o);
-	}
+//	@Inject
+//	void selectionChanged(@Named(IServiceConstants.ACTIVE_SELECTION) Object o) {
+//		if(o != null && o instanceof ETerminology)
+//			updateActiveTerminology((ETerminology) o);
+//	}
 	
 
 	protected TableItem createItem(Table table, String label) {
