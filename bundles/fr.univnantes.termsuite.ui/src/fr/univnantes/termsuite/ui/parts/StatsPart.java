@@ -45,6 +45,7 @@ public abstract class StatsPart {
 		this.activeTermino = termino;
 		sync.asyncExec(() -> {
 			setTerminoHeader(termino);
+			computingNewStats(termino);
 			new Job("Computing statistics for terminology " + TerminologyPart.toPartLabel(termino)){
 				public IStatus run(IProgressMonitor monitor) {
 					TerminologyStats stats = eTerminologyService.getStats(termino);
