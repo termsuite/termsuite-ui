@@ -1,7 +1,6 @@
 package fr.univnantes.termsuite.ui.services.impl;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -142,9 +141,7 @@ public class NLPServiceImpl implements NLPService {
 				try {
 					resourceService.saveCorpus(corpus.getCorpus());
 					Path terminoPath = resourceService.getWorkspacePath(terminology);
-					try(FileWriter fileWriter = new FileWriter(terminoPath.toFile())) {
-						IndexedCorpusIO.toJson(preparedCorpus, fileWriter);
-					}
+					IndexedCorpusIO.toJson(preparedCorpus, terminoPath);
 					eventBroker.post(TermSuiteEvents.NEW_TERMINOLOGY, terminology);
 				} catch(IOException e) {
 					context.get(ILoggerProvider.class).getClassLogger(this.getClass()).error(e, "Could not save corpus after terminology creation: " + e.getMessage());
@@ -255,7 +252,7 @@ public class NLPServiceImpl implements NLPService {
 				
 				// save preprocessed corpus to cache
 				Path cachePath = getCachePath(corpus, pipeline.getTaggerConfigName(), pipeline.getMaxNumTermsMemory());
-				IndexedCorpusIO.toJson(preparedCorpus, new FileWriter(cachePath.toFile()));
+				IndexedCorpusIO.toJson(preparedCorpus, cachePath);
 				
 				eventBroker.post(TermSuiteEvents.CORPUS_PREPROCESSED, preparedCorpus);
 				return Status.OK_STATUS;
