@@ -13,8 +13,11 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.ui.workbench.UIEvents;
+import org.eclipse.e4.ui.model.application.ui.basic.MPartStack;
+import org.eclipse.e4.ui.model.application.ui.basic.MStackElement;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -29,6 +32,7 @@ import com.google.common.collect.Lists;
 
 import fr.univnantes.termsuite.api.TerminologyStats;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
+import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.services.ETerminologyService;
 import fr.univnantes.termsuite.ui.util.PartAdapter;
@@ -83,15 +87,7 @@ public abstract class StatsPart {
 //			processActivePart(part);
 //	}
 //	
-	@Inject @Optional
-	private void init(@UIEventTopic(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE) EPartService partService) {
-	}
-
 	
-	private void processActivePart(MPart part) {
-		if(part != null && part.getObject() instanceof TerminologyPart && part.getContext().get(ETerminology.class) != null) 
-			updateActiveTerminology(part.getContext().get(ETerminology.class));
-	}
 
 //	@Inject
 //	void activePartChanged(@Named(IServiceConstants.ACTIVE_PART) MPart part, EPartService partService) {
@@ -116,7 +112,7 @@ public abstract class StatsPart {
 	protected Table table;
 
 	@PostConstruct
-	public void createControls(IEclipseContext context, final Composite parent, MPart part, EPartService partService) {
+	public void createControls(IEclipseContext context, final Composite parent, MPart part, EPartService partService, EModelService modelService, MApplication application) {
 		table = new Table(parent, SWT.BORDER | getSelectionStyle());
 		column1 = new TableColumn(table, SWT.LEFT);
 		column1.setText("Terminology");
@@ -139,10 +135,27 @@ public abstract class StatsPart {
 		partService.addPartListener(new PartAdapter() {
 			@Override
 			public void partActivated(MPart part) {
-				processActivePart(part);
+				if(part != null) {
+					if(part.getObject() instanceof TerminologyPart && part.getContext().get(ETerminology.class) != null) 
+						updateActiveTerminology(part.getContext().get(ETerminology.class));
+
+				}
 			}
 		});
+		
+		
+		setActiveTerminology(modelService, application);
 
+	}
+
+	private void setActiveTerminology( EModelService modelService, MApplication application) {
+		MPartStack stack = (MPartStack) modelService.find(TermSuiteUI.UI_MAIN_PART_STACK, application);
+		MStackElement element = stack.getSelectedElement();
+		if(element != null && element instanceof MPart) {
+			MPart activePart = (MPart) element;
+			if(activePart.getObject() instanceof TerminologyPart)
+				updateActiveTerminology((activePart.getContext().get(ETerminology.class)));
+		}
 	}
 	
 	@Inject @Optional
@@ -160,6 +173,4 @@ public abstract class StatsPart {
 	protected void itemsSelected(List<TableItem> selection) {
 		
 	}
-	
-
 }
