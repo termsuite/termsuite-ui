@@ -1,7 +1,6 @@
 package fr.univnantes.termsuite.ui.parts;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -43,8 +42,6 @@ public abstract class StatsPart {
 	
 	private Job updatingJob = null;
 	
-	private AtomicInteger updateId = new AtomicInteger(0);
-	
 	private void updateActiveTerminology(ETerminology termino) {
 		this.activeTermino = termino;
 		setTerminoHeader(termino);
@@ -57,13 +54,7 @@ public abstract class StatsPart {
 				if(monitor.isCanceled())
 					return Status.CANCEL_STATUS;
 				else if(stats != null) {
-					System.out.println("Stats computed for " + StatsPart.this.getClass() + ": " + updateId.incrementAndGet());
-					System.out.flush();
-					System.err.flush();
 					sync.asyncExec(() -> {
-						System.out.println("Display stats for " + StatsPart.this.getClass() + ": " + updateId.get());
-						System.out.flush();
-						System.err.flush();
 						setTerminoHeader(termino);	
 						newStatsComputed(termino, stats);
 					});
