@@ -191,8 +191,12 @@ public class NavigatorPart implements TreePart {
 //				viewer.setInput(new Object[]{CustomNode.CORPORA, CustomNode.PIPELINES});
 				viewer.refresh();
 				Object data = event.getProperty(IEventBroker.DATA);
-				if(event.getTopic().equals(TermSuiteEvents.NEW_TERMINOLOGY) && data instanceof ETerminology)
+				try {
 					viewer.reveal(data);
+					viewer.expandToLevel(data, 1);
+				} catch(Exception e) {
+					
+				}
 			}
 		};
 		eventBroker.subscribe(TermSuiteEvents.NEW_PIPELINE, updateHandler);
@@ -200,6 +204,7 @@ public class NavigatorPart implements TreePart {
 		eventBroker.subscribe(TermSuiteEvents.PIPELINE_REMOVED, updateHandler);
 		eventBroker.subscribe(TermSuiteEvents.TERMINOLOGY_REMOVED, updateHandler);
 		eventBroker.subscribe(TermSuiteEvents.CORPUS_REMOVED, updateHandler);
+		eventBroker.subscribe(TermSuiteEvents.CORPUS_CREATED, updateHandler);
 
 		menuService.registerContextMenu(viewer.getControl(), POPUP_MENU_ID);
 		
@@ -215,8 +220,6 @@ public class NavigatorPart implements TreePart {
 	private void init(@UIEventTopic(TermSuiteEvents.NEW_TERMINOLOGY) ETerminology terminology) {
 		viewer.reveal(terminology);
 	}
-
-
 
 	private Object[] getRootNodes() {
 		List<Object> nodes = Lists.newArrayList();

@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.core.services.log.ILoggerProvider;
 import org.eclipse.e4.core.services.log.Logger;
 
@@ -33,6 +34,7 @@ import fr.univnantes.termsuite.api.TermSuiteException;
 import fr.univnantes.termsuite.model.Document;
 import fr.univnantes.termsuite.model.Lang;
 import fr.univnantes.termsuite.model.TermOccurrence;
+import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
@@ -48,6 +50,8 @@ import fr.univnantes.termsuite.ui.util.LangUtil;
 @Singleton
 @SuppressWarnings("restriction")
 public class CorpusServiceImpl implements CorpusService {
+	@Inject 
+	private IEventBroker broker;
 
 	@Inject 
 	private IEclipseContext context;
@@ -238,6 +242,7 @@ public class CorpusServiceImpl implements CorpusService {
 		context.get(ResourceService.class).getCorporaList().getCorpora().add(corpus);
 		context.get(ResourceService.class).saveCorpus(corpus);
 		cacheSlc(corpus);
+		broker.post(TermSuiteEvents.CORPUS_CREATED, corpus);
 		return corpus;
 	}
 }
