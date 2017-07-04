@@ -147,6 +147,7 @@ public class NavigatorPart implements TreePart {
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.setInput(getRootNodes());
+		viewer.expandToLevel(2);
 		IDoubleClickListener doubleClickHandler = new IDoubleClickListener() {
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
