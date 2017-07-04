@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 
 import com.google.common.primitives.Ints;
 
@@ -74,6 +75,12 @@ public class TermLabelProvider extends ColumnLabelProvider implements IStyledLab
 		throw new IllegalArgumentException("Not a supported type for TermLabelProvider: " + object.getClass());
 		
 	}
+	
+	
+	private static final Styler TERM_STYLER = StyledString.COUNTER_STYLER;
+	private static final Styler VARIATION_STYLER = TermSuiteUI.STYLE_GRAYED;
+
+	
 	@Override
 	public StyledString getStyledText(Object element) {
 		Pattern pattern = viewerConfig.getSearchString().trim().isEmpty() ? null
@@ -89,6 +96,8 @@ public class TermLabelProvider extends ColumnLabelProvider implements IStyledLab
 							((Collection<?>)value).stream().map(Object::toString).collect(Collectors.joining(", ")) :
 								null;
 		
+		StyledString styledString  = new StyledString();
+		Styler styler = element instanceof TermService ? TERM_STYLER : VARIATION_STYLER;
 		if(stringValue != null) {
 			Matcher matcher;
 			int b = 0;
@@ -97,21 +106,19 @@ public class TermLabelProvider extends ColumnLabelProvider implements IStyledLab
 				b = matcher.start();
 				e = matcher.end();
 			}
-			StyledString styledString = new StyledString();
-	
-			styledString.append(stringValue.substring(0, Ints.min(b, stringValue.length())), StyledString.COUNTER_STYLER);
+			styledString.append(stringValue.substring(0, Ints.min(b, stringValue.length())), styler);
 			styledString.append(stringValue.substring(Ints.min(b, stringValue.length()), Ints.min(e, stringValue.length())),
 					TermSuiteUI.STYLE_GRAYED_BOLD);
 			styledString.append(stringValue.substring(Ints.min(e, stringValue.length()), stringValue.length()),
-					StyledString.COUNTER_STYLER);
-			return styledString;
+					styler);
 		} else if(property.isDecimalNumber()) {
 			double v = (double)value;
-			return new StyledString(String.format("%.2f", v));
+			styledString.append(String.format("%.2f", v), styler);
 		} else if(property.getRange().equals(Boolean.class))
-			return new StyledString(String.format("%d", (boolean)value ? 1 : 0));
+			styledString.append(String.format("%d", (boolean)value ? 1 : 0), styler);
 		else 
-			return new StyledString(String.format("%d", value));
+			styledString.append(String.format("%d", value), styler);
+		return styledString;
 	}
 	
 	@Override
