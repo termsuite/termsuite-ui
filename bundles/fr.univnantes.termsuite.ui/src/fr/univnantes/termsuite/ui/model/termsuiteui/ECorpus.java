@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus#getPath <em>Path</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus#getSingleLanguageCorpora <em>Single Language Corpora</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus#getName <em>Name</em>}</li>
+ *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus#getEncoding <em>Encoding</em>}</li>
  * </ul>
  *
  * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getECorpus()
@@ -94,5 +95,32 @@ public interface ECorpus extends EObject {
 	 * @generated
 	 */
 	void setName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Encoding</b></em>' attribute.
+	 * The default value is <code>"UTF-8"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Encoding</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Encoding</em>' attribute.
+	 * @see #setEncoding(String)
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage#getECorpus_Encoding()
+	 * @model default="UTF-8"
+	 * @generated
+	 */
+	String getEncoding();
+
+	/**
+	 * Sets the value of the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus#getEncoding <em>Encoding</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Encoding</em>' attribute.
+	 * @see #getEncoding()
+	 * @generated
+	 */
+	void setEncoding(String value);
 
 } // ECorpus

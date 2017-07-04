@@ -29,6 +29,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ECorpusImpl#getPath <em>Path</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ECorpusImpl#getSingleLanguageCorpora <em>Single Language Corpora</em>}</li>
  *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ECorpusImpl#getName <em>Name</em>}</li>
+ *   <li>{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ECorpusImpl#getEncoding <em>Encoding</em>}</li>
  * </ul>
  *
  * @generated
@@ -83,6 +84,26 @@ public class ECorpusImpl extends MinimalEObjectImpl.Container implements ECorpus
 	 * @ordered
 	 */
 	protected String name = NAME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getEncoding() <em>Encoding</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getEncoding()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String ENCODING_EDEFAULT = "UTF-8";
+
+	/**
+	 * The cached value of the '{@link #getEncoding() <em>Encoding</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getEncoding()
+	 * @generated
+	 * @ordered
+	 */
+	protected String encoding = ENCODING_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -162,6 +183,27 @@ public class ECorpusImpl extends MinimalEObjectImpl.Container implements ECorpus
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getEncoding() {
+		return encoding;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setEncoding(String newEncoding) {
+		String oldEncoding = encoding;
+		encoding = newEncoding;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TermsuiteuiPackage.ECORPUS__ENCODING, oldEncoding, encoding));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -200,6 +242,8 @@ public class ECorpusImpl extends MinimalEObjectImpl.Container implements ECorpus
 				return getSingleLanguageCorpora();
 			case TermsuiteuiPackage.ECORPUS__NAME:
 				return getName();
+			case TermsuiteuiPackage.ECORPUS__ENCODING:
+				return getEncoding();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -223,6 +267,9 @@ public class ECorpusImpl extends MinimalEObjectImpl.Container implements ECorpus
 			case TermsuiteuiPackage.ECORPUS__NAME:
 				setName((String)newValue);
 				return;
+			case TermsuiteuiPackage.ECORPUS__ENCODING:
+				setEncoding((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -244,6 +291,9 @@ public class ECorpusImpl extends MinimalEObjectImpl.Container implements ECorpus
 			case TermsuiteuiPackage.ECORPUS__NAME:
 				setName(NAME_EDEFAULT);
 				return;
+			case TermsuiteuiPackage.ECORPUS__ENCODING:
+				setEncoding(ENCODING_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -262,6 +312,8 @@ public class ECorpusImpl extends MinimalEObjectImpl.Container implements ECorpus
 				return singleLanguageCorpora != null && !singleLanguageCorpora.isEmpty();
 			case TermsuiteuiPackage.ECORPUS__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case TermsuiteuiPackage.ECORPUS__ENCODING:
+				return ENCODING_EDEFAULT == null ? encoding != null : !ENCODING_EDEFAULT.equals(encoding);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -280,6 +332,8 @@ public class ECorpusImpl extends MinimalEObjectImpl.Container implements ECorpus
 		result.append(path);
 		result.append(", name: ");
 		result.append(name);
+		result.append(", encoding: ");
+		result.append(encoding);
 		result.append(')');
 		return result.toString();
 	}

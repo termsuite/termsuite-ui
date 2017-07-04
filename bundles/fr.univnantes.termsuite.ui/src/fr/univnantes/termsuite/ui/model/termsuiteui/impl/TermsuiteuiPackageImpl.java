@@ -299,6 +299,15 @@ public class TermsuiteuiPackageImpl extends EPackageImpl implements TermsuiteuiP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getECorpus_Encoding() {
+		return (EAttribute)eCorpusEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getESingleLanguageCorpus() {
 		return eSingleLanguageCorpusEClass;
 	}
@@ -896,6 +905,7 @@ public class TermsuiteuiPackageImpl extends EPackageImpl implements TermsuiteuiP
 		createEAttribute(eCorpusEClass, ECORPUS__PATH);
 		createEReference(eCorpusEClass, ECORPUS__SINGLE_LANGUAGE_CORPORA);
 		createEAttribute(eCorpusEClass, ECORPUS__NAME);
+		createEAttribute(eCorpusEClass, ECORPUS__ENCODING);
 
 		eSingleLanguageCorpusEClass = createEClass(ESINGLE_LANGUAGE_CORPUS);
 		createEAttribute(eSingleLanguageCorpusEClass, ESINGLE_LANGUAGE_CORPUS__LANGUAGE);
@@ -1016,6 +1026,7 @@ public class TermsuiteuiPackageImpl extends EPackageImpl implements TermsuiteuiP
 		initEReference(getECorpus_SingleLanguageCorpora(), this.getESingleLanguageCorpus(), this.getESingleLanguageCorpus_Corpus(), "singleLanguageCorpora", null, 0, -1, ECorpus.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		getECorpus_SingleLanguageCorpora().getEKeys().add(this.getESingleLanguageCorpus_Language());
 		initEAttribute(getECorpus_Name(), ecorePackage.getEString(), "name", null, 0, 1, ECorpus.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getECorpus_Encoding(), ecorePackage.getEString(), "encoding", "UTF-8", 0, 1, ECorpus.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(eSingleLanguageCorpusEClass, ESingleLanguageCorpus.class, "ESingleLanguageCorpus", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getESingleLanguageCorpus_Language(), this.getELang(), "language", null, 1, 1, ESingleLanguageCorpus.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

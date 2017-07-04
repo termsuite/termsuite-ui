@@ -15,7 +15,7 @@ public interface CorpusService {
 
 	public File asFile(EDocument d);
 
-	public ECorpus createCorpus(String name, String corpusPath);
+	public ECorpus createCorpus(String name, String corpusPath, String encoding);
 
 
 	/**

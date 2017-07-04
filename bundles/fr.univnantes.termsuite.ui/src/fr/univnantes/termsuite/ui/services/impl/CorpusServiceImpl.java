@@ -2,6 +2,7 @@ package fr.univnantes.termsuite.ui.services.impl;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -192,9 +193,11 @@ public class CorpusServiceImpl implements CorpusService {
 
 	@Override
 	public TXTCorpus asTxtCorpus(ESingleLanguageCorpus corpus) {
-		return new TXTCorpus(
+		TXTCorpus txtCorpus = new TXTCorpus(
 				Lang.forName(corpus.getLanguage().getName().toLowerCase()), 
 				getSourcePath(corpus));
+		txtCorpus.setEncoding(Charset.forName(corpus.getCorpus().getEncoding()));
+		return txtCorpus;
 	}
 
 	@Override
@@ -221,9 +224,10 @@ public class CorpusServiceImpl implements CorpusService {
 	}
 	
 	@Override
-	public ECorpus createCorpus(String name, String corpusPath) {
+	public ECorpus createCorpus(String name, String corpusPath, String encoding) {
 		ECorpus corpus = TermsuiteuiFactory.eINSTANCE.createECorpus();
 		corpus.setName(name);
+		corpus.setEncoding(encoding);
 		corpus.setPath(Paths.get(corpusPath).toString());
 		for(File sl:candidateSLCChildrenForPath(corpus.getPath())) {
 			ESingleLanguageCorpus slc = TermsuiteuiFactory.eINSTANCE.createESingleLanguageCorpus();

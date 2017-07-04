@@ -12,6 +12,8 @@
         upperBound="-1" eType="#//ESingleLanguageCorpus" containment="true" eOpposite="#//ESingleLanguageCorpus/corpus"
         eKeys="#//ESingleLanguageCorpus/language"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="encoding" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="UTF-8"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ESingleLanguageCorpus">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="language" lowerBound="1"

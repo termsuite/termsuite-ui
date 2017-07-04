@@ -132,13 +132,22 @@ public interface TermsuiteuiPackage extends EPackage {
 	int ECORPUS__NAME = 2;
 
 	/**
+	 * The feature id for the '<em><b>Encoding</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ECORPUS__ENCODING = 3;
+
+	/**
 	 * The number of structural features of the '<em>ECorpus</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ECORPUS_FEATURE_COUNT = 3;
+	int ECORPUS_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>ECorpus</em>' class.
@@ -1044,6 +1053,17 @@ public interface TermsuiteuiPackage extends EPackage {
 	EAttribute getECorpus_Name();
 
 	/**
+	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus#getEncoding <em>Encoding</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Encoding</em>'.
+	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus#getEncoding()
+	 * @see #getECorpus()
+	 * @generated
+	 */
+	EAttribute getECorpus_Encoding();
+
+	/**
 	 * Returns the meta object for class '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus <em>ESingle Language Corpus</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1792,6 +1812,14 @@ public interface TermsuiteuiPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ECORPUS__NAME = eINSTANCE.getECorpus_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Encoding</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ECORPUS__ENCODING = eINSTANCE.getECorpus_Encoding();
 
 		/**
 		 * The meta object literal for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ESingleLanguageCorpusImpl <em>ESingle Language Corpus</em>}' class.
