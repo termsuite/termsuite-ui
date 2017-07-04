@@ -186,7 +186,7 @@ public class TerminologyPart implements TreePart {
 					 * This is a non empty search string filter. Expand all nodes
 					 * in order to make selected variant appear.
 					 */
-					viewer.expandToLevel(1);
+					viewer.expandToLevel(2);
 
 			}
 		});
@@ -342,7 +342,7 @@ public class TerminologyPart implements TreePart {
 				BrokerUtil.get(params, ETerminology.class),
 				context.get(ETerminology.class))) {
 			viewer.setFilters(null, BrokerUtil.get(params, VariationFilter.class));
-			viewer.expandToLevel(1);
+			viewer.expandToLevel(2);
 		}
 	}
 
@@ -353,6 +353,7 @@ public class TerminologyPart implements TreePart {
 				BrokerUtil.get(params, ETerminology.class),
 				context.get(ETerminology.class))) {
 			viewer.setFilters(BrokerUtil.get(params, TermFilter.class), null);
+			viewer.expandToLevel(1);
 		}
 	}
 
