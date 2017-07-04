@@ -121,7 +121,6 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	private static final Class<?>[] RENAMEABLE_RESOURCES = new Class<?>[]{
-		ECorpus.class,
 		EPipeline.class,
 		ETerminology.class
 	};
