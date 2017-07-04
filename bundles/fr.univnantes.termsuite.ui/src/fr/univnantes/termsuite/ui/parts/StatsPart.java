@@ -1,10 +1,10 @@
 package fr.univnantes.termsuite.ui.parts;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -15,7 +15,6 @@ import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.swt.SWT;
@@ -33,6 +32,7 @@ import fr.univnantes.termsuite.api.TerminologyStats;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.services.ETerminologyService;
+import fr.univnantes.termsuite.ui.util.PartAdapter;
 
 public abstract class StatsPart {
 
@@ -43,30 +43,36 @@ public abstract class StatsPart {
 	
 	private Job updatingJob = null;
 	
+	private AtomicInteger updateId = new AtomicInteger(0);
+	
 	private void updateActiveTerminology(ETerminology termino) {
 		this.activeTermino = termino;
-		sync.asyncExec(() -> {
-			setTerminoHeader(termino);
-			computingNewStats(termino);
-			if(updatingJob != null)
-				updatingJob.cancel();
-			updatingJob = new Job("Computing statistics for terminology " + TerminologyPart.toPartLabel(termino)){
-				public IStatus run(IProgressMonitor monitor) {
-					TerminologyStats stats = eTerminologyService.getStats(termino);
-					if(monitor.isCanceled())
-						return Status.CANCEL_STATUS;
-					else if(stats != null) {
-						sync.asyncExec(() -> {
-							setTerminoHeader(termino);	
-							newStatsComputed(termino, stats);
-						});
-					}
-					return Status.OK_STATUS;
+		setTerminoHeader(termino);
+		computingNewStats(termino);
+		if(updatingJob != null)
+			updatingJob.cancel();
+		updatingJob = new Job("Computing statistics for terminology " + TerminologyPart.toPartLabel(termino)){
+			public IStatus run(IProgressMonitor monitor) {
+				TerminologyStats stats = eTerminologyService.getStats(termino);
+				if(monitor.isCanceled())
+					return Status.CANCEL_STATUS;
+				else if(stats != null) {
+					System.out.println("Stats computed for " + StatsPart.this.getClass() + ": " + updateId.incrementAndGet());
+					System.out.flush();
+					System.err.flush();
+					sync.asyncExec(() -> {
+						System.out.println("Display stats for " + StatsPart.this.getClass() + ": " + updateId.get());
+						System.out.flush();
+						System.err.flush();
+						setTerminoHeader(termino);	
+						newStatsComputed(termino, stats);
+					});
 				}
-				
-			};
-			updatingJob.schedule();
-		});
+				return Status.OK_STATUS;
+			}
+			
+		};
+		updatingJob.schedule();
 	}
 
 	protected abstract void computingNewStats(ETerminology termino);
@@ -80,15 +86,14 @@ public abstract class StatsPart {
 		column2.setText(TerminologyPart.toPartLabel(termino));
 	}
 
+//	@Inject @Optional
+//	public void raisedToTop(@UIEventTopic(UIEvents.UILifeCycle.BRINGTOTOP) MPart part) {
+//		if(part != null)
+//			processActivePart(part);
+//	}
+//	
 	@Inject @Optional
-	public void raisedToTop(@UIEventTopic(UIEvents.UILifeCycle.BRINGTOTOP) MPart part) {
-		if(part != null)
-			processActivePart(part);
-	}
-	
-	@Inject @Optional
-	private void init(@UIEventTopic(TermSuiteEvents.EDITOR_INITIATED) Object o, MPart part) {
-		processActivePart(part);
+	private void init(@UIEventTopic(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE) EPartService partService) {
 	}
 
 	
@@ -97,10 +102,10 @@ public abstract class StatsPart {
 			updateActiveTerminology(part.getContext().get(ETerminology.class));
 	}
 
-	@Inject
-	void activePartChanged(@Named(IServiceConstants.ACTIVE_PART) MPart part) {
-		processActivePart(part);
-	}
+//	@Inject
+//	void activePartChanged(@Named(IServiceConstants.ACTIVE_PART) MPart part, EPartService partService) {
+//		processActivePart(part);
+//	}
 
 //	@Inject
 //	void selectionChanged(@Named(IServiceConstants.ACTIVE_SELECTION) Object o) {
@@ -139,6 +144,14 @@ public abstract class StatsPart {
 		});
 
 		tableCreated();
+		
+		partService.addPartListener(new PartAdapter() {
+			@Override
+			public void partActivated(MPart part) {
+				processActivePart(part);
+			}
+		});
+
 	}
 	
 	@Inject @Optional
