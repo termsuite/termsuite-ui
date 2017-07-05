@@ -3,6 +3,7 @@ package fr.univnantes.termsuite.ui.handlers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Named;
 
@@ -11,6 +12,7 @@ import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.services.IServiceConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 
@@ -20,6 +22,8 @@ import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.dialogs.CorpusSelectionDialog;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
+import fr.univnantes.termsuite.ui.parts.TerminologyPart;
 import fr.univnantes.termsuite.ui.services.NLPService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 
@@ -60,7 +64,19 @@ public class RunPipelineHandler {
 					selectedCorpora.add(((ESingleLanguageCorpus)o));
 			}
 		} 
-		extractorService.runPipelineOnSeveralCorpus(pipeline, Lists.newArrayList(selectedCorpora), useCache);
+		
+		List<ETerminology> overridenTerminologies = new ArrayList<>();
+		for(ESingleLanguageCorpus slc:selectedCorpora) {
+			for(ETerminology terminology:slc.getTerminologies())
+				if(terminology.getName().equals(pipeline.getName()))
+					overridenTerminologies.add(terminology);
+		}
+		String msg = String.format(
+				"The following terminologies already exist and will be overwritten: %s. Proceed with terminology extraction anyway?",
+				overridenTerminologies.stream().map(t->TerminologyPart.toPartLabel(t)).collect(Collectors.joining(", ")));
+		if(overridenTerminologies.isEmpty()
+			|| MessageDialog.openQuestion(shell, "Confirm terminology overwrite", msg))
+			extractorService.runPipelineOnSeveralCorpus(pipeline, Lists.newArrayList(selectedCorpora), useCache);
 	}
 	
 	@CanExecute

@@ -118,7 +118,10 @@ public class NLPServiceImpl implements NLPService {
 		}
 	}
 
-	public void runPipelineOnPreprocessedCorpus(EPipeline pipeline, ESingleLanguageCorpus corpus, IndexedCorpus preparedCorpus) {
+	public void runPipelineOnPreprocessedCorpus(
+			EPipeline pipeline, 
+			ESingleLanguageCorpus corpus, 
+			IndexedCorpus preparedCorpus) {
 		String jobName = "Extracting terminology with pipeline " + pipeline.getName() + " on corpus " + corpus.getCorpus().getName() + " - "+preparedCorpus.getTerminology().getLang().getNameUC()+"";
 
 		Job job = Job.create(jobName, (ICoreRunnable) monitor -> {
