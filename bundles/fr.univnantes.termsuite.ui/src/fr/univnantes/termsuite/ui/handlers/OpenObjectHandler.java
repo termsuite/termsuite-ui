@@ -5,7 +5,6 @@ import java.io.File;
 import javax.inject.Named;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -20,8 +19,8 @@ import com.google.common.base.Objects;
 
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
+import fr.univnantes.termsuite.ui.model.LinguisticResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.parts.FileEditorPart;
@@ -40,14 +39,14 @@ public class OpenObjectHandler {
 	public static final String COMMAND_ID = "fr.univnantes.termsuite.ui.command.OpenObject";
 	
 	public static final String PARAM_INPUT_OBJECT_ID = "fr.univnantes.termsuite.ui.commandparameter.InputResourceId";
-	public static final String PARAM_INPUT_OBJECT_PATH = "fr.univnantes.termsuite.ui.commandparameter.InputObjectPath";
+	public static final String PARAM_LINGUISTIC_RESOURCE = "fr.univnantes.termsuite.ui.commandparameter.LinguisticResource";
 	
 	@Execute
 	public void execute(               
 			@Optional @Named(PARAM_INPUT_OBJECT_ID) String inputObjectId,
-			@Optional @Named(PARAM_INPUT_OBJECT_PATH) String inputObjectPath,
+			@Optional @Named(PARAM_LINGUISTIC_RESOURCE) String linguisticResourceString,
 			ResourceService resourceService,
-			LinguisticResourcesService linguisticResourcesService,
+			LinguisticResourcesService lingueeService,
 			EPartService partService, 
 			final CorpusService corpusService, 
 			MApplication application,
@@ -56,9 +55,8 @@ public class OpenObjectHandler {
 		Object inputObject = null;
 		if(inputObjectId != null)
 			inputObject = resourceService.getResource(inputObjectId);
-		else if(inputObjectPath != null)
-			inputObject = linguisticResourcesService.getResource(inputObjectPath);
-//		Object inputObject = selectionService.getSelection();
+		else if(linguisticResourceString != null)
+			inputObject = lingueeService.getResourceFromString(linguisticResourceString);
 		for(MPart part:partService.getParts()) {
 			IEclipseContext context = part.getContext();
 			
@@ -83,12 +81,12 @@ public class OpenObjectHandler {
 				}
 			};
 			label = ((FileInput<?>)inputObject).getFile().getName();
-		} else if(inputObject instanceof ELinguisticResource) {
+		} else if(inputObject instanceof LinguisticResource) {
 			partId = FileEditorPart.ID;
-			inputObject = new FileInput<ELinguisticResource>((ELinguisticResource)inputObject) {
+			inputObject = new FileInput<LinguisticResource>((LinguisticResource)inputObject) {
 				@Override
 				public File asFile() {
-					return new File(this.inputObject.getPath());
+					return lingueeService.asFile(inputObject, true);
 				}
 			};
 			label = ((FileInput<?>)inputObject).getFile().getName();
@@ -120,8 +118,8 @@ public class OpenObjectHandler {
 	private void setInputObject(Object inputObject, MPart part) {
 		if(inputObject instanceof ETerminology)
 			part.getContext().set(ETerminology.class, (ETerminology)inputObject);
-		else if(inputObject instanceof ELinguisticResource)
-			part.getContext().set(ELinguisticResource.class, (ELinguisticResource)inputObject);
+		else if(inputObject instanceof LinguisticResource)
+			part.getContext().set(LinguisticResource.class, (LinguisticResource)inputObject);
 		else if(inputObject instanceof EPipeline)
 			part.getContext().set(EPipeline.class, (EPipeline)inputObject);
 		else if(inputObject instanceof EDocument)
@@ -129,17 +127,17 @@ public class OpenObjectHandler {
 		part.getContext().set(TermSuiteUI.INPUT_OBJECT,inputObject);
 	}
 
-	@CanExecute
-	public boolean canExecute(
-			@Optional @Named(PARAM_INPUT_OBJECT_ID) String inputObjectId,
-			@Optional @Named(PARAM_INPUT_OBJECT_PATH) String inputObjectPath,
-			LinguisticResourcesService linguisticResourcesService,
-			ResourceService resourceService) {
-		if(inputObjectId != null)
-			return resourceService.getResource(inputObjectId) != null;
-		if(inputObjectPath != null)
-			return linguisticResourcesService.getResource(inputObjectPath) != null;
-		return false;
-
-	}
+//	@CanExecute
+//	public boolean canExecute(
+//			@Optional @Named(PARAM_INPUT_OBJECT_ID) String inputObjectId,
+//			@Optional @Named(PARAM_INPUT_OBJECT_PATH) String inputObjectPath,
+//			LinguisticResourcesService linguisticResourcesService,
+//			ResourceService resourceService) {
+//		if(inputObjectId != null)
+//			return resourceService.getResource(inputObjectId) != null;
+//		if(inputObjectPath != null)
+//			return linguisticResourcesService.getResource(inputObjectPath) != null;
+//		return false;
+//
+//	}
 }

@@ -10,8 +10,6 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.EBilingualDictionary;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorporaList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipelineList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EResource;
@@ -145,18 +143,6 @@ public class TermsuiteuiSwitch<T> extends Switch<T> {
 			case TermsuiteuiPackage.EBILINGUAL_DICTIONARY: {
 				EBilingualDictionary eBilingualDictionary = (EBilingualDictionary)theEObject;
 				T result = caseEBilingualDictionary(eBilingualDictionary);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case TermsuiteuiPackage.ELINGUISTIC_RESOURCE: {
-				ELinguisticResource eLinguisticResource = (ELinguisticResource)theEObject;
-				T result = caseELinguisticResource(eLinguisticResource);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case TermsuiteuiPackage.ELINGUISTIC_RESOURCE_SET: {
-				ELinguisticResourceSet eLinguisticResourceSet = (ELinguisticResourceSet)theEObject;
-				T result = caseELinguisticResourceSet(eLinguisticResourceSet);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -332,36 +318,6 @@ public class TermsuiteuiSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseEBilingualDictionary(EBilingualDictionary object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>ELinguistic Resource</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>ELinguistic Resource</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseELinguisticResource(ELinguisticResource object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>ELinguistic Resource Set</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>ELinguistic Resource Set</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseELinguisticResourceSet(ELinguisticResourceSet object) {
 		return null;
 	}
 

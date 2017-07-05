@@ -52,6 +52,7 @@ import fr.univnantes.termsuite.ui.services.TaggerService;
 import fr.univnantes.termsuite.ui.util.Jobs;
 import fr.univnantes.termsuite.ui.util.LangUtil;
 
+@SuppressWarnings("restriction")
 public class NLPServiceImpl implements NLPService {
 
 	@Inject
@@ -126,7 +127,7 @@ public class NLPServiceImpl implements NLPService {
 			TermSuite.terminoExtractor()
 					.setOptions(toExtractorOptions(pipeline, corpus.getLanguage()))
 					.setListener(new WorkbenchPipelineListener(subMonitor, sync, totalWork))
-					.setResourceConfig(resourceService.getResourceConfig())
+					.setResourceConfig(resourceService.getResourceConfig(corpus.getLanguage()))
 					.execute(preparedCorpus);
 		});
 		job.addJobChangeListener(new JobChangeAdapter() {
@@ -245,6 +246,7 @@ public class NLPServiceImpl implements NLPService {
 				IndexedCorpus preparedCorpus = TermSuite.preprocessor()
 					.setTagger(context.get(TaggerService.class).getTermSuiteTagger(pipeline))
 					.setTaggerPath(context.get(TaggerService.class).getTaggerPath(pipeline))
+					.setResourceOptions(resourceService.getResourceConfig(corpus.getLanguage()))
 					.setListener(new WorkbenchPipelineListener(subMonitor, sync, totalWork))
 				 	.toIndexedCorpus(
 						corpusService.asTxtCorpus(corpus), 

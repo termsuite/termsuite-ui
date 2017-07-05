@@ -744,116 +744,6 @@ public interface TermsuiteuiPackage extends EPackage {
 	int EBILINGUAL_DICTIONARY_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ELinguisticResourceImpl <em>ELinguistic Resource</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.ELinguisticResourceImpl
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getELinguisticResource()
-	 * @generated
-	 */
-	int ELINGUISTIC_RESOURCE = 11;
-
-	/**
-	 * The feature id for the '<em><b>Resource Set</b></em>' container reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ELINGUISTIC_RESOURCE__RESOURCE_SET = 0;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ELINGUISTIC_RESOURCE__NAME = 1;
-
-	/**
-	 * The feature id for the '<em><b>Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ELINGUISTIC_RESOURCE__PATH = 2;
-
-	/**
-	 * The feature id for the '<em><b>Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ELINGUISTIC_RESOURCE__DESCRIPTION = 3;
-
-	/**
-	 * The number of structural features of the '<em>ELinguistic Resource</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ELINGUISTIC_RESOURCE_FEATURE_COUNT = 4;
-
-	/**
-	 * The number of operations of the '<em>ELinguistic Resource</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ELINGUISTIC_RESOURCE_OPERATION_COUNT = 0;
-
-	/**
-	 * The meta object id for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ELinguisticResourceSetImpl <em>ELinguistic Resource Set</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.ELinguisticResourceSetImpl
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getELinguisticResourceSet()
-	 * @generated
-	 */
-	int ELINGUISTIC_RESOURCE_SET = 12;
-
-	/**
-	 * The feature id for the '<em><b>Language</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ELINGUISTIC_RESOURCE_SET__LANGUAGE = 0;
-
-	/**
-	 * The feature id for the '<em><b>Resources</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ELINGUISTIC_RESOURCE_SET__RESOURCES = 1;
-
-	/**
-	 * The number of structural features of the '<em>ELinguistic Resource Set</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ELINGUISTIC_RESOURCE_SET_FEATURE_COUNT = 2;
-
-	/**
-	 * The number of operations of the '<em>ELinguistic Resource Set</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ELINGUISTIC_RESOURCE_SET_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminoFilterImpl <em>ETermino Filter</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -861,7 +751,7 @@ public interface TermsuiteuiPackage extends EPackage {
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getETerminoFilter()
 	 * @generated
 	 */
-	int ETERMINO_FILTER = 13;
+	int ETERMINO_FILTER = 11;
 
 	/**
 	 * The feature id for the '<em><b>Property Name</b></em>' attribute.
@@ -934,7 +824,7 @@ public interface TermsuiteuiPackage extends EPackage {
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getELang()
 	 * @generated
 	 */
-	int ELANG = 14;
+	int ELANG = 12;
 
 	/**
 	 * The meta object id for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETagger <em>ETagger</em>}' enum.
@@ -944,7 +834,7 @@ public interface TermsuiteuiPackage extends EPackage {
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getETagger()
 	 * @generated
 	 */
-	int ETAGGER = 15;
+	int ETAGGER = 13;
 
 	/**
 	 * The meta object id for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EFilteringMode <em>EFiltering Mode</em>}' enum.
@@ -954,7 +844,7 @@ public interface TermsuiteuiPackage extends EPackage {
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getEFilteringMode()
 	 * @generated
 	 */
-	int EFILTERING_MODE = 16;
+	int EFILTERING_MODE = 14;
 
 
 	/**
@@ -965,7 +855,7 @@ public interface TermsuiteuiPackage extends EPackage {
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getEOccurrenceMode()
 	 * @generated
 	 */
-	int EOCCURRENCE_MODE = 17;
+	int EOCCURRENCE_MODE = 15;
 
 	/**
 	 * The meta object id for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.EAssocMeasure <em>EAssoc Measure</em>}' enum.
@@ -975,7 +865,7 @@ public interface TermsuiteuiPackage extends EPackage {
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getEAssocMeasure()
 	 * @generated
 	 */
-	int EASSOC_MEASURE = 18;
+	int EASSOC_MEASURE = 16;
 
 	/**
 	 * The meta object id for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ESimilarityMeasure <em>ESimilarity Measure</em>}' enum.
@@ -985,7 +875,7 @@ public interface TermsuiteuiPackage extends EPackage {
 	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getESimilarityMeasure()
 	 * @generated
 	 */
-	int ESIMILARITY_MEASURE = 19;
+	int ESIMILARITY_MEASURE = 17;
 
 
 	/**
@@ -1526,92 +1416,6 @@ public interface TermsuiteuiPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getEBilingualDictionary_Path();
-
-	/**
-	 * Returns the meta object for class '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource <em>ELinguistic Resource</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>ELinguistic Resource</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource
-	 * @generated
-	 */
-	EClass getELinguisticResource();
-
-	/**
-	 * Returns the meta object for the container reference '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource#getResourceSet <em>Resource Set</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the container reference '<em>Resource Set</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource#getResourceSet()
-	 * @see #getELinguisticResource()
-	 * @generated
-	 */
-	EReference getELinguisticResource_ResourceSet();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource#getName()
-	 * @see #getELinguisticResource()
-	 * @generated
-	 */
-	EAttribute getELinguisticResource_Name();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource#getPath <em>Path</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Path</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource#getPath()
-	 * @see #getELinguisticResource()
-	 * @generated
-	 */
-	EAttribute getELinguisticResource_Path();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource#getDescription <em>Description</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Description</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource#getDescription()
-	 * @see #getELinguisticResource()
-	 * @generated
-	 */
-	EAttribute getELinguisticResource_Description();
-
-	/**
-	 * Returns the meta object for class '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet <em>ELinguistic Resource Set</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>ELinguistic Resource Set</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet
-	 * @generated
-	 */
-	EClass getELinguisticResourceSet();
-
-	/**
-	 * Returns the meta object for the attribute '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet#getLanguage <em>Language</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Language</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet#getLanguage()
-	 * @see #getELinguisticResourceSet()
-	 * @generated
-	 */
-	EAttribute getELinguisticResourceSet_Language();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet#getResources <em>Resources</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Resources</em>'.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet#getResources()
-	 * @see #getELinguisticResourceSet()
-	 * @generated
-	 */
-	EReference getELinguisticResourceSet_Resources();
 
 	/**
 	 * Returns the meta object for class '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoFilter <em>ETermino Filter</em>}'.
@@ -2182,74 +1986,6 @@ public interface TermsuiteuiPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute EBILINGUAL_DICTIONARY__PATH = eINSTANCE.getEBilingualDictionary_Path();
-
-		/**
-		 * The meta object literal for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ELinguisticResourceImpl <em>ELinguistic Resource</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.ELinguisticResourceImpl
-		 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getELinguisticResource()
-		 * @generated
-		 */
-		EClass ELINGUISTIC_RESOURCE = eINSTANCE.getELinguisticResource();
-
-		/**
-		 * The meta object literal for the '<em><b>Resource Set</b></em>' container reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ELINGUISTIC_RESOURCE__RESOURCE_SET = eINSTANCE.getELinguisticResource_ResourceSet();
-
-		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ELINGUISTIC_RESOURCE__NAME = eINSTANCE.getELinguisticResource_Name();
-
-		/**
-		 * The meta object literal for the '<em><b>Path</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ELINGUISTIC_RESOURCE__PATH = eINSTANCE.getELinguisticResource_Path();
-
-		/**
-		 * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ELINGUISTIC_RESOURCE__DESCRIPTION = eINSTANCE.getELinguisticResource_Description();
-
-		/**
-		 * The meta object literal for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ELinguisticResourceSetImpl <em>ELinguistic Resource Set</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.ELinguisticResourceSetImpl
-		 * @see fr.univnantes.termsuite.ui.model.termsuiteui.impl.TermsuiteuiPackageImpl#getELinguisticResourceSet()
-		 * @generated
-		 */
-		EClass ELINGUISTIC_RESOURCE_SET = eINSTANCE.getELinguisticResourceSet();
-
-		/**
-		 * The meta object literal for the '<em><b>Language</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ELINGUISTIC_RESOURCE_SET__LANGUAGE = eINSTANCE.getELinguisticResourceSet_Language();
-
-		/**
-		 * The meta object literal for the '<em><b>Resources</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ELINGUISTIC_RESOURCE_SET__RESOURCES = eINSTANCE.getELinguisticResourceSet_Resources();
 
 		/**
 		 * The meta object literal for the '{@link fr.univnantes.termsuite.ui.model.termsuiteui.impl.ETerminoFilterImpl <em>ETermino Filter</em>}' class.

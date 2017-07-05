@@ -257,7 +257,8 @@ public class FileEditorPart {
 	@Persist
 	public void save(MDirtyable dirty,
 			@Named(IServiceConstants.ACTIVE_SHELL) Shell shell) {
-		logger.debug("Saving " + this.fileInput.getFile().getAbsolutePath());
+		String absolutePath = this.fileInput.getFile().getAbsolutePath();
+		logger.debug("Saving " + absolutePath);
 
 		try {
 			fileInput.save(this.text.getText());

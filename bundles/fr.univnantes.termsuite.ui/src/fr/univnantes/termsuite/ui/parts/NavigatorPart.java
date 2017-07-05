@@ -46,10 +46,11 @@ import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.handlers.OpenObjectHandler;
+import fr.univnantes.termsuite.ui.model.LinguisticResource;
+import fr.univnantes.termsuite.ui.model.LinguisticResourceSet;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
@@ -163,11 +164,12 @@ public class NavigatorPart implements TreePart {
 					if(handlerService.canExecute(command))
 						handlerService.executeHandler(command);
 					
-				} else if(sel instanceof ELinguisticResource) {
-					ELinguisticResource res = (ELinguisticResource)sel;
+				} else if(sel instanceof LinguisticResource) {
 					ParameterizedCommand command = commandService.createCommand(
 							OpenObjectHandler.COMMAND_ID, 
-							CommandUtil.params(OpenObjectHandler.PARAM_INPUT_OBJECT_PATH, res.getPath()));
+							CommandUtil.params(
+									OpenObjectHandler.PARAM_LINGUISTIC_RESOURCE,  
+									lingueeService.getResourceAsString((LinguisticResource) sel)));
 					if(handlerService.canExecute(command))
 						handlerService.executeHandler(command);
 
@@ -297,7 +299,8 @@ public class NavigatorPart implements TreePart {
 					Collections.sort(documents, TermSuiteUI.DOCUMENT_COMPARATOR);
 					return documents.toArray();
 				} else if (node.getNodeType() == NODE_RESOURCES) {
-					Collection<ELinguisticResourceSet> linguisticResourceSets = lingueeService.getLinguisticResourceSets();
+					Collection<LinguisticResourceSet> linguisticResourceSets = lingueeService.getResourceSets();
+							
 					if(linguisticResourceSets.isEmpty())
 						return new MsgNode[]{new MsgNode(
 								node, 
@@ -305,9 +308,9 @@ public class NavigatorPart implements TreePart {
 					else
 						return linguisticResourceSets.toArray();
 				}
-			} else if (parentElement instanceof ELinguisticResourceSet) {
-				ELinguisticResourceSet resSet = (ELinguisticResourceSet)parentElement;
-				return resSet.getResources().toArray();
+			} else if (parentElement instanceof LinguisticResourceSet) {
+				LinguisticResourceSet resourceSet = (LinguisticResourceSet)parentElement;
+				return resourceSet.getResources().toArray();
 			} else if (parentElement instanceof ECorpus) {
 				ECorpus c = (ECorpus) parentElement;
 				List<ESingleLanguageCorpus> slcList = Lists.newArrayList();
@@ -342,9 +345,9 @@ public class NavigatorPart implements TreePart {
 			} else if (element instanceof ESingleLanguageCorpus) {
 				ESingleLanguageCorpus c = (ESingleLanguageCorpus) element;
 				return c.getCorpus();
-			} else if (element instanceof ELinguisticResource) {
-				return ((ELinguisticResource)element).getResourceSet();
-			} else if (element instanceof ELinguisticResourceSet) {
+			} else if (element instanceof LinguisticResource) {
+				return ((LinguisticResource)element).getResourceSet();
+			} else if (element instanceof LinguisticResourceSet) {
 				return THE_RESOURCE_NODE;
 			} else if (element instanceof ECorpus) {
 				return THE_CORPORA_NODE;
@@ -379,7 +382,7 @@ public class NavigatorPart implements TreePart {
 				}
 			} else if(element instanceof ECorpus)
 				return true;
-			else if (element instanceof ELinguisticResourceSet) 
+			else if (element instanceof LinguisticResourceSet) 
 				return true;
 			else if(element instanceof ESingleLanguageCorpus)
 				return true;
@@ -413,13 +416,14 @@ public class NavigatorPart implements TreePart {
 			} else if (element instanceof MsgNode) {
 				MsgNode msgNode = (MsgNode)element;
 				text.append(msgNode.getMsg(), StyledString.COUNTER_STYLER);
-			} else if (cell.getElement() instanceof ELinguisticResourceSet) {
-				ELinguisticResourceSet resSet = (ELinguisticResourceSet) element;
-				text.append(resSet.getLanguage().getName());
-				cell.setImage(img.getFlag(resSet.getLanguage()));
-			} else if (cell.getElement() instanceof ELinguisticResource) {
-				ELinguisticResource res = (ELinguisticResource) element;
-				text.append(FileUtil.getFilename(res.getPath()));
+			} else if (cell.getElement() instanceof LinguisticResourceSet) {
+				LinguisticResourceSet resSet = (LinguisticResourceSet) element;
+				text.append(resSet.getLang().getName());
+				cell.setImage(img.getFlag(resSet.getLang()));
+			} else if (cell.getElement() instanceof LinguisticResource) {
+				LinguisticResource res = (LinguisticResource) element;
+				ELang lang = res.getResourceSet().getLang();
+				text.append(FileUtil.getFilename(res.getResourceType().getPath(LangUtil.getTermsuiteLang(lang))));
 				cell.setImage(img.get(TermsuiteImg.FILE));
 			} else if (cell.getElement() instanceof File) {
 				File file = (File) element;

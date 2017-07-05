@@ -183,7 +183,7 @@
   <commands xmi:id="_hzlTgE19EeWpcYFej9JPeQ" elementId="fr.univnantes.termsuite.ui.command.import" commandName="Import Corpus"/>
   <commands xmi:id="_BSxgQE_ZEeWST6jINIj7qQ" elementId="fr.univnantes.termsuite.ui.command.OpenObject" commandName="Open Object" description="Open object in an editor">
     <parameters xmi:id="_jzXIgLoeEeWOe4SAf8ad9Q" elementId="fr.univnantes.termsuite.ui.commandparameter.InputResourceId" name="InputResourceID"/>
-    <parameters xmi:id="_4OLPUBdyEeayibHHymxkiw" elementId="fr.univnantes.termsuite.ui.commandparameter.InputObjectPath" name="InputObjectPath"/>
+    <parameters xmi:id="_4OLPUBdyEeayibHHymxkiw" elementId="fr.univnantes.termsuite.ui.commandparameter.LinguisticResource" name="LinguisticResource"/>
   </commands>
   <commands xmi:id="_paaRwFE9EeWJlbJYl3DYnQ" elementId="fr.univnantes.termsuite.ui.command.newpipeline" commandName="New Pipeline" description="Creates a new pipeline"/>
   <commands xmi:id="_U1zxIFJBEeWNjZ8iJmBR2A" elementId="fr.univnantes.termsuite.ui.command.runpipelineselectedcorpus" commandName="Run pipeline on selected corpus" description="Run the current pipeline on selected corpus"/>

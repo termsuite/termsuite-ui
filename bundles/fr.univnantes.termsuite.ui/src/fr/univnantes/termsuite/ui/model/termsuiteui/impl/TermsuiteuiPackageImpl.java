@@ -16,8 +16,6 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EFilteringMode;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipelineList;
@@ -115,20 +113,6 @@ public class TermsuiteuiPackageImpl extends EPackageImpl implements TermsuiteuiP
 	 * @generated
 	 */
 	private EClass eBilingualDictionaryEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass eLinguisticResourceEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass eLinguisticResourceSetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -695,78 +679,6 @@ public class TermsuiteuiPackageImpl extends EPackageImpl implements TermsuiteuiP
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getELinguisticResource() {
-		return eLinguisticResourceEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getELinguisticResource_ResourceSet() {
-		return (EReference)eLinguisticResourceEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getELinguisticResource_Name() {
-		return (EAttribute)eLinguisticResourceEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getELinguisticResource_Path() {
-		return (EAttribute)eLinguisticResourceEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getELinguisticResource_Description() {
-		return (EAttribute)eLinguisticResourceEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getELinguisticResourceSet() {
-		return eLinguisticResourceSetEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getELinguisticResourceSet_Language() {
-		return (EAttribute)eLinguisticResourceSetEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getELinguisticResourceSet_Resources() {
-		return (EReference)eLinguisticResourceSetEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getETerminoFilter() {
 		return eTerminoFilterEClass;
 	}
@@ -959,16 +871,6 @@ public class TermsuiteuiPackageImpl extends EPackageImpl implements TermsuiteuiP
 		createEAttribute(eBilingualDictionaryEClass, EBILINGUAL_DICTIONARY__TARGET_LANG);
 		createEAttribute(eBilingualDictionaryEClass, EBILINGUAL_DICTIONARY__PATH);
 
-		eLinguisticResourceEClass = createEClass(ELINGUISTIC_RESOURCE);
-		createEReference(eLinguisticResourceEClass, ELINGUISTIC_RESOURCE__RESOURCE_SET);
-		createEAttribute(eLinguisticResourceEClass, ELINGUISTIC_RESOURCE__NAME);
-		createEAttribute(eLinguisticResourceEClass, ELINGUISTIC_RESOURCE__PATH);
-		createEAttribute(eLinguisticResourceEClass, ELINGUISTIC_RESOURCE__DESCRIPTION);
-
-		eLinguisticResourceSetEClass = createEClass(ELINGUISTIC_RESOURCE_SET);
-		createEAttribute(eLinguisticResourceSetEClass, ELINGUISTIC_RESOURCE_SET__LANGUAGE);
-		createEReference(eLinguisticResourceSetEClass, ELINGUISTIC_RESOURCE_SET__RESOURCES);
-
 		eTerminoFilterEClass = createEClass(ETERMINO_FILTER);
 		createEAttribute(eTerminoFilterEClass, ETERMINO_FILTER__PROPERTY_NAME);
 		createEAttribute(eTerminoFilterEClass, ETERMINO_FILTER__TOP_N);
@@ -1079,16 +981,6 @@ public class TermsuiteuiPackageImpl extends EPackageImpl implements TermsuiteuiP
 		initEAttribute(getEBilingualDictionary_SourceLang(), this.getELang(), "sourceLang", null, 0, 1, EBilingualDictionary.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getEBilingualDictionary_TargetLang(), this.getELang(), "targetLang", null, 0, 1, EBilingualDictionary.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getEBilingualDictionary_Path(), ecorePackage.getEString(), "path", null, 0, 1, EBilingualDictionary.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(eLinguisticResourceEClass, ELinguisticResource.class, "ELinguisticResource", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getELinguisticResource_ResourceSet(), this.getELinguisticResourceSet(), this.getELinguisticResourceSet_Resources(), "resourceSet", null, 1, 1, ELinguisticResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getELinguisticResource_Name(), ecorePackage.getEString(), "name", null, 0, 1, ELinguisticResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getELinguisticResource_Path(), ecorePackage.getEString(), "path", "", 0, 1, ELinguisticResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getELinguisticResource_Description(), ecorePackage.getEString(), "description", null, 0, 1, ELinguisticResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(eLinguisticResourceSetEClass, ELinguisticResourceSet.class, "ELinguisticResourceSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getELinguisticResourceSet_Language(), this.getELang(), "language", "en", 0, 1, ELinguisticResourceSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getELinguisticResourceSet_Resources(), this.getELinguisticResource(), this.getELinguisticResource_ResourceSet(), "resources", null, 0, -1, ELinguisticResourceSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(eTerminoFilterEClass, ETerminoFilter.class, "ETerminoFilter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getETerminoFilter_PropertyName(), ecorePackage.getEString(), "propertyName", null, 0, 1, ETerminoFilter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

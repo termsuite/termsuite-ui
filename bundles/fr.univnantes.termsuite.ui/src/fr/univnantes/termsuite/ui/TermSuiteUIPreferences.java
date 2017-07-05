@@ -11,4 +11,5 @@ public class TermSuiteUIPreferences {
 	public static final String LINGUISTIC_RESOURCES_DIRECTORY = "linguisticResourceDirectory";
 	public static final String COPY_BUILTIN_RESOURCES_IF_EMPTY = "copyBuiltinResourcesToTargetDirectory";
 	public static final String OUTPUT_DIRECTORY_DEFAULT = "output";
+	public static final String LINGUISTIC_RESOURCES_DIRECTORY_DEFAULT = "linguistic-resources";
 }

@@ -1,5 +1,8 @@
 package fr.univnantes.termsuite.ui.prefs;
 
+import java.io.File;
+import java.nio.file.Paths;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
@@ -67,10 +70,30 @@ public class ResourcePreferencePage extends FieldEditorPreferencePage {
 		if(linguisticPathField != null) {
 			boolean active = activeCustomResourcesEditor.getBooleanValue();
 			linguisticPathField.setEnabled(active, linguisticPathFieldEditorParent);
-		}
-		setMessage(null);
+			if(active) {
+				File file = Paths.get(linguisticPathField.getStringValue()).toFile();
+				if(!file.exists())
+					setError("Directory does not exist: \""+file.getPath()+"\"");
+				else if(!file.isDirectory())
+					setError("Not a directory: \""+file.getPath()+"\"");
+				else
+					setOk();
+			} else
+				setOk();
+		} else 
+			setOk();
+	}
+	
+	private void setError(String message) {
+		setMessage(message);
+		setErrorMessage(message);
+		setValid(false);
+	}
+
+	private void setOk() {
+		setMessage("Ok");
 		setErrorMessage(null);
 		setValid(true);
-
+		
 	}
 }

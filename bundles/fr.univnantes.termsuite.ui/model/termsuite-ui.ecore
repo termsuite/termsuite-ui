@@ -92,20 +92,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetLang" eType="#//ELang"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ELinguisticResource">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="resourceSet" lowerBound="1"
-        eType="#//ELinguisticResourceSet" eOpposite="#//ELinguisticResourceSet/resources"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        defaultValueLiteral=""/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ELinguisticResourceSet">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="language" eType="#//ELang"
-        defaultValueLiteral="en"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="resources" upperBound="-1"
-        eType="#//ELinguisticResource" containment="true" eOpposite="#//ELinguisticResource/resourceSet"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ETerminoFilter">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="propertyName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="topN" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"

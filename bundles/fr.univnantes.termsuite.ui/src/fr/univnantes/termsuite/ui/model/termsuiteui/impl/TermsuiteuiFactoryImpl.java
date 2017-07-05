@@ -16,8 +16,6 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EFilteringMode;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipelineList;
@@ -87,8 +85,6 @@ public class TermsuiteuiFactoryImpl extends EFactoryImpl implements TermsuiteuiF
 			case TermsuiteuiPackage.ERESOURCE: return createEResource();
 			case TermsuiteuiPackage.ETAGGER_CONFIG: return createETaggerConfig();
 			case TermsuiteuiPackage.EBILINGUAL_DICTIONARY: return createEBilingualDictionary();
-			case TermsuiteuiPackage.ELINGUISTIC_RESOURCE: return createELinguisticResource();
-			case TermsuiteuiPackage.ELINGUISTIC_RESOURCE_SET: return createELinguisticResourceSet();
 			case TermsuiteuiPackage.ETERMINO_FILTER: return createETerminoFilter();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
@@ -253,26 +249,6 @@ public class TermsuiteuiFactoryImpl extends EFactoryImpl implements TermsuiteuiF
 	public EBilingualDictionary createEBilingualDictionary() {
 		EBilingualDictionaryImpl eBilingualDictionary = new EBilingualDictionaryImpl();
 		return eBilingualDictionary;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ELinguisticResource createELinguisticResource() {
-		ELinguisticResourceImpl eLinguisticResource = new ELinguisticResourceImpl();
-		return eLinguisticResource;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ELinguisticResourceSet createELinguisticResourceSet() {
-		ELinguisticResourceSetImpl eLinguisticResourceSet = new ELinguisticResourceSetImpl();
-		return eLinguisticResourceSet;
 	}
 
 	/**

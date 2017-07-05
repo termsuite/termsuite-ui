@@ -5,7 +5,7 @@ import java.nio.file.Paths;
 import javax.inject.Inject;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -32,20 +32,20 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import fr.univnantes.termsuite.ui.services.AlignmentService;
 import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.ETerminologyService;
 import fr.univnantes.termsuite.ui.services.LinguisticResourcesService;
 import fr.univnantes.termsuite.ui.services.NLPService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.services.TaggerService;
 import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
-import fr.univnantes.termsuite.ui.services.ETerminologyService;
 import fr.univnantes.termsuite.ui.services.impl.AlignmentServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.CorpusServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.LinguisticResourcesServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.NLPServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.ResourceServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.TaggerServiceImpl;
-import fr.univnantes.termsuite.ui.services.impl.TerminologyServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.TermSuiteSelectionServiceImpl;
+import fr.univnantes.termsuite.ui.services.impl.TerminologyServiceImpl;
 import fr.univnantes.termsuite.ui.util.WorkspaceUtil;
 
 @SuppressWarnings("restriction")
@@ -69,14 +69,20 @@ public class LifeCycleManager {
 	}
 
 	private void checkPreferences() throws BackingStoreException {
-		Preferences preferences = ConfigurationScope.INSTANCE.getNode(TermSuiteUI.PLUGIN_ID);
-		if(preferences.get(TermSuiteUIPreferences.OUTPUT_DIRECTORY, "").equals("")) {
-			String outputDirectoryDefault = WorkspaceUtil.getLocation(TermSuiteUIPreferences.OUTPUT_DIRECTORY_DEFAULT);
-			logger.info("Setting output directory to: {0}", outputDirectoryDefault);
-			preferences.put(TermSuiteUIPreferences.OUTPUT_DIRECTORY, outputDirectoryDefault);
-			Paths.get(outputDirectoryDefault).toFile().mkdirs();
+		String outputDir = WorkspaceUtil.getLocation(TermSuiteUIPreferences.OUTPUT_DIRECTORY_DEFAULT);
+		setDefaultPreference(
+				TermSuiteUIPreferences.OUTPUT_DIRECTORY, 
+				outputDir); 
+		Paths.get(outputDir).toFile().mkdirs();
+	}
+
+	private void setDefaultPreference(String prefKey, String outputDirectoryDefault) throws BackingStoreException {
+		Preferences preferences = InstanceScope.INSTANCE.getNode(TermSuiteUI.PLUGIN_ID);
+		if(preferences.get(prefKey, "").equals("")) {
+			logger.info("Setting preference {0} to: {1}", prefKey, outputDirectoryDefault);
+			preferences.put(prefKey, outputDirectoryDefault);
 			preferences.flush();
-		} 
+		}
 	}
 
 	@Inject @Optional
@@ -184,7 +190,7 @@ public class LifeCycleManager {
 	};
 	
 	private void logContextualInfo() {
-		Preferences preferences = ConfigurationScope.INSTANCE.getNode(TermSuiteUI.PLUGIN_ID);
+		Preferences preferences = InstanceScope.INSTANCE.getNode(TermSuiteUI.PLUGIN_ID);
 
 		logger.info("Current directory: " + Paths.get(".").toAbsolutePath().normalize().toString());
 		logger.info("Workspace location: " + Platform.getInstanceLocation().getURL().toString());

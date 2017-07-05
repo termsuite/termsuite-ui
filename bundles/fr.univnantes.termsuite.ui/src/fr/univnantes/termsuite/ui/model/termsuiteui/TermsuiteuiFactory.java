@@ -121,24 +121,6 @@ public interface TermsuiteuiFactory extends EFactory {
 	EBilingualDictionary createEBilingualDictionary();
 
 	/**
-	 * Returns a new object of class '<em>ELinguistic Resource</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>ELinguistic Resource</em>'.
-	 * @generated
-	 */
-	ELinguisticResource createELinguisticResource();
-
-	/**
-	 * Returns a new object of class '<em>ELinguistic Resource Set</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>ELinguistic Resource Set</em>'.
-	 * @generated
-	 */
-	ELinguisticResourceSet createELinguisticResourceSet();
-
-	/**
 	 * Returns a new object of class '<em>ETermino Filter</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

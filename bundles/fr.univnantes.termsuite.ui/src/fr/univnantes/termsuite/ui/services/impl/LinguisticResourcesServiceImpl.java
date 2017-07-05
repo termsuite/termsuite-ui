@@ -1,43 +1,55 @@
 package fr.univnantes.termsuite.ui.services.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.eclipse.core.runtime.Platform;
+import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.core.services.log.ILoggerProvider;
 import org.eclipse.e4.core.services.log.Logger;
-import org.eclipse.e4.ui.services.IServiceConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleException;
+import org.osgi.service.prefs.Preferences;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import fr.univnantes.termsuite.api.ResourceConfig;
-import fr.univnantes.termsuite.tools.ResourceExporter;
+import fr.univnantes.termsuite.api.TermSuiteException;
+import fr.univnantes.termsuite.model.Lang;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet;
+import fr.univnantes.termsuite.ui.model.LinguisticResource;
+import fr.univnantes.termsuite.ui.model.LinguisticResourceSet;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
 import fr.univnantes.termsuite.ui.services.LinguisticResourcesService;
-import fr.univnantes.termsuite.ui.util.LinguisticResourceUtil;
-import fr.univnantes.termsuite.ui.util.ValidationException;
+import fr.univnantes.termsuite.ui.util.LangUtil;
+import fr.univnantes.termsuite.uima.ResourceType;
 
 @SuppressWarnings("restriction")
 public class LinguisticResourcesServiceImpl implements LinguisticResourcesService {
 
+	private static final List<ResourceType> EDITABLE_RESOURCES = Lists.newArrayList(
+			ResourceType.MWT_RULES,
+			ResourceType.VARIANTS,
+			ResourceType.PREFIX_BANK,
+			ResourceType.PREFIX_EXCEPTIONS,
+			ResourceType.NEOCLASSICAL_PREFIXES,
+			ResourceType.SUFFIX_DERIVATIONS,
+			ResourceType.SUFFIX_DERIVATION_EXCEPTIONS
+			);
+	
 	@Inject
 	@Preference(value = TermSuiteUIPreferences.ACTIVATE_CUSTOM_RESOURCES)
 	private boolean withCustomResources = false;
@@ -46,9 +58,6 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 	@Preference(value = TermSuiteUIPreferences.COPY_BUILTIN_RESOURCES_IF_EMPTY)
 	private boolean copyIfEmpty = false;
 
-	@Inject
-	@Preference(value = TermSuiteUIPreferences.LINGUISTIC_RESOURCES_DIRECTORY)
-	private String customResourcePath;
 	
 	@Inject
 	IEclipseContext context;
@@ -56,9 +65,7 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 	/*
 	 * Cache fields
 	 */
-	private Map<String, ELinguisticResource> resourcesByPath = null;
-	private Collection<ELinguisticResourceSet> resourceSets = null;
-	private Bundle customResourcesBundle = null;
+	private List<LinguisticResourceSet> resourceSets = null;
 
 	Logger logger;
 	
@@ -69,8 +76,6 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 	}
 	
 	private void resetCache() {
-		customResourcesBundle = null;
-		resourcesByPath = null;
 		resourceSets = null;
 	}
 	
@@ -82,9 +87,6 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 			) {
 		this.withCustomResources = active;
 		logger.debug("Modification detected in preferences: custom resources are now " + (this.withCustomResources ? "activated": "deactivated") );
-		if(this.withCustomResources == false) {
-			this.unloadCustomResourcesFromClasspath();
-		}
 		resetCache();
 	}
 
@@ -102,67 +104,11 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 	@Inject
 	@Optional
 	public void reactOnCustomResourceChange( 
-			LinguisticResourcesService lingueeService, 
-			@Preference(value = TermSuiteUIPreferences.LINGUISTIC_RESOURCES_DIRECTORY) String customResourcePath
+			LinguisticResourcesService lingueeService
 			) {
-		this.customResourcePath = customResourcePath;
-		logger.debug("Modification detected in preferences: customResourcePath is " + this.customResourcePath);
 		resetCache();
 	}
 
-	private Bundle getBuiltinResourcesBundle() {
-		return Platform.getBundle(TermSuiteUI.PLUGIN_TERMSUITE_RESOURCES_ID);
-	}
-
-	public void unloadCustomResourcesFromClasspath() {
-		if(customResourcesBundle != null)
-			try {
-				logger.info("Unloading custom linguistic resources ["+customResourcePath+"] from classpath");
-				customResourcesBundle.stop();
-				logger.info("Loading built-in linguistic resources to classpath");
-				getBuiltinResourcesBundle().start();
-			} catch (BundleException e) {
-				logger.error("Could not reload custom resources.");
-				logger.error(e);
-				MessageDialog.openError(
-						(Shell)context.get(IServiceConstants.ACTIVE_SHELL), 
-						"Error",
-						"Custom linguistic resources could not be loaded. Using built-in resources instead of custom resources.");
-			}
-	}
-
-	@Override
-	public Collection<ELinguisticResourceSet> getLinguisticResourceSets() {
-		Preconditions.checkState(withCustomResources, "The use of custom resources is not allowed");
-		
-		if(resourceSets == null) {
-			try {
-				logger.info("Creating a custom resource directory at " + this.customResourcePath);
-					new ResourceExporter().exportTo(Paths.get(this.customResourcePath));
-				resourceSets = LinguisticResourceUtil.getLinguisticResourceSets(this.customResourcePath, false);
-				logger.debug(resourceSets.size() + " resource sets loaded from path: " + customResourcePath);
-			} catch(ValidationException e) {
-				logger.error("Could not load resources", e);
-				return Lists.newArrayList();
-			} catch (IOException e) {
-				logger.error("Unable to create linguistic resource directory");
-				return Lists.newArrayList();
-			}
-		}
-		return resourceSets;
-	}
-
-	@Override
-	public ELinguisticResource getResource(String path) {
-		Preconditions.checkState(withCustomResources, "The use of custom resources is not allowed");
-		if(resourcesByPath == null) {
-			resourcesByPath = Maps.newHashMap();
-			for(ELinguisticResourceSet resourceSet:getLinguisticResourceSets())
-				for(ELinguisticResource linguisticResource:resourceSet.getResources())
-					resourcesByPath.put(linguisticResource.getPath(), linguisticResource);
-		}
-		return resourcesByPath.get(path);
-	}
 
 	@Override
 	public boolean areCustomResourcesActivated() {
@@ -170,16 +116,106 @@ public class LinguisticResourcesServiceImpl implements LinguisticResourcesServic
 	}
 
 	@Override
-	public Path getCustomResourcesPath() {
+	public Path getCustomResourceDirectoryPath() {
 		Preconditions.checkState(withCustomResources, "Custom resources are not activated");
-		return Paths.get(this.customResourcePath);
+		Preferences preferences = InstanceScope.INSTANCE.getNode(TermSuiteUI.PLUGIN_ID);
+		String string = preferences.get(TermSuiteUIPreferences.LINGUISTIC_RESOURCES_DIRECTORY, "");
+		if(string.equals("")) {
+			preferences.put(
+					TermSuiteUIPreferences.LINGUISTIC_RESOURCES_DIRECTORY, 
+					TermSuiteUIPreferences.LINGUISTIC_RESOURCES_DIRECTORY_DEFAULT);
+		}
+		return Paths.get(string);
+	}
+
+
+	@Override
+	public Collection<ResourceType> getEditableResources() {
+		return EDITABLE_RESOURCES;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<LinguisticResourceSet> getResourceSets() {
+		if(withCustomResources) {
+			if(resourceSets == null)
+				resourceSets = LangUtil.getSupportedLanguages().stream()
+					.map(lang -> { 
+						List<LinguisticResource> resources = new ArrayList<LinguisticResource>();
+						LinguisticResourceSet set = new LinguisticResourceSet(lang, resources);
+						for(ResourceType t:getEditableResources())
+							resources.add(new LinguisticResource(set, t));
+						return set;
+					})
+					.collect(Collectors.toList());
+			return resourceSets;
+		} else
+			return Collections.EMPTY_LIST;
+	}
+
+	
+	public Path getPath(LinguisticResource r, boolean createIfAbsent) {
+		Lang l = LangUtil.getTermsuiteLang(r.getResourceSet().getLang());
+		Path resPath = getCustomResourceDirectoryPath().resolve(r.getResourceType().getPath(l));
+		if(!resPath.toFile().exists() && createIfAbsent) {
+			resPath.getParent().toFile().mkdirs();
+			try {
+				FileUtils.copyURLToFile(
+						r.getResourceType().fromClasspath(l), 
+						resPath.toFile());
+			} catch (IOException e) {
+				String msg = String.format("Could not copy built-in linguistic resource %s to file %s. Cause %s: %s", 
+						r.getResourceType().getPath(l),
+						resPath.toString(),
+						e.getClass().getSimpleName(),
+						e.getMessage()
+						);
+				throw new TermSuiteException(msg, e);
+			}
+		}
+		return resPath;
 	}
 
 	@Override
-	public ResourceConfig getResourceConfig() {
+	public File asFile(LinguisticResource r, boolean createIfAbsent) {
+		return getPath(r, createIfAbsent).toFile();
+	}
+
+	@Override
+	public LinguisticResource getResourceFromString(String linguisticResourceString) {
+		for(LinguisticResourceSet set:getResourceSets())
+			for(LinguisticResource r:set.getResources())
+				if(getResourceAsString(r).equals(linguisticResourceString))
+					return r;
+		throw new IllegalArgumentException("No linguistic resource with such serialized string value: " + linguisticResourceString);
+	}
+
+	private static final String RESOURCE_AS_STRING_FORMAT = "LingueeResource_%s_%s";
+	@Override
+	public String getResourceAsString(LinguisticResource linguisticResource) {
+		return String.format(RESOURCE_AS_STRING_FORMAT, 
+				linguisticResource.getResourceSet().getLang().getName(), 
+				linguisticResource.getResourceType().toString());
+	}
+
+	public LinguisticResourceSet getResourceSet(ELang lang) {
+		Preconditions.checkState(areCustomResourcesActivated(), "Operation only allowed when custom linguistic resources are enabled.");
+		for(LinguisticResourceSet set:getResourceSets())
+			if(set.getLang() == lang)
+				return set;
+		throw new IllegalArgumentException("No linguistic resource set found for lang " + lang);
+	}
+
+	@Override
+	public ResourceConfig getResourceConfig(ELang lang) {
 		ResourceConfig config = new ResourceConfig();
-		if(areCustomResourcesActivated())
-			config.addDirectory(getCustomResourcesPath());
+		if(areCustomResourcesActivated()) {
+			for(LinguisticResource res:getResourceSet(lang).getResources()) {
+				File file = asFile(res, false);
+				if(file.exists())
+					config.addCustomResourcePath(res.getResourceType(), getPath(res, true));
+			}
+		}
 		return config;
 	}
 }

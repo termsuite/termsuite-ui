@@ -107,6 +107,9 @@
             name="Linguistic resources">
       </page>
    </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+   </extension>
 
 
 </plugin>

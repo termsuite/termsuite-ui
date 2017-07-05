@@ -16,8 +16,8 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -219,7 +219,7 @@ public class PipelinePart {
 
 
 		
-		ConfigurationScope.INSTANCE
+		InstanceScope.INSTANCE
 			.getNode(TermSuiteUIPreferences.NODE_GENERAL)
 			.addPreferenceChangeListener(this::taggerConfigUpdated);
 

@@ -11,8 +11,6 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.EBilingualDictionary;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorporaList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipelineList;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EResource;
@@ -122,14 +120,6 @@ public class TermsuiteuiAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseEBilingualDictionary(EBilingualDictionary object) {
 				return createEBilingualDictionaryAdapter();
-			}
-			@Override
-			public Adapter caseELinguisticResource(ELinguisticResource object) {
-				return createELinguisticResourceAdapter();
-			}
-			@Override
-			public Adapter caseELinguisticResourceSet(ELinguisticResourceSet object) {
-				return createELinguisticResourceSetAdapter();
 			}
 			@Override
 			public Adapter caseETerminoFilter(ETerminoFilter object) {
@@ -306,34 +296,6 @@ public class TermsuiteuiAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createEBilingualDictionaryAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource <em>ELinguistic Resource</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource
-	 * @generated
-	 */
-	public Adapter createELinguisticResourceAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet <em>ELinguistic Resource Set</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet
-	 * @generated
-	 */
-	public Adapter createELinguisticResourceSetAdapter() {
 		return null;
 	}
 

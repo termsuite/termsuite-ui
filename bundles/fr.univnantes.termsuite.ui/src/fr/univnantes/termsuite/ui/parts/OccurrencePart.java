@@ -23,7 +23,6 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.e4.ui.workbench.modeling.IPartListener;
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -40,9 +39,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
@@ -209,7 +206,6 @@ public class OccurrencePart implements TreePart {
 	}
 
 
-	private Label emptyOccStoreLabel;
 	private TreeViewer viewer;
 
 	@PostConstruct
