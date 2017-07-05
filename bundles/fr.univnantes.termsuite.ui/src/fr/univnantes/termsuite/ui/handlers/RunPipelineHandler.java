@@ -23,6 +23,7 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.services.NLPService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 
+@SuppressWarnings("unchecked")
 public class RunPipelineHandler {
 
 	public static final String ID = "fr.univnantes.termsuite.ui.handler.RunPipeline";
@@ -34,21 +35,23 @@ public class RunPipelineHandler {
 			NLPService extractorService,
 			ResourceService resourceService) {
 		Map<String, Object> parameterMap = command.getParameterMap();
+		boolean useCache = parameterMap.containsKey(TermSuiteUI.COMMAND_RUN_PIPELINE_PARAMETER_USE_CACHE)
+				&& Boolean.parseBoolean((String) parameterMap.get(TermSuiteUI.COMMAND_RUN_PIPELINE_PARAMETER_USE_CACHE));
 		if(!parameterMap.containsKey(TermSuiteUI.COMMAND_RUN_PIPELINE_PARAMETER_PIPELINE_ID)
 				&& selectedPipeline != null) {
 			// run handler from selected pipeline
-			runPipeline(shell, extractorService, resourceService, selectedPipeline);
+			runPipeline(shell, extractorService, resourceService, selectedPipeline, useCache);
 		} else {
 			// run handler from parameterized command
 			String pipelineName = parameterMap.get(TermSuiteUI.COMMAND_RUN_PIPELINE_PARAMETER_PIPELINE_ID).toString();
 			java.util.Optional<EPipeline> pipeline = resourceService.getPipeline(pipelineName);
 			if(pipeline.isPresent()) 
-				runPipeline(shell, extractorService, resourceService, pipeline.get());
+				runPipeline(shell, extractorService, resourceService, pipeline.get(), useCache);
 		}
 	}
 
 	private void runPipeline(Shell shell, NLPService extractorService, ResourceService resourceService,
-			EPipeline pipeline) {
+			EPipeline pipeline, boolean useCache) {
 		CorpusSelectionDialog dialog = new CorpusSelectionDialog(shell, resourceService.getCorporaList().getCorpora());
 		List<ESingleLanguageCorpus> selectedCorpora = new ArrayList<>();
 		if(dialog.open() == Window.OK) {
@@ -57,7 +60,7 @@ public class RunPipelineHandler {
 					selectedCorpora.add(((ESingleLanguageCorpus)o));
 			}
 		} 
-		extractorService.runPipelineOnSeveralCorpus(pipeline, Lists.newArrayList(selectedCorpora));
+		extractorService.runPipelineOnSeveralCorpus(pipeline, Lists.newArrayList(selectedCorpora), useCache);
 	}
 	
 	@CanExecute

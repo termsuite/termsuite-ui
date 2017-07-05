@@ -75,6 +75,6 @@ public class TermSuiteUI {
 	 */
 	public static final String COMMAND_RUN_PIPELINE_ID = "fr.univnantes.termsuite.ui.command.RunPipeline";
 	public static final String COMMAND_RUN_PIPELINE_PARAMETER_PIPELINE_ID = "fr.univnantes.termsuite.ui.command.RunPipeline.commandparameter.pipelinename";
+	public static final String COMMAND_RUN_PIPELINE_PARAMETER_USE_CACHE = "fr.univnantes.termsuite.ui.command.RunPipeline.commandparameter.reusecache";
 	public static final String COMMAND_CLEAR_CACHE_ID = "fr.univnantes.termsuite.ui.command.ClearPreprocessingCache";
-
 }

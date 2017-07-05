@@ -16,9 +16,9 @@ public interface NLPService {
 
 	public static final Set<ELang> SUPPORTED_LANGUAGES = ImmutableSet.of(ELang.FR, ELang.EN, ELang.ES, ELang.DE, ELang.RU, ELang.IT);
 
-	public void runPipelineOnCorpus(EPipeline pipeline, ESingleLanguageCorpus corpus);
+	public void runPipelineOnCorpus(EPipeline pipeline, ESingleLanguageCorpus corpus, boolean useCache);
 
-	public void runPipelineOnSeveralCorpus(EPipeline pipeline, Iterable<ESingleLanguageCorpus> corpusList);
+	public void runPipelineOnSeveralCorpus(EPipeline pipeline, Iterable<ESingleLanguageCorpus> corpusList, boolean useCache);
 
 	/**
 	 * 

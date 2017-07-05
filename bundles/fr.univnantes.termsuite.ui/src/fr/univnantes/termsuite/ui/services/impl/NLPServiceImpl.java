@@ -74,15 +74,15 @@ public class NLPServiceImpl implements NLPService {
 	}
 
 	@Override
-	public void runPipelineOnCorpus(EPipeline pipeline, ESingleLanguageCorpus corpus) {
+	public void runPipelineOnCorpus(EPipeline pipeline, ESingleLanguageCorpus corpus, boolean useCache) {
 		List<ESingleLanguageCorpus> l = Lists.newArrayList();
 		l.add(corpus);
-		runPipelineOnCorpus(pipeline, l);
+		runPipelineOnCorpus(pipeline, l, useCache);
 	}
 
 	@Override
-	public void runPipelineOnSeveralCorpus(EPipeline pipeline, Iterable<ESingleLanguageCorpus> corpusList) {
-		runPipelineOnCorpus(pipeline, corpusList);		
+	public void runPipelineOnSeveralCorpus(EPipeline pipeline, Iterable<ESingleLanguageCorpus> corpusList, boolean useCache) {
+		runPipelineOnCorpus(pipeline, corpusList, useCache);		
 	}
 	
 	
@@ -91,12 +91,12 @@ public class NLPServiceImpl implements NLPService {
 	 */
 	private void runPipelineOnCorpus(
 			final EPipeline pipeline, 
-			final Iterable<ESingleLanguageCorpus> corpusList) {
+			final Iterable<ESingleLanguageCorpus> corpusList, boolean useCache) {
 
 		for(final ESingleLanguageCorpus corpus:corpusList) {
 			Path preprocessedCorpusPath = getCachePath(corpus, pipeline.getTaggerConfigName(), pipeline.getMaxNumTermsMemory());
 
-			if(preprocessedCorpusPath.toFile().isFile())
+			if(useCache && preprocessedCorpusPath.toFile().isFile())
 				runPipelineOnPreprocessedCorpus(pipeline, corpus, IndexedCorpusIO.fromJson(preprocessedCorpusPath));
 			else {
 				Job preprocessCorpusJob = getPrepareCorpusJob(pipeline, corpus);

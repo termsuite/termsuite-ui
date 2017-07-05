@@ -190,6 +190,7 @@
   <commands xmi:id="_RIfJ0MULEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.command.saveall" commandName="Save all" description="Save all opened editors"/>
   <commands xmi:id="_zpB2oMUUEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.command.RunPipeline" commandName="Run Pipeline">
     <parameters xmi:id="_54UncFWZEeefSMCel-Yjlw" elementId="fr.univnantes.termsuite.ui.command.RunPipeline.commandparameter.pipelinename" name="Pipeline Name" optional="false"/>
+    <parameters xmi:id="_f9OaMGGIEeecM40uMxkL9w" elementId="fr.univnantes.termsuite.ui.command.RunPipeline.commandparameter.reusecache" name="Reuse cached preprocessings"/>
   </commands>
   <commands xmi:id="_XCv48MakEeWpYeBiwS_H7Q" elementId="fr.univnantes.termsuite.ui.command.preferences" commandName="Preferences" description="Show the preferences dialog"/>
   <commands xmi:id="_cgtKcMwKEeWh7K416TAaxg" elementId="fr.univnantes.termsuite.ui.command.About" commandName="About" description="Shows information about TermSuite"/>

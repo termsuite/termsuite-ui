@@ -410,6 +410,9 @@ public class PipelinePart {
 			);
 
 		
+		// The preprocessing cache
+		Button reuseCache = toolkit.createButton(runClient, "Reuse NLP preprocessings (spotted terms) if they are in cache ", SWT.CHECK);
+
 		
 		// The run link
 	    Composite composite = new Composite(runClient, SWT.NONE);
@@ -426,7 +429,10 @@ public class PipelinePart {
 			public void widgetSelected(SelectionEvent e) {
 				Map<String, Object> parameters = ImmutableMap.of(
 						TermSuiteUI.COMMAND_RUN_PIPELINE_PARAMETER_PIPELINE_ID, 
-						pipelineValue.getValue().getName());
+						pipelineValue.getValue().getName(),
+						TermSuiteUI.COMMAND_RUN_PIPELINE_PARAMETER_USE_CACHE,
+						Boolean.toString(reuseCache.getSelection())
+						);
 				ParameterizedCommand command = context.get(ECommandService.class).createCommand(
 						TermSuiteUI.COMMAND_RUN_PIPELINE_ID, 
 						parameters);
