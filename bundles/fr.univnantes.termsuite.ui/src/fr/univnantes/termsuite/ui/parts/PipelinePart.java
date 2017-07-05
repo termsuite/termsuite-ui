@@ -273,16 +273,6 @@ public class PipelinePart {
 
 		
 		/*
-		 * Term filtering
-		 */
-		Composite filterClient = createSection(
-				toolkit, 
-				form, 
-				"Term filtering", 
-				"Select how the extracted terminology is filtered to fit your needs.");		
-		
-		
-		/*
 		 * Semantic variant detection
 		 */
 		Composite semanticClient = createSection(
