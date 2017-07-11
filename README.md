@@ -3,7 +3,6 @@
 
 # Developer instructions for `termsuite-ui`
 
-[![Build Status](https://travis-ci.org/termsuite/termsuite-ui.svg?branch=develop)](https://travis-ci.org/termsuite/termsuite-ui)
 
 ## Requirements
 
