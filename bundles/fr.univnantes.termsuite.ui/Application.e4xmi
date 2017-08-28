@@ -162,9 +162,9 @@
         <children xsi:type="menu:DynamicMenuContribution" xmi:id="_CsVtoO9uEeW_3q2PUR_c0Q" elementId="fr.univnantes.termsuite.ui.menu.terminology.align.dynamicmenucontribution" label="Align" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.menu.AlignMenuContribution"/>
       </children>
     </menus>
-    <menus xmi:id="_dIvgwFgOEeeKTPPWqFeA1g" elementId="fr.univnantes.termsuite.ui.menu.TerminologyViewMenu" label="Terminology view menu">
+    <menus xmi:id="_dIvgwFgOEeeKTPPWqFeA1g" elementId="fr.univnantes.termsuite.ui.menu.TerminologyViewMenu" label="Terminology view menu" iconURI="">
       <tags>ViewMenu</tags>
-      <children xsi:type="menu:HandledMenuItem" xmi:id="_haGBMFgOEeeKTPPWqFeA1g" elementId="fr.univnantes.termsuite.ui.handledmenuitem.SelectTerminologyProperties" tooltip="" command="_iwOtsFgOEeeKTPPWqFeA1g"/>
+      <children xsi:type="menu:HandledMenuItem" xmi:id="_haGBMFgOEeeKTPPWqFeA1g" elementId="fr.univnantes.termsuite.ui.handledmenuitem.SelectTerminologyProperties" label="Select columns..." tooltip="" command="_iwOtsFgOEeeKTPPWqFeA1g"/>
       <children xsi:type="menu:MenuSeparator" xmi:id="_phKTEFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.menuseparator.9"/>
       <children xsi:type="menu:HandledMenuItem" xmi:id="_qguSoFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.handledmenuitem.filterterminology" label="Filter terminology..." command="_wgn_kFs8EeeMfu0KRwv50A"/>
       <children xsi:type="menu:MenuSeparator" xmi:id="_jpHhoFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.menuseparator.8"/>
