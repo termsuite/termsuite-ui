@@ -30,6 +30,8 @@ import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -46,6 +48,7 @@ import fr.univnantes.termsuite.index.Terminology;
 import fr.univnantes.termsuite.model.IndexedCorpus;
 import fr.univnantes.termsuite.model.Property;
 import fr.univnantes.termsuite.model.RelationProperty;
+import fr.univnantes.termsuite.model.Term;
 import fr.univnantes.termsuite.model.TermProperty;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
@@ -254,7 +257,6 @@ public class TerminologyPart implements TreePart {
 					 * http://www.programcreek.com/java-api-examples/index.php?api=org.eclipse.jface.viewers.TreeViewerColumn
 					 */
 					updateSortingProperty(property);
-					viewer.refresh();
 				}
 			});
 		}
@@ -274,6 +276,22 @@ public class TerminologyPart implements TreePart {
 		}
 		viewerConfig.setSortingPropertyName(sortingProperty.getJsonField());
 		viewerConfig.setSortingAsc(!desc);
+		if(property instanceof TermProperty) {
+			TermProperty tp = (TermProperty)property;
+			viewer.setComparator(new ViewerComparator() {
+				@Override
+				public int compare(Viewer viewer, Object e1, Object e2) {
+					if(e1 instanceof TermService 
+							&& e2 instanceof TermService) {
+						Term t1 = ((TermService)e1).getTerm();
+						Term t2 = ((TermService)e2).getTerm();
+						return desc ? tp.compare(t2, t1) : tp.compare(t1, t2);
+					} else 
+						return 0;
+				}
+			});
+		} 
+
 
 	}
 	private void createFilterHeader(Composite infoContainer) {
