@@ -137,6 +137,7 @@
   <handlers xmi:id="_A-xNAFs9EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.handler.FilterTerminologyHandler" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.FilterTerminologyHandler" command="_wgn_kFs8EeeMfu0KRwv50A"/>
   <handlers xmi:id="_F_0FAFs9EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.handler.ExportToTSV" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.ExportToTsvHandler" command="_6STVAFs8EeeMfu0KRwv50A"/>
   <handlers xmi:id="_MS8P8Fs9EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.handler.ExportToTBX" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.ExportToTbxHandler" command="_-AQ0gFs8EeeMfu0KRwv50A"/>
+  <handlers xmi:id="_4nxQMIvsEee7EsZZ3K68ow" elementId="fr.univnantes.termsuite.ui.handler.ExportToJSON" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.ExportToJsonHandler" command="_1LbsMIvsEee7EsZZ3K68ow"/>
   <bindingTables xmi:id="_ZZiw8FITEeWJrZq1Fp2XFA" elementId="fr.univnantes.termsuite.ui.bindingtable.0" bindingContext="_aq_KsFITEeWJrZq1Fp2XFA">
     <bindings xmi:id="_0uye4J_zEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.keybinding.save" keySequence="M1+S" command="_GQqeAEyhEeWINr2AFtxMwQ">
       <tags>type:user</tags>
@@ -169,6 +170,7 @@
       <children xsi:type="menu:MenuSeparator" xmi:id="_jpHhoFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.menuseparator.8"/>
       <children xsi:type="menu:HandledMenuItem" xmi:id="_kKYboFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.handledmenuitem.exporttotsv" label="Export to TSV..." command="_6STVAFs8EeeMfu0KRwv50A"/>
       <children xsi:type="menu:HandledMenuItem" xmi:id="_m7JTEFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.handledmenuitem.exporttotbx" label="Export to TBX..." command="_-AQ0gFs8EeeMfu0KRwv50A"/>
+      <children xsi:type="menu:HandledMenuItem" xmi:id="_ybNAQIvsEee7EsZZ3K68ow" elementId="fr.univnantes.termsuite.ui.handledmenuitem.exporttotbx" label="Export to JSON..." command="_1LbsMIvsEee7EsZZ3K68ow"/>
     </menus>
     <toolbar xmi:id="_mMEEMKASEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.toolbar.4">
       <children xsi:type="menu:HandledToolItem" xmi:id="_-DsRcOX_EeWuJP7LFnU52Q" elementId="fr.univnantes.termsuite.ui.handledtoolitem.TerminoCollapseAll" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/collapseall.png" command="_BXGjQOIsEeWihJy1yCPB5A"/>
@@ -207,6 +209,7 @@
   <commands xmi:id="_wgn_kFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.command.filterterminology" commandName="Filter Terminology"/>
   <commands xmi:id="_6STVAFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.command.exporttotsv" commandName="Export To TSV" description="Export terminology to TSV"/>
   <commands xmi:id="_-AQ0gFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.command.exporttotbx" commandName="Export to TBX" description="Export terminology to TBX"/>
+  <commands xmi:id="_1LbsMIvsEee7EsZZ3K68ow" elementId="fr.univnantes.termsuite.ui.command.exporttojson" commandName="Export to JSON" description="Export terminology to JSON"/>
   <addons xmi:id="_jupbsUwBEeWIWrXS0l4jxg" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_jupbskwBEeWIWrXS0l4jxg" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_jupbs0wBEeWIWrXS0l4jxg" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
