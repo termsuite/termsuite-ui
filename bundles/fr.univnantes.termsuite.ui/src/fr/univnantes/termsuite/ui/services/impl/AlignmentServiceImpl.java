@@ -72,7 +72,9 @@ public class AlignmentServiceImpl implements AlignmentService {
 
 		String dictionaryDirectory = preferences.get(TermSuiteUIPreferences.BILINGUAL_DICTIONARY_DIRECTORY, null);
 		
-		dictionaries = findDictionaries(Paths.get(dictionaryDirectory));
+		dictionaries = dictionaryDirectory == null ? 
+				Lists.newArrayList() : 
+					findDictionaries(Paths.get(dictionaryDirectory));
 			
 		for(EBilingualDictionary dico:dictionaries) {
 			sourceDictionaries.put(dico.getSourceLang(), dico);
