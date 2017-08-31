@@ -16,7 +16,8 @@ public class StringToDoubleConverter extends Converter {
 	    	return StringConverter.asDouble(fromObject.toString());
 	    } else if (fromObject instanceof Double) {
 	    	return StringConverter.asString((Double)fromObject);
-	    }
+	    } else if(fromObject == null)
+	    	return null;
 	    throw new IllegalArgumentException(fromObject.getClass() + " type cannot be converted by " + getClass());
 	} 
 }

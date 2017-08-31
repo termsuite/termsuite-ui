@@ -1,5 +1,9 @@
 package fr.univnantes.termsuite.ui.parts;
 
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -26,9 +30,12 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.google.common.collect.Lists;
 
-import eu.project.ttc.models.Component;
-import eu.project.ttc.models.Term;
-import eu.project.ttc.models.TermVariation;
+import fr.univnantes.termsuite.framework.service.RelationService;
+import fr.univnantes.termsuite.framework.service.TermService;
+import fr.univnantes.termsuite.model.Component;
+import fr.univnantes.termsuite.model.Relation;
+import fr.univnantes.termsuite.model.RelationType;
+import fr.univnantes.termsuite.model.Term;
 import fr.univnantes.termsuite.ui.TermOccurrenceContainer;
 import fr.univnantes.termsuite.ui.util.CustomTreeNode;
 import fr.univnantes.termsuite.ui.util.CustomTreeNodeManager;
@@ -55,6 +62,11 @@ public class TermOutlinePart {
 		public boolean isDirect() {
 			return direct;
 		}
+		
+		private static Object[] fromObjects(boolean direct, Collection<?> objects) {
+			return fromObjects(direct, objects.toArray());
+		}
+
 		private static Object[] fromObjects(boolean direct, Object... objects) {
 			List<DirectionalObject> list = Lists.newArrayList();
 			for(Object o:objects)
@@ -91,7 +103,7 @@ public class TermOutlinePart {
 
 	
 	@Inject
-	void updateTerm(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) Term scoredTerm) {
+	void updateTerm(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) TermService scoredTerm) {
 		if(viewer != null && scoredTerm != null)
 			viewer.setInput(scoredTerm);
 	}
@@ -109,7 +121,7 @@ public class TermOutlinePart {
 		viewer.setContentProvider( 
 				new ITreeContentProvider() {
 
-					private Term scoredTerm;
+					private TermService scoredTerm;
 					
 					@Override
 					public void dispose() {
@@ -120,12 +132,12 @@ public class TermOutlinePart {
 					@Override
 					public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 						nodeManager.clear();
-						this.scoredTerm = (Term) newInput;
+						this.scoredTerm = (TermService) newInput;
 					}
 
 					@Override
 					public Object[] getElements(Object inputElement) {
-						Term term = (Term) inputElement;
+						TermService term = (TermService) inputElement;
 						List<Object> children = Lists.newArrayList();
 						children.add(new Feature("Key", term.getGroupingKey(), true));
 						children.add(new Feature("Rank", term.getRank()));
@@ -152,11 +164,10 @@ public class TermOutlinePart {
 						
 						children.add(nodeManager.get(term, THE_FORMS_NODE));
 						
-						if(!term.getVariations().isEmpty())
+						if(term.outboundRelations(RelationType.VARIATION).findAny().isPresent())
 							children.add(nodeManager.get(term, THE_VARIANT_NODE));
 
-						
-						if(!term.getBases().isEmpty())
+						if(term.inboundRelations(RelationType.VARIATION).findAny().isPresent())
 							children.add(nodeManager.get(term, THE_VARIATION_BASE_NODE));
 						
 						return children.toArray();
@@ -169,13 +180,13 @@ public class TermOutlinePart {
 							if(node.getNodeType() == THE_FORMS_NODE) {
 								return TermOccurrenceUtil.toTermForms(scoredTerm.getOccurrences()).toArray();
 							} else if(node.getNodeType() == THE_VARIANT_NODE) {
-								return DirectionalObject.fromObjects(true, scoredTerm.getVariations());
+								return DirectionalObject.fromObjects(true, scoredTerm.outboundRelations(RelationType.VARIATION).collect(toList()));
 							} else if(node.getNodeType() == THE_VARIATION_BASE_NODE) {
-								return DirectionalObject.fromObjects(false, scoredTerm.getBases());
+								return DirectionalObject.fromObjects(false, scoredTerm.inboundRelations(RelationType.VARIATION).collect(toList()));
 							} else if(node.getNodeType() == THE_EXTENSION_NODE) {
-								return scoredTerm.getExtensions().toArray();
+								return scoredTerm.extensions().toArray();
 							} else if(node.getNodeType() == THE_EXTENSION_BASE_NODE) {
-								return scoredTerm.getExtensionBases().toArray();
+								return scoredTerm.extensionBases().toArray();
 							} else if(node.getNodeType() == THE_COMPOSITION_NODE) {
 								return scoredTerm.getWords().get(0).getWord().getComponents().toArray();
 
@@ -204,7 +215,6 @@ public class TermOutlinePart {
 						}
 						return false;
 					}
-					
 				}
 		);
 		
@@ -219,7 +229,7 @@ public class TermOutlinePart {
 				if(element instanceof CustomTreeNode) {
 					CustomTreeNode node = (CustomTreeNode)element;
 					if(node.getNodeType() == THE_FORMS_NODE) {
-					List<TermOccurrenceContainer<String>> termForms = TermOccurrenceUtil.toTermForms(((Term)node.getParent()).getOccurrences());
+					List<TermOccurrenceContainer<String>> termForms = TermOccurrenceUtil.toTermForms(((TermService)node.getParent()).getOccurrences());
 					cell.setText(String.format(
 							"Forms (%d)", 
 							termForms.size()
@@ -248,12 +258,10 @@ public class TermOutlinePart {
 					cell.setText(t.getPilot());
 				} else if (element instanceof DirectionalObject) {
 					DirectionalObject o = (DirectionalObject)element;
-					if(element instanceof TermVariation) {
-						TermVariation tv = (TermVariation)o.getObject();
-						cell.setText((o.isDirect() ? tv.getVariant(): tv.getBase()).getPilot());
-					} else if(element instanceof TermVariation) {
-						TermVariation tv = (TermVariation)o.getObject();
-						cell.setText((o.isDirect() ? tv.getVariant(): tv.getBase()).getPilot());
+					Object object = o.getObject();
+					if(object instanceof Relation) {
+						Relation tv = (Relation)object;
+						cell.setText((o.isDirect() ? tv.getTo(): tv.getFrom()).getPilot());
 					}	
 				} 			
 			}
@@ -266,7 +274,7 @@ public class TermOutlinePart {
 			@Override
 			public void update(ViewerCell cell) {
 				Object element = cell.getElement();
-				Term sourceTerm = (Term)viewer.getInput();
+				TermService sourceTerm = (TermService)viewer.getInput();
 				if(element instanceof TermOccurrenceContainer) {
 					cell.setText(((TermOccurrenceContainer<?>)element).getFrequency().toString());
 				} else if(element instanceof Feature) {
@@ -279,22 +287,19 @@ public class TermOutlinePart {
 					cell.setText(sourceTerm.getWords().get(0).getWord().getLemma().substring(c.getBegin(), c.getEnd()));
 				} else if (element instanceof DirectionalObject) {
 					DirectionalObject o = (DirectionalObject)element;
-					if(element instanceof TermVariation) {
-						TermVariation sv = (TermVariation)o.getObject();
-						cell.setText(sv.getLabel());
-					} else if(element instanceof TermVariation) {
-						TermVariation tv = (TermVariation)o.getObject();
-						cell.setText(tv.getLabel());
-					} else if(element instanceof Term) {
-						Term t = (Term)o.getObject();
+					if(element instanceof RelationService) {
+						RelationService sv = (RelationService)o.getObject();
+						cell.setText(sv.getVariationRules().stream().collect(joining(", ")));
+					} else if(element instanceof TermService) {
+						TermService t = (TermService)o.getObject();
 						cell.setText(t.getPattern());
 					}	
 				} 						
 			}
 		});
 		
-		if(selectionService.getSelection() instanceof Term)
-			updateTerm((Term)selectionService.getSelection());
+		if(selectionService.getSelection() instanceof TermService)
+			updateTerm((TermService)selectionService.getSelection());
 	
 		viewer.addDoubleClickListener(new ExpandCollapseDoubleClickListener(viewer));
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {

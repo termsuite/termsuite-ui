@@ -27,7 +27,7 @@ public class TermsuiteImg {
 	public static final String FOLDER_TERMINO = "icons/fldr_termino.png";
 	public static final String FOLDER_DOCUMENT = "icons/fldr_document.png";
 	public static final String FILE = "icons/file_obj.png";
-	public static final String RUN = "icons/run.png";
+	public static final String RUN = "icons/run_exc.png";
 	public static final String TERM_FORM = "icons/default_co.png";
 	public static final String OCCURRENCE = "icons/public_co.png";
 	protected static final String SEARCHM_OBJECT = "icons/searchm_obj.png";

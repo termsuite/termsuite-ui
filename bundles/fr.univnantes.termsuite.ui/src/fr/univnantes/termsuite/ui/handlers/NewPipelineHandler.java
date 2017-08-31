@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import fr.univnantes.termsuite.ui.dialogs.NewPipelineDialog;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
-import fr.univnantes.termsuite.ui.services.PipelineService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.util.CommandUtil;
 
@@ -32,7 +31,6 @@ public class NewPipelineHandler {
 	public void execute(EPartService partService, 
 			@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
 			EModelService modelService,
-			PipelineService pipelineService,
 			ResourceService resourceService,
 			ECommandService commandService,
 			EHandlerService handlerService,
@@ -40,13 +38,13 @@ public class NewPipelineHandler {
 			IEclipseContext context,
 			MApplication mApplication) {
 		
-		NewPipelineDialog dialog = new NewPipelineDialog(shell, pipelineService);
+		NewPipelineDialog dialog = new NewPipelineDialog(shell, resourceService);
 		if(dialog.open() == Dialog.OK) {
 			
 			String filename = dialog.getFilename();
 			EPipeline pipeline;
 			try {
-				pipeline = pipelineService.createPipeline(filename);
+				pipeline = resourceService.createPipeline(filename);
 				ParameterizedCommand command = commandService.createCommand(
 						OpenObjectHandler.COMMAND_ID, 
 						CommandUtil.params(OpenObjectHandler.PARAM_INPUT_OBJECT_ID, resourceService.getResourceId(pipeline)));

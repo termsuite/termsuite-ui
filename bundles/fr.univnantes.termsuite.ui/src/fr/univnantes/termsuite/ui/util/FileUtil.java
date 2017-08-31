@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Scanner;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.io.ByteStreams;
 
@@ -40,5 +41,17 @@ public class FileUtil {
 	public static String getFilename(String path) {
 		List<String> list = Splitter.on(File.separator).splitToList(path);
 		return list.get(list.size() - 1);
+	}
+
+	public static long folderSize(File directory) {
+		Preconditions.checkArgument(directory.isDirectory());
+	    long length = 0;
+	    for (File file : directory.listFiles()) {
+	        if (file.isFile())
+	            length += file.length();
+	        else
+	            length += folderSize(file);
+	    }
+	    return length;		
 	}
 }

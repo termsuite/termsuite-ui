@@ -15,11 +15,13 @@ import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.Focus;
-import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -44,17 +46,18 @@ import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.handlers.OpenObjectHandler;
+import fr.univnantes.termsuite.ui.model.LinguisticResource;
+import fr.univnantes.termsuite.ui.model.LinguisticResourceSet;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EResource;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.services.CorpusService;
 import fr.univnantes.termsuite.ui.services.LinguisticResourcesService;
-import fr.univnantes.termsuite.ui.services.PipelineService;
+import fr.univnantes.termsuite.ui.services.NLPService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.util.CommandUtil;
 import fr.univnantes.termsuite.ui.util.CustomTreeNode;
@@ -69,7 +72,7 @@ public class NavigatorPart implements TreePart {
 
 	public static final String ID = "fr.univnantes.termsuite.ui.part.navigator";
 	public static final String POPUP_MENU_ID = "fr.univnantes.termsuite.ui.popupmenu.navigator";
-
+	
 	private static final int NODE_PIPELINES = 2;
 	private static final int NODE_CORPORA = 3;
 	private static final int NODE_FOLDER_TERMINO = 4;
@@ -106,7 +109,10 @@ public class NavigatorPart implements TreePart {
 	private CorpusService corpusService;
 
 	@Inject
-	private PipelineService pipelineService;
+	private ResourceService resourceService;
+
+	@Inject
+	private NLPService nlpService;
 
 	@Inject
 	private LinguisticResourcesService lingueeService;
@@ -125,8 +131,6 @@ public class NavigatorPart implements TreePart {
 			final ESelectionService selectionService,
 			EMenuService menuService,
 			IEventBroker eventBroker,
-			MPart part,
-			final ResourceService resourceService,
 			final EHandlerService handlerService,
 			final ECommandService commandService) {
 		
@@ -137,13 +141,14 @@ public class NavigatorPart implements TreePart {
 						NavigatorPart.this.viewer.refresh();
 					}
 				};
-		pipelineService.getPipelineList().eAdapters().add(refresher);
-		corpusService.getCorporaList().eAdapters().add(refresher);
+		resourceService.getPipelineList().eAdapters().add(refresher);
+		resourceService.getCorporaList().eAdapters().add(refresher);
 		
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.setInput(getRootNodes());
+		viewer.expandToLevel(2);
 		IDoubleClickListener doubleClickHandler = new IDoubleClickListener() {
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
@@ -159,11 +164,12 @@ public class NavigatorPart implements TreePart {
 					if(handlerService.canExecute(command))
 						handlerService.executeHandler(command);
 					
-				} else if(sel instanceof ELinguisticResource) {
-					ELinguisticResource res = (ELinguisticResource)sel;
+				} else if(sel instanceof LinguisticResource) {
 					ParameterizedCommand command = commandService.createCommand(
 							OpenObjectHandler.COMMAND_ID, 
-							CommandUtil.params(OpenObjectHandler.PARAM_INPUT_OBJECT_PATH, res.getPath()));
+							CommandUtil.params(
+									OpenObjectHandler.PARAM_LINGUISTIC_RESOURCE,  
+									lingueeService.getResourceAsString((LinguisticResource) sel)));
 					if(handlerService.canExecute(command))
 						handlerService.executeHandler(command);
 
@@ -177,7 +183,8 @@ public class NavigatorPart implements TreePart {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-				selectionService.setSelection(selection.getFirstElement());
+				Object firstElement = selection.getFirstElement();
+				selectionService.setSelection(firstElement);
 			}
 		});
 
@@ -187,8 +194,12 @@ public class NavigatorPart implements TreePart {
 //				viewer.setInput(new Object[]{CustomNode.CORPORA, CustomNode.PIPELINES});
 				viewer.refresh();
 				Object data = event.getProperty(IEventBroker.DATA);
-				if(event.getTopic().equals(TermSuiteEvents.NEW_TERMINOLOGY) && data instanceof ETerminology)
+				try {
 					viewer.reveal(data);
+					viewer.expandToLevel(data, 1);
+				} catch(Exception e) {
+					
+				}
 			}
 		};
 		eventBroker.subscribe(TermSuiteEvents.NEW_PIPELINE, updateHandler);
@@ -196,10 +207,21 @@ public class NavigatorPart implements TreePart {
 		eventBroker.subscribe(TermSuiteEvents.PIPELINE_REMOVED, updateHandler);
 		eventBroker.subscribe(TermSuiteEvents.TERMINOLOGY_REMOVED, updateHandler);
 		eventBroker.subscribe(TermSuiteEvents.CORPUS_REMOVED, updateHandler);
+		eventBroker.subscribe(TermSuiteEvents.CORPUS_CREATED, updateHandler);
 
 		menuService.registerContextMenu(viewer.getControl(), POPUP_MENU_ID);
 		
 		revealTerminologies();
+	}
+	
+	@Inject @Optional
+	private void init(@UIEventTopic(TermSuiteEvents.OBJECT_RENAMED) EObject object) {
+		viewer.refresh(object);
+	}
+
+	@Inject @Optional
+	private void init(@UIEventTopic(TermSuiteEvents.NEW_TERMINOLOGY) ETerminology terminology) {
+		viewer.reveal(terminology);
 	}
 
 	private Object[] getRootNodes() {
@@ -232,7 +254,7 @@ public class NavigatorPart implements TreePart {
 
 
 	public void revealTerminologies() {
-		for(ECorpus corpus:corpusService.getCorporaList().getCorpora())
+		for(ECorpus corpus:resourceService.getCorporaList().getCorpora())
 			for(ESingleLanguageCorpus slc:corpus.getSingleLanguageCorpora())
 				for(ETerminology termino:slc.getTerminologies())
 					viewer.reveal(termino);
@@ -256,19 +278,29 @@ public class NavigatorPart implements TreePart {
 			if(parentElement instanceof CustomTreeNode) {
 				CustomTreeNode node = (CustomTreeNode)parentElement;
 				if(node.getNodeType() == NODE_CORPORA)
-					return corpusService.getCorporaList().getCorpora().toArray();
+					return resourceService.getCorporaList().getCorpora().toArray();
 				else if (node.getNodeType() == NODE_PIPELINES)
-					return pipelineService.getPipelineList().getPipelines().toArray();
+					return resourceService.getPipelineList().getPipelines().toArray();
 				else if (node.getNodeType() == NODE_FOLDER_TERMINO) {
 					ESingleLanguageCorpus c = (ESingleLanguageCorpus)node.getParent();
-					return c.getTerminologies().toArray();
+					EList<ETerminology> terminologies = c
+							.getTerminologies();
+					Object[] array = terminologies
+							.stream()
+							.filter(t -> {
+								File f = resourceService.getWorkspacePath(t).toFile();
+								return f.exists() && f.length() > 0;
+							})
+							.toArray();
+					return array;
 				} else if (node.getNodeType() == NODE_FOLDER_DOCUMENT) {
 					ESingleLanguageCorpus c = (ESingleLanguageCorpus)node.getParent();
-					List<EDocument> documents = Lists.newArrayList(c.getDocuments());
+					List<EDocument> documents = Lists.newArrayList(corpusService.getDocuments(c));
 					Collections.sort(documents, TermSuiteUI.DOCUMENT_COMPARATOR);
 					return documents.toArray();
 				} else if (node.getNodeType() == NODE_RESOURCES) {
-					Collection<ELinguisticResourceSet> linguisticResourceSets = lingueeService.getLinguisticResourceSets();
+					Collection<LinguisticResourceSet> linguisticResourceSets = lingueeService.getResourceSets();
+							
 					if(linguisticResourceSets.isEmpty())
 						return new MsgNode[]{new MsgNode(
 								node, 
@@ -276,14 +308,14 @@ public class NavigatorPart implements TreePart {
 					else
 						return linguisticResourceSets.toArray();
 				}
-			} else if (parentElement instanceof ELinguisticResourceSet) {
-				ELinguisticResourceSet resSet = (ELinguisticResourceSet)parentElement;
-				return resSet.getResources().toArray();
+			} else if (parentElement instanceof LinguisticResourceSet) {
+				LinguisticResourceSet resourceSet = (LinguisticResourceSet)parentElement;
+				return resourceSet.getResources().toArray();
 			} else if (parentElement instanceof ECorpus) {
 				ECorpus c = (ECorpus) parentElement;
 				List<ESingleLanguageCorpus> slcList = Lists.newArrayList();
 				for(ESingleLanguageCorpus slc:c.getSingleLanguageCorpora())
-					if(corpusService.isLanguageSupported(slc.getLanguage()))
+					if(nlpService.isLanguageSupported(slc.getLanguage()))
 						slcList.add(slc);
 				return slcList.toArray();
 			} else if (parentElement instanceof ESingleLanguageCorpus) {
@@ -291,7 +323,7 @@ public class NavigatorPart implements TreePart {
 				List<Object> children = Lists.newArrayList();
 				if(!c.getTerminologies().isEmpty())
 					children.add(nodeManager.get(c, NODE_FOLDER_TERMINO));
-				if(!c.getDocuments().isEmpty())
+				if(!corpusService.getDocuments(c).isEmpty())
 					children.add(nodeManager.get(c, NODE_FOLDER_DOCUMENT));
 				return children.toArray();
 			}
@@ -313,9 +345,9 @@ public class NavigatorPart implements TreePart {
 			} else if (element instanceof ESingleLanguageCorpus) {
 				ESingleLanguageCorpus c = (ESingleLanguageCorpus) element;
 				return c.getCorpus();
-			} else if (element instanceof ELinguisticResource) {
-				return ((ELinguisticResource)element).getResourceSet();
-			} else if (element instanceof ELinguisticResourceSet) {
+			} else if (element instanceof LinguisticResource) {
+				return ((LinguisticResource)element).getResourceSet();
+			} else if (element instanceof LinguisticResourceSet) {
 				return THE_RESOURCE_NODE;
 			} else if (element instanceof ECorpus) {
 				return THE_CORPORA_NODE;
@@ -336,21 +368,21 @@ public class NavigatorPart implements TreePart {
 			if(element instanceof CustomTreeNode) {
 				CustomTreeNode node = (CustomTreeNode)element;
 				if(node.getNodeType() == NODE_CORPORA)
-					return !corpusService.getCorporaList().getCorpora().isEmpty();
+					return !resourceService.getCorporaList().getCorpora().isEmpty();
 				else if (node.getNodeType() == NODE_RESOURCES)
 					return true;
 				else if (node.getNodeType() == NODE_PIPELINES)
-					return !pipelineService.getPipelineList().getPipelines().isEmpty();
+					return !resourceService.getPipelineList().getPipelines().isEmpty();
 				else if (node.getNodeType() == NODE_FOLDER_TERMINO) {
 					ESingleLanguageCorpus c = (ESingleLanguageCorpus)node.getParent();
 					return !c.getTerminologies().isEmpty();
 				} else if (node.getNodeType() == NODE_FOLDER_DOCUMENT) {
 						ESingleLanguageCorpus c = (ESingleLanguageCorpus)node.getParent();
-						return !c.getDocuments().isEmpty();
+						return !corpusService.getDocuments(c).isEmpty();
 				}
 			} else if(element instanceof ECorpus)
 				return true;
-			else if (element instanceof ELinguisticResourceSet) 
+			else if (element instanceof LinguisticResourceSet) 
 				return true;
 			else if(element instanceof ESingleLanguageCorpus)
 				return true;
@@ -384,13 +416,14 @@ public class NavigatorPart implements TreePart {
 			} else if (element instanceof MsgNode) {
 				MsgNode msgNode = (MsgNode)element;
 				text.append(msgNode.getMsg(), StyledString.COUNTER_STYLER);
-			} else if (cell.getElement() instanceof ELinguisticResourceSet) {
-				ELinguisticResourceSet resSet = (ELinguisticResourceSet) element;
-				text.append(resSet.getLanguage().getName());
-				cell.setImage(img.getFlag(resSet.getLanguage()));
-			} else if (cell.getElement() instanceof ELinguisticResource) {
-				ELinguisticResource res = (ELinguisticResource) element;
-				text.append(FileUtil.getFilename(res.getPath()));
+			} else if (cell.getElement() instanceof LinguisticResourceSet) {
+				LinguisticResourceSet resSet = (LinguisticResourceSet) element;
+				text.append(resSet.getLang().getName());
+				cell.setImage(img.getFlag(resSet.getLang()));
+			} else if (cell.getElement() instanceof LinguisticResource) {
+				LinguisticResource res = (LinguisticResource) element;
+				ELang lang = res.getResourceSet().getLang();
+				text.append(FileUtil.getFilename(res.getResourceType().getPath(LangUtil.getTermsuiteLang(lang))));
 				cell.setImage(img.get(TermsuiteImg.FILE));
 			} else if (cell.getElement() instanceof File) {
 				File file = (File) element;
@@ -423,7 +456,7 @@ public class NavigatorPart implements TreePart {
 				cell.setImage(img.get(TermsuiteImg.TERMINOLOGY));
 			} else if (element instanceof EPipeline) {
 				EPipeline p = (EPipeline) cell.getElement();
-				text.append(Files.getNameWithoutExtension(p.getTargetTerminologyName()));
+				text.append(Files.getNameWithoutExtension(p.getName()));
 				cell.setImage(img.get(TermsuiteImg.PIPELINE));
 			} else if (cell.getElement() instanceof ECorpus) {
 				ECorpus c = (ECorpus) cell.getElement();
@@ -432,7 +465,7 @@ public class NavigatorPart implements TreePart {
 			} else if (cell.getElement() instanceof ESingleLanguageCorpus) {
 				ESingleLanguageCorpus c = (ESingleLanguageCorpus) cell.getElement();
 				text.append(LangUtil.getTermsuiteLang(c.getLanguage()).getNameUC());
-				text.append(" (" + c.getDocuments().size() + ") ", StyledString.COUNTER_STYLER);
+				text.append(" (" + corpusService.getDocuments(c).size() + ") ", StyledString.COUNTER_STYLER);
 				cell.setImage(img.getFlag(c.getLanguage()));
 			}
 			cell.setText(text.toString());

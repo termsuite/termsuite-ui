@@ -1,6 +1,7 @@
 package fr.univnantes.termsuite.ui.util.jface;
 
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.jface.resource.DataFormatException;
 import org.eclipse.jface.resource.StringConverter;
 
 public class StringToIntegerConverter extends Converter {
@@ -13,10 +14,15 @@ public class StringToIntegerConverter extends Converter {
 	  @Override
 	  public Object convert(Object fromObject) {
 	    if (fromObject instanceof String) {
-	    	return StringConverter.asInt(fromObject.toString());
+	    	try {
+	    		return StringConverter.asInt(fromObject.toString());
+	    	} catch(DataFormatException e) {
+	    		
+	    	}
 	    } else if (fromObject instanceof Integer) {
 	    	return StringConverter.asString((Integer)fromObject);
-	    }
+	    } else if(fromObject == null)
+	    	return null;
 	    throw new IllegalArgumentException(fromObject.getClass() + " type cannot be converted by " + getClass());
 	} 
 }

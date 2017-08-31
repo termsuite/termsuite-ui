@@ -1,7 +1,6 @@
 package fr.univnantes.termsuite.ui.util;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -20,6 +19,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import fr.univnantes.termsuite.api.TermSuiteException;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
 
 public class WorkspaceUtil {
@@ -38,17 +38,20 @@ public class WorkspaceUtil {
 	 * 			the file extension
 	 * @throws IOException
 	 */
-	public static void saveResource(EObject emfObject, String workspaceDir, String fileBaseName, String fileExtension)
-			throws IOException {
-		// Obtain a new resource set
-		ResourceSet resSet = new ResourceSetImpl();
+	public static void saveResource(EObject emfObject, String workspaceDir, String fileBaseName, String fileExtension) {
 
 		Path p = Paths.get(
 				Platform.getLocation().toString(), 
 				workspaceDir,  
 				fileBaseName + "." + fileExtension);
+		saveResource(emfObject, p);
+	}
+
+	public static void saveResource(EObject emfObject, Path path) {
+		// Obtain a new resource set
+		ResourceSet resSet = new ResourceSetImpl();
 		Resource resource = resSet
-				.createResource(URI.createFileURI(p.toString()));
+				.createResource(URI.createFileURI(path.toString()));
 		// Get the first model element and cast it to the right type, in my
 		// example everything is hierarchical included in this first node
 		
@@ -60,7 +63,11 @@ public class WorkspaceUtil {
 		// now save the content.
 		Map<String, Object> options = Maps.newHashMap();
 //		options.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, false);
-		resource.save(options);
+		try {
+			resource.save(options);
+		} catch (IOException e) {
+			throw new TermSuiteException("Could not save resource " + emfObject.getClass().getSimpleName(), e);
+		}
 	}
 	
 	/**
@@ -78,7 +85,6 @@ public class WorkspaceUtil {
 		p.toFile().delete();
 	}
 	
-
 	public static URL getWorkspaceURL() {
 		return Platform.getInstanceLocation().getURL();
 	}
@@ -87,8 +93,7 @@ public class WorkspaceUtil {
 		try {
 			return Paths.get(getWorkspaceURL().toURI());
 		} catch (URISyntaxException e) {
-			e.printStackTrace();
-			return null;
+			throw new TermSuiteException(e);
 		}
 	}
 
@@ -108,15 +113,10 @@ public class WorkspaceUtil {
 		
 		File pDir = Paths.get(Platform.getLocation().toString(), dir).toFile();
 		if(pDir.exists()) {
-			File[] pFiles = pDir.listFiles(new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String name) {
-					return name.endsWith("." + extension);
-				}
-			});
+			File[] pFiles = pDir.listFiles((directory, name) ->  name.endsWith("." + extension));
 			for(File f:pFiles) {
-				Resource resource = resSet.getResource(URI
-						.createFileURI(f.getAbsolutePath()), true);
+				URI uri = URI.createFileURI(f.getAbsolutePath());
+				Resource resource = resSet.getResource(uri, true);
 				// Get the first model element and cast it to the right type, in my
 				// example everything is hierarchical included in this first node
 				T pip = cls.cast(resource.getContents().get(0));

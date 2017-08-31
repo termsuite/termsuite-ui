@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ComparisonChain;
 
-import eu.project.ttc.models.TermOccurrence;
+import fr.univnantes.termsuite.model.TermOccurrence;
 
 public class TermOccurrenceContainer<T> implements Comparable<TermOccurrenceContainer<T>>{
 	private T container;

@@ -16,15 +16,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import fr.univnantes.termsuite.ui.services.PipelineService;
+import fr.univnantes.termsuite.ui.services.ResourceService;
 
 public class NewPipelineDialog extends TitleAreaDialog {
 
-	PipelineService pipelineService;
+	ResourceService resourceService;
 	
-	public NewPipelineDialog(Shell parentShell, PipelineService pipelineService) {
+	public NewPipelineDialog(Shell parentShell, ResourceService pipelineService) {
 		super(parentShell);
-		this.pipelineService = pipelineService;
+		this.resourceService = pipelineService;
 	}
 	
 	@Override
@@ -47,7 +47,7 @@ public class NewPipelineDialog extends TitleAreaDialog {
 	private final Pattern startsWithChar = Pattern.compile("[a-zA-Z](\\w|-)*");
 	public void validate(Object value) {
 		if (value != null && startsWithChar.matcher(value.toString()).matches()) {
-			if(pipelineService.canCreatePipeline(value.toString())) {
+			if(resourceService.canCreatePipeline(value.toString())) {
 				setMessage("Ok", IMessageProvider.NONE);
 				getButton(IDialogConstants.OK_ID).setEnabled(true);
 			} else {

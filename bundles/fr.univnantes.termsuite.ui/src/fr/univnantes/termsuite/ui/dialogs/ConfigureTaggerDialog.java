@@ -102,10 +102,14 @@ public class ConfigureTaggerDialog extends TitleAreaDialog {
 		languageLabel.setVisible(isValid);
 	}
 	
+	private DataBindingContext dbc;
+	private BrowseDirText taggerPath;
+	private ComboViewer taggerComboViewer;
+	
 	@Override
 	protected Control createDialogArea(final Composite parent) {
 	    Composite container = (Composite) super.createDialogArea(parent);
-	    DataBindingContext dbc = new DataBindingContext();
+	    dbc = new DataBindingContext();
 	    FormToolkit toolkit = new FormToolkit(container.getDisplay());
 	    form = toolkit.createScrolledForm(container);
 	    GridDataFactory.fillDefaults().grab(true, true).applyTo(container);
@@ -159,7 +163,7 @@ public class ConfigureTaggerDialog extends TitleAreaDialog {
 	    GridLayoutFactory.fillDefaults().margins(10,  10).numColumns(2).applyTo(configureSectionClient);
 	    // Tagger type
 		toolkit.createLabel(configureSectionClient, "3rd party tagger:");
-		ComboViewer taggerComboViewer = new ComboViewer(configureSectionClient, SWT.DROP_DOWN);
+		taggerComboViewer = new ComboViewer(configureSectionClient, SWT.DROP_DOWN);
 //		toolkit.adapt(taggerComboViewer.getControl(), true, true);
 		taggerComboViewer.setContentProvider(ArrayContentProvider.getInstance());
 		taggerComboViewer.setLabelProvider(new LabelProvider() {
@@ -169,21 +173,13 @@ public class ConfigureTaggerDialog extends TitleAreaDialog {
 		  };
 		});
 		taggerComboViewer.setInput(ETagger.VALUES);
-		dbc.bindValue(
-				ViewerProperties.singleSelection().observe(taggerComboViewer), 
-				EMFProperties.value(TermsuiteuiPackage.Literals.ETAGGER_CONFIG__TAGGER_TYPE).observe(this.taggerConfig));
-
+	
 	    // Tagger path
 		toolkit.createLabel(configureSectionClient, "Path to tagger's installation directory:");
-		BrowseDirText taggerPath = new BrowseDirText(configureSectionClient, SWT.NONE);
+		taggerPath = new BrowseDirText(configureSectionClient, SWT.NONE);
 		toolkit.adapt(taggerPath, true, true);
 
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(taggerPath);
-		dbc.bindValue(
-				new BrowseDirText.TextValueProperty().observe(taggerPath), 
-				EMFProperties.value(TermsuiteuiPackage.Literals.ETAGGER_CONFIG__PATH).observe(this.taggerConfig));
-
-	    
 		
 
 		Composite errorSectionClient = toolkit.createComposite(errorSection);
@@ -212,11 +208,24 @@ public class ConfigureTaggerDialog extends TitleAreaDialog {
 		});
 		toolkit.adapt(languageViewer.getControl(), true, true);
 		
-		dbc.updateTargets();
-		updateTaggerName();
 		return form.getBody();
 	}
 	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		super.createButtonsForButtonBar(parent);
+		dbc.bindValue(
+				ViewerProperties.singleSelection().observe(taggerComboViewer), 
+				EMFProperties.value(TermsuiteuiPackage.Literals.ETAGGER_CONFIG__TAGGER_TYPE).observe(this.taggerConfig));
+		dbc.bindValue(
+				new BrowseDirText.TextValueProperty().observe(taggerPath), 
+				EMFProperties.value(TermsuiteuiPackage.Literals.ETAGGER_CONFIG__PATH).observe(this.taggerConfig));
+
+		dbc.updateTargets();
+		updateTaggerName();
+	}
 	public ETaggerConfig getTaggerConfig() {
 		return taggerConfig;
 	}

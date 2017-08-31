@@ -1,17 +1,14 @@
 package fr.univnantes.termsuite.ui.parts;
 
-import java.util.Collections;
-import java.util.EventObject;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -21,48 +18,62 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
+import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.TreeColumnLayout;
+import org.eclipse.jface.viewers.ColumnLayoutData;
+import org.eclipse.jface.viewers.ColumnPixelData;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventHandler;
+import org.eclipse.swt.widgets.TreeColumn;
 
-import com.google.common.collect.Lists;
-
-import eu.project.ttc.models.Term;
-import eu.project.ttc.models.TermIndex;
-import eu.project.ttc.models.TermVariation;
+import fr.univnantes.termsuite.framework.service.RelationService;
+import fr.univnantes.termsuite.framework.service.TermService;
+import fr.univnantes.termsuite.framework.service.TerminologyService;
+import fr.univnantes.termsuite.index.Terminology;
+import fr.univnantes.termsuite.model.IndexedCorpus;
+import fr.univnantes.termsuite.model.Property;
+import fr.univnantes.termsuite.model.RelationProperty;
+import fr.univnantes.termsuite.model.Term;
+import fr.univnantes.termsuite.model.TermProperty;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
-import fr.univnantes.termsuite.ui.UITermProperty;
 import fr.univnantes.termsuite.ui.controls.DelayableText;
-import fr.univnantes.termsuite.ui.controls.DelayedModificationListener;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminoViewerConfig;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
-import fr.univnantes.termsuite.ui.services.TermIndexService;
+import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
+import fr.univnantes.termsuite.ui.services.ETerminologyService;
 import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
+import fr.univnantes.termsuite.ui.util.BrokerUtil;
+import fr.univnantes.termsuite.ui.util.PropertyUtil;
+import fr.univnantes.termsuite.ui.util.TermFilter;
+import fr.univnantes.termsuite.ui.util.VariationFilter;
 import fr.univnantes.termsuite.ui.util.treeviewer.TreePart;
-import fr.univnantes.termsuite.ui.viewers.TermIndexViewer;
 import fr.univnantes.termsuite.ui.viewers.TermLabelProvider;
+import fr.univnantes.termsuite.ui.viewers.TermSelectionListener;
+import fr.univnantes.termsuite.ui.viewers.TerminologyViewer;
 
 public class TerminologyPart implements TreePart {
 	
 	public static final String ID = "fr.univnantes.termsuite.ui.partdescriptor.terminology";
 	public static final String POPUP_MENU_ID = "fr.univnantes.termsuite.ui.popupmenu.terminology";
 
-	private TermIndexViewer viewer;
+	private TerminologyViewer viewer;
 	private ETerminoViewerConfig viewerConfig;
 
 	@Inject
@@ -72,7 +83,10 @@ public class TerminologyPart implements TreePart {
 	private IEventBroker eventBroker; 
 
 	@Inject 
-	private TermIndexService termIndexService;
+	private EMenuService menuService;
+	
+	@Inject 
+	private ETerminologyService eTerminologyService;
 	
 	@Inject
 	TermSuiteSelectionService termSuiteSelectionService;
@@ -80,77 +94,160 @@ public class TerminologyPart implements TreePart {
 	@Inject
 	private UISynchronize sync;
 
-	private Composite parent;
-
+	private DelayableText numOfTermsToShow;
+	private TreeColumnLayout layout;
+	private Label totalDisplayedTerms;
+	private DelayableText searchText;
+	
 	@PostConstruct
 	public void createControls(final IEclipseContext context, 
 			final ESelectionService selectionService,
 			final EMenuService menuService,
 			final EPartService partService,
 			final Composite parent, MPart part) {
-		this.parent = parent;
-		parent.setLayout(new GridLayout(2, false));
+		parent.setLayout(new GridLayout(7, false));
 
-		viewerConfig = TermsuiteuiFactory.eINSTANCE.createETerminoViewerConfig();
+		viewerConfig = createDefaultViewerConfig();
+		context.set(ETerminoViewerConfig.class, viewerConfig);
+		this.eventBroker.subscribe(
+				TermSuiteEvents.SEARCH_TEXT_MODIFIED, 
+				event -> viewerConfig.setSearchString((String)event.getProperty(IEventBroker.DATA))
+			);
+		viewerConfig.eAdapters().add(new AdapterImpl(){
+			@Override
+			public void notifyChanged(Notification msg) {
+				super.notifyChanged(msg);
+				if(msg.getFeatureID(ETerminoViewerConfig.class) == TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SELECTED_PROPERTY_NAMES) {
+					switch(msg.getEventType()) {
+					case Notification.REMOVE:
+						Property<?> removedProperty = PropertyUtil.forName(msg.getOldStringValue());
+						for(TreeColumn column:viewer.getTree().getColumns()) {
+							if(column.getData().equals(removedProperty))
+								column.dispose();
+						}
+						break;
+					case Notification.ADD:
+						createColumn(PropertyUtil.forName(msg.getNewStringValue()));
+					}
+					viewer.getControl().getParent().layout();
+				}
+			}
+		});
 
+		
 		// populate headers
-	    populateInfoContainer(parent);
+	    createFilterHeader(parent);
 	    
 		// populate viewer
-		this.viewer = new TermIndexViewer(viewerConfig, parent, SWT.SINGLE| SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
-		GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(viewer.getControl());
+	    Composite container = new Composite(parent, SWT.None);
+	    GridDataFactory.fillDefaults().span(7, 1).grab(true, true).applyTo(container);
+		createViewer(container);
 		
-		subscribe(context, termIndexService, parent);
+		viewer.getNbTermsDisplayed().addChangeListener(e -> {
+			ETerminology eTerminology = context.get(ETerminology.class);
+			totalDisplayedTerms.setText(getTotalText(
+					viewer.getNbTermsDisplayed().getValue(),
+					eTerminologyService.readTerminology(eTerminology).getTerminology().getTerms().size()));
+		});
+		viewer.addSelectionChangedListener(e -> {
+			IStructuredSelection selection = (IStructuredSelection)e.getSelection();
+			if(!selection.isEmpty()) {
+				Object el = selection.getFirstElement();
+				if(el instanceof TermService) {
+					selectionService.setSelection(el);
+					termSuiteSelectionService.setActiveTerm((TermService)el);
+				} if(el instanceof RelationService) {
+					selectionService.setSelection(((RelationService)el).getTo());
+					termSuiteSelectionService.setActiveTerm(((RelationService)el).getTo());
+				}
+			}
+		});
+	}
+
+	private String getTotalText(int nbDisplay, int nbTotal) {
+		return String.format(
+				"%d - Number of terms in terminology: %d", 
+				nbDisplay, 
+				nbTotal);
+	}
+	
+	private void createViewer(Composite container) {
 		
-		addColumn(UITermProperty.TERM_RANK, 50);
-		addColumn(UITermProperty.TERM_PILOT, 300);
-		addColumn(UITermProperty.TERM_PATTERN, 100);
-		addColumn(UITermProperty.SPECIFICITY, 60);
-		addColumn(UITermProperty.FREQUENCY, 60);
-		addColumn(UITermProperty.DOCUMENT_FREQUENCY, 60);
-		addColumn(UITermProperty.VARIATION_RULE, 100);
+		layout = new TreeColumnLayout(true);
+		container.setLayout(layout);
+		this.viewer = new TerminologyViewer(viewerConfig, container, SWT.SINGLE| SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		GridDataFactory.fillDefaults().span(4, 1).grab(true, true).applyTo(viewer.getControl());
+        
+		for(String pName:viewerConfig.getSelectedPropertyNames()) 
+			createColumn(PropertyUtil.forName(pName));
+		viewerConfig.eAdapters().add(new AdapterImpl(){
+			@Override
+			public void notifyChanged(Notification msg) {
+				if(msg.getFeatureID(ETerminoViewerConfig.class) == TermsuiteuiPackage.ETERMINO_VIEWER_CONFIG__SEARCH_STRING
+					&& msg.getNewValue() != null && !msg.getNewValue().toString().isEmpty())
+					/*
+					 * This is a non empty search string filter. Expand all nodes
+					 * in order to make selected variant appear.
+					 */
+					viewer.expandToLevel(2);
+
+			}
+		});
 		
-		  // attach a selection listener to our jface viewer
-		  viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-		    public void selectionChanged(SelectionChangedEvent event) {
-		      IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-		      // set the selection to the service
-		      if(selection.size() == 1) {
-		    	  Object sel = selection.getFirstElement();
-		    	  Term t;
-		    	  if(sel instanceof TermVariation)
-		    		  t = ((TermVariation)sel).getVariant();
-		    	  else if(sel instanceof Term)
-		    		  t = (Term)sel;
-		    	  else
-		    		  throw new IllegalStateException();
-		    	  selectionService.setSelection(t);
-		    	  termSuiteSelectionService.setActiveTerm(t);
-		    	  MPart outlinePart = partService.findPart(TermOutlinePart.ID);
-		    	  if(outlinePart != null)
-		    		  partService.bringToTop(outlinePart);
-		      }
-		    }
-		  });
+		// attach a selection listener to our jface viewer
+		TermSelectionListener listener = ContextInjectionFactory.make(TermSelectionListener.class, context);
+		viewer.addSelectionChangedListener(listener);
 		  
 		menuService.registerContextMenu(viewer.getControl(), POPUP_MENU_ID);
+	}
 
+	private ColumnLayoutData getRecommendedSize(Property<?> property) {
+		if(property == TermProperty.PILOT || property == TermProperty.GROUPING_KEY ) 
+			return new ColumnWeightData(100, 100, true);
+		else if(property == RelationProperty.VARIATION_RULES) 
+			return new ColumnPixelData(100, true, true);
+		else if(property.getRange().equals(Boolean.class)) 
+			return new ColumnPixelData(40, true, true);
+		else if(property.getRange().equals(String.class)) 
+			return new ColumnPixelData(70, true, true);
+		else
+			return new ColumnPixelData(50,true, true);
+	}
+
+	private ETerminoViewerConfig createDefaultViewerConfig() {
+		ETerminoViewerConfig viewerConfig = TermsuiteuiFactory.eINSTANCE.createETerminoViewerConfig();
+		viewerConfig.setSortingPropertyName(TermProperty.RANK.getJsonField());
+		viewerConfig.setSortingAsc(true);
+		viewerConfig.setSearchString("");
+		viewerConfig.setNbDisplayedTerms(100);
+		viewerConfig.getSelectedPropertyNames().add(TermProperty.RANK.getPropertyName());
+		viewerConfig.getSelectedPropertyNames().add(TermProperty.PILOT.getPropertyName());
+		viewerConfig.getSelectedPropertyNames().add(TermProperty.PATTERN.getPropertyName());
+		viewerConfig.getSelectedPropertyNames().add(TermProperty.SPECIFICITY.getPropertyName());
+		viewerConfig.getSelectedPropertyNames().add(TermProperty.FREQUENCY.getPropertyName());
+		viewerConfig.getSelectedPropertyNames().add(TermProperty.DOCUMENT_FREQUENCY.getPropertyName());
+		viewerConfig.getSelectedPropertyNames().add(RelationProperty.VARIATION_RULES.getPropertyName());
+		return viewerConfig;
 	}
 
 
-
+	public ETerminoViewerConfig getViewerConfig() {
+		return viewerConfig;
+	}
+	
 	/*
 	 * Good link for TreeViewerColumn applications :
 	 * 
 	 * http://www.programcreek.com/java-api-examples/index.php?api=org.eclipse.jface.viewers.TreeViewerColumn
 	 */
-	private void addColumn(final UITermProperty property, int width) {
+	private TreeViewerColumn createColumn(final Property<?> property) {
 		TreeViewerColumn column1 = new TreeViewerColumn(viewer, property.getRange().equals(String.class) ? SWT.LEFT : SWT.RIGHT);
 		column1.setLabelProvider(new DelegatingStyledCellLabelProvider(new TermLabelProvider(property, viewerConfig)));
-		column1.getColumn().setWidth(width);
-		column1.getColumn().setText(property.getLabel());
-		column1.getColumn().setToolTipText(property.getTooltip());
-		if(property.isNumber()) {
+		column1.getColumn().setMoveable(true);
+		column1.getColumn().setData(property);
+		column1.getColumn().setText(property.getPropertyName());
+		column1.getColumn().setToolTipText(String.format("%s%n%s", property.getPropertyName(), property.getDescription()));
+		if(property instanceof TermProperty && property.isNumeric()) {
 			column1.getColumn().addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -160,149 +257,162 @@ public class TerminologyPart implements TreePart {
 					 * http://www.programcreek.com/java-api-examples/index.php?api=org.eclipse.jface.viewers.TreeViewerColumn
 					 */
 					updateSortingProperty(property);
-					setSortedInput();
 				}
-
-
 			});
 		}
+		layout.setColumnData(column1.getColumn(), getRecommendedSize(property));
+		return column1;
 	}
 
-	private UITermProperty sortingProperty = UITermProperty.TERM_RANK;
+	private Property<?> sortingProperty = TermProperty.RANK;
 	boolean desc = false;
 	
-	private void updateSortingProperty(UITermProperty property) {
+	private void updateSortingProperty(Property<?> property) {
 		if(sortingProperty == property) 
 			this.desc = !desc;
 		else {
 			this.sortingProperty = property;
 			this.desc = true;
 		}
+		viewerConfig.setSortingPropertyName(sortingProperty.getJsonField());
+		viewerConfig.setSortingAsc(!desc);
+		if(property instanceof TermProperty) {
+			TermProperty tp = (TermProperty)property;
+			viewer.setComparator(new ViewerComparator() {
+				@Override
+				public int compare(Viewer viewer, Object e1, Object e2) {
+					if(e1 instanceof TermService 
+							&& e2 instanceof TermService) {
+						Term t1 = ((TermService)e1).getTerm();
+						Term t2 = ((TermService)e2).getTerm();
+						return desc ? tp.compare(t2, t1) : tp.compare(t1, t2);
+					} else 
+						return 0;
+				}
+			});
+		} 
+
+
 	}
-	
-	private TermIndex termIndex = null;
-
-	private void setSortedInput() {
-		List<Term> sortedTerms = Lists.newArrayList(termIndex.getTerms());
-		Collections.sort(sortedTerms, sortingProperty.getTermProperty().getComparator(desc));
-		this.viewer.setInput(sortedTerms);
-	}
-
-
-	private DelayableText numOfTermsToShow;
-	private Label numOfTermsBeforeFiltering;
-	
-	
-	private void populateInfoContainer(Composite infoContainer) {
-		
-		// The total number of terms label
-		new Label(infoContainer, SWT.NONE).setText("Number of terms in termino (before filtering): ");
-		numOfTermsBeforeFiltering = new Label(infoContainer, SWT.NONE);
-		GridDataFactory.fillDefaults().applyTo(numOfTermsBeforeFiltering);
-		
-		// horizontal line
-	    Label separator = new Label(infoContainer, SWT.HORIZONTAL | SWT.SEPARATOR);
-	    GridDataFactory.fillDefaults().span(2,1).applyTo(separator);
-		
-	    
-		// The search filter
-		new Label(infoContainer, SWT.NONE).setText("Search pattern: ");
-		final DelayableText searchText = new DelayableText(1000, infoContainer, SWT.SEARCH | SWT.ICON_SEARCH | SWT.CANCEL | SWT.BORDER);
-		searchText.setMessage("Search");
-		GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).applyTo(searchText);
-		searchText.addDelayedModificationListener(new DelayedModificationListener() {
-			@Override
-			public void modifyText(final EventObject e) {
-				sync.asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						viewerConfig.setSearchString((String)((DelayableText)e.getSource()).getText());
-					}
-				});
-			}
-		});
-
-		
-		
+	private void createFilterHeader(Composite infoContainer) {
 		// maxNumOfterm filter
-		new Label(infoContainer, SWT.NONE).setText("How many terms to show: ");
+	    Label label = new Label(infoContainer, SWT.NONE);
+	    label.setText("Showing");
+		GridDataFactory.fillDefaults().grab(false, false).applyTo(label);
 		numOfTermsToShow = new DelayableText(500, infoContainer, SWT.NONE);
 		numOfTermsToShow.setText(Integer.toString(viewerConfig.getNbDisplayedTerms()));
-		GridDataFactory.fillDefaults().applyTo(numOfTermsToShow);
-		numOfTermsToShow.addDelayedModificationListener(new DelayedModificationListener() {
+		GridDataFactory.fillDefaults().hint(50, SWT.DEFAULT).grab(false, false).applyTo(numOfTermsToShow);
+		numOfTermsToShow.addDelayedModificationListener(e -> {
+			sync.asyncExec(() -> {
+				try {
+					int maxTerms = Integer.parseInt(((DelayableText)e.getSource()).getText());
+					viewerConfig.setNbDisplayedTerms(maxTerms);
+				} catch(NumberFormatException nfe) {}
+			});
+		});
+		label = new Label(infoContainer, SWT.NONE);
+	    label.setText("terms on ");
+		GridDataFactory.fillDefaults().grab(false, false).applyTo(label);
+		totalDisplayedTerms = new Label(infoContainer, SWT.NONE);
+		totalDisplayedTerms.setText(getTotalText(100000,100000));
+		GridDataFactory.fillDefaults().grab(false, false).applyTo(totalDisplayedTerms);
+		Button clearButton = new Button(infoContainer, SWT.PUSH);
+		clearButton.setImage(TermSuiteUI.getImg(TermSuiteUI.IMG_CLEAR_CO).createImage());
+		clearButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void modifyText(final EventObject e) {
-				sync.asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							int maxTerms = Integer.parseInt(((DelayableText)e.getSource()).getText());
-							viewerConfig.setNbDisplayedTerms(maxTerms);
-						} catch(NumberFormatException e) {}
-					}
-				});
-				
+			public void widgetSelected(SelectionEvent e) {
+				clearFilters(null);
 			}
 		});
+		
+		// The search filter
+		Label searchLabel = new Label(infoContainer, SWT.NONE);
+	    searchLabel.setText("Search:");
+		GridDataFactory.fillDefaults().grab(false, false).applyTo(searchLabel);
+		searchText = new DelayableText(1000, infoContainer, SWT.SEARCH | SWT.ICON_SEARCH | SWT.CANCEL | SWT.BORDER);
+		searchText.setMessage("Search");
+		GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).grab(true, false).applyTo(searchText);
+		searchText.addDelayedModificationListener(e -> 
+				sync.asyncExec(() -> 
+					viewerConfig.setSearchString((String)((DelayableText)e.getSource()).getText()))
+			);
+	}
+	
+	
+	@Inject @Optional
+	private void clearFilters(@UIEventTopic(TermSuiteEvents.TERMINO_FILTER_CLEARED) Object nullValue) {
+		viewer.setFilters(null, null);
+		searchText.setText("");
+	}
+	
+	@Inject @Optional
+	private void clearFilters(@UIEventTopic(TermSuiteEvents.TERMINOLOGY_MODIFIED) ETerminology terminology, ETerminologyService eTerminologyService) {
+		if(context.get(ETerminology.class).equals(terminology)) 
+			viewer.refresh();
+	}
+
+
+
+	@Inject @Optional
+	private void filterVariations(@UIEventTopic(TermSuiteEvents.NEW_VARIATION_FILTER) Map<Class<?>, Object> params) {
+		// Make sure the filter was set for this editor's terminology
+		if(Objects.equals(
+				BrokerUtil.get(params, ETerminology.class),
+				context.get(ETerminology.class))) {
+			viewer.setFilters(null, BrokerUtil.get(params, VariationFilter.class));
+			viewer.expandToLevel(2);
+		}
 	}
 
 	@Inject @Optional
-	private void init(@UIEventTopic(TermSuiteEvents.EDITOR_INITIATED) Object part) {
+	private void filterTerms(@UIEventTopic(TermSuiteEvents.NEW_TERM_FILTER) Map<Class<?>, Object> params) {
+		// Make sure the filter was set for this editor's terminology
+		if(Objects.equals(
+				BrokerUtil.get(params, ETerminology.class),
+				context.get(ETerminology.class))) {
+			viewer.setFilters(BrokerUtil.get(params, TermFilter.class), null);
+			viewer.expandToLevel(1);
+		}
+	}
+
+
+	@Inject @Optional
+	private void init(@UIEventTopic(TermSuiteEvents.EDITOR_INITIATED) Object part, MPart mPart) {
 		if(this == part) {
 			ETerminology terminology = (ETerminology)context.get(TermSuiteUI.INPUT_OBJECT);
-			try {
-				if(terminology != null) {
-					final TermIndex termIndex = termIndexService.getTermIndex(terminology);
-					Job job = new Job("Open terminology") {
-
-						@Override
-						protected IStatus run(IProgressMonitor monitor) {
-							sync.asyncExec(new Runnable() {
-								@Override
-								public void run() {
-									numOfTermsBeforeFiltering.setText(Integer.toString(termIndex.getTerms().size()));
-									TerminologyPart.this.termIndex = termIndex;
-									TerminologyPart.this.setSortedInput();
-								}
-							});
-							return Status.OK_STATUS;
-						}
-						
-					};
-					job.schedule();
-
-				} else
-					MessageDialog.openError(parent.getShell(), 
-							"Could not open Terminology",
-							"No termino found in context.");
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-				MessageDialog.openError(parent.getShell(), "Could not open Terminology", e.getMessage());
-			}
+			terminology.eAdapters().add(new EContentAdapter() {
+				public void notifyChanged(Notification notification) {
+					super.notifyChanged(notification);
+					if(notification.getFeature().equals(TermsuiteuiPackage.eINSTANCE.getETerminology_Name())) {
+						mPart.setLabel(toPartLabel(terminology));
+					} else {
+						// set dirty
+//						dirty.setDirty(true);
+					}
+				}
+			});
+			final IndexedCorpus indexedCorpus = eTerminologyService.readTerminology(terminology);
+			context.set(IndexedCorpus.class, indexedCorpus);
+			context.set(Terminology.class, indexedCorpus.getTerminology());
+			final TerminologyService terminologyService = eTerminologyService.getTerminologyService(terminology);
+			context.set(TerminologyService.class, terminologyService);
+			Job job = Job.create("Open terminology", monitor -> {
+				sync.asyncExec(() -> viewer.setInput(terminologyService));
+				return Status.OK_STATUS;
+			});
+			job.schedule();
 		}
-
 	}
-
-	private void subscribe(final IEclipseContext context, final TermIndexService termIndexService,
-			final Composite parent) {
-		this.eventBroker.subscribe(TermSuiteEvents.SEARCH_TEXT_MODIFIED, new EventHandler(){
-			@Override
-			public void handleEvent(Event event) {
-				viewerConfig.setSearchString((String)event.getProperty(IEventBroker.DATA));
-			}
-		});
-
-//		this.eventBroker.subscribe(TermSuiteEvents.EDITOR_INITIATED, new EventHandler(){
-//			@Override
-//			public void handleEvent(Event event) {
-//			}
-//		});
-	}
-
-
-
+	
 	@Override
 	public TreeViewer getTreeViewer() {
 		return this.viewer;
+	}
+
+	public static  String toPartLabel(ETerminology termino) {
+		return String.format("%s/%s/%s", 
+				termino.getCorpus().getCorpus().getName(), 
+				termino.getCorpus().getLanguage().getName().toLowerCase(), 
+				termino.getName());
 	}
 }

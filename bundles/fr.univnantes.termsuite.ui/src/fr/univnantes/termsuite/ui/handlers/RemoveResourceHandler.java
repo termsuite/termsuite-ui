@@ -16,9 +16,7 @@ import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ECorpus;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
-import fr.univnantes.termsuite.ui.services.CorpusService;
-import fr.univnantes.termsuite.ui.services.PipelineService;
-import fr.univnantes.termsuite.ui.services.TerminoService;
+import fr.univnantes.termsuite.ui.services.ResourceService;
 
 public class RemoveResourceHandler {
 
@@ -26,9 +24,9 @@ public class RemoveResourceHandler {
 	public static final String ID = "fr.univnantes.termsuite.ui.handler.RemoveResource";
 
 	@Execute
-	public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell, CorpusService corpusService,
-			TerminoService terminoService,
-			PipelineService pipelineService, ESelectionService selectionService, EPartService partService) {
+	public void execute(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell, 
+			ResourceService resourceService, 
+			ESelectionService selectionService, EPartService partService) {
 		Object s = selectionService.getSelection();
 
 		boolean ok = MessageDialog.openConfirm(shell, "Confirmation", String.format(
@@ -36,11 +34,11 @@ public class RemoveResourceHandler {
 
 		if (ok) {
 			if (s instanceof EPipeline) {
-				pipelineService.remove((EPipeline) s);
+				resourceService.remove((EPipeline) s);
 			} else if (s instanceof ECorpus) {
-				corpusService.removeCorpus((ECorpus) s);
+				resourceService.removeCorpus((ECorpus) s);
 			} else if (s instanceof ETerminology) {
-				terminoService.removeTerminology((ETerminology) s);
+				resourceService.removeTerminology((ETerminology) s);
 			}
 
 			for (MPart p : partService.getParts()) {
@@ -75,7 +73,7 @@ public class RemoveResourceHandler {
 
 	private String getResourceName(Object s) {
 		if (s instanceof EPipeline) {
-			return ((EPipeline) s).getFilename();
+			return ((EPipeline) s).getName();
 		} else if (s instanceof ECorpus) {
 			return ((ECorpus) s).getName();
 		} else if (s instanceof ETerminology) {

@@ -3,8 +3,8 @@ package fr.univnantes.termsuite.ui.services;
 import java.util.Collection;
 import java.util.List;
 
-import eu.project.ttc.engines.BilingualAligner.TranslationCandidate;
-import eu.project.ttc.models.Term;
+import fr.univnantes.termsuite.alignment.TranslationCandidate;
+import fr.univnantes.termsuite.framework.service.TermService;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EBilingualDictionary;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
@@ -65,7 +65,7 @@ public interface AlignmentService {
 	
 	/**
 	 * Reads the input directory for bilingual dictionaries from 
-	 * the {@link TermSuiteUIPreferences#DICTIONARY_DIRECTORY} preference
+	 * the {@link TermSuiteUIPreferences#BILINGUAL_DICTIONARY_DIRECTORY} preference
 	 * value and reload all dictionaries from that directory.
 	 * 
 	 */
@@ -80,7 +80,7 @@ public interface AlignmentService {
 	 * @return
 	 * 		The dico if exists, <code>null</code> otherwise
 	 */
-	public EBilingualDictionary getDictionary(ELang source, ELang target);
+	public EBilingualDictionary getSynonymDictionary(ELang source, ELang target);
 
 	
 	/**
@@ -90,5 +90,5 @@ public interface AlignmentService {
 	 * @param targetTerminology
 	 * @return
 	 */
-	public List<TranslationCandidate> align(Term term, ETerminology sourceTerminology, ETerminology targetTerminology);
+	public List<TranslationCandidate> align(TermService term, ETerminology sourceTerminology, ETerminology targetTerminology);
 }

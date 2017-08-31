@@ -1,36 +1,31 @@
 package fr.univnantes.termsuite.ui.services;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 
-import org.osgi.framework.Bundle;
-
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResource;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ELinguisticResourceSet;
+import fr.univnantes.termsuite.api.ResourceConfig;
+import fr.univnantes.termsuite.ui.model.LinguisticResource;
+import fr.univnantes.termsuite.ui.model.LinguisticResourceSet;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
+import fr.univnantes.termsuite.uima.ResourceType;
 
 public interface LinguisticResourcesService {
 	
-	/**
-	 * Loads all the resource sets from a given path into memory.
-	 * 
-	 * @return
-	 */
-	public Collection<ELinguisticResourceSet> getLinguisticResourceSets();
+	public Collection<ResourceType> getEditableResources();
 	
+	public boolean areCustomResourcesActivated();
+
+	public Path getCustomResourceDirectoryPath();
+
+	public ResourceConfig getResourceConfig(ELang lang);
+
+	public List<LinguisticResourceSet> getResourceSets();
+
+	public File asFile(LinguisticResource r, boolean createIfAbsent);
+
+	public LinguisticResource getResourceFromString(String linguisticResourceString);
 	
-	/**
-	 * Gets a resource by path.
-	 */
-	public ELinguisticResource getResource(String path);
-	
-
-	/**
-	 * 
-	 * Returns the plugin of the active 
-	 * linguistic resources sets.
-	 * 
-	 * @return
-	 */
-	public Bundle getLinguisticResourceBundle();
-
-
+	public String getResourceAsString(LinguisticResource linguisticResource);
 }

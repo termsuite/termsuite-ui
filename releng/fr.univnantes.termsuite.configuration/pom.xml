@@ -7,15 +7,15 @@
   <packaging>pom</packaging>
 
   <properties>
-    <tycho.version>0.24.0</tycho.version>
+    <tycho.version>0.26.0</tycho.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
-    <mars-repo.url>http://download.eclipse.org/releases/mars</mars-repo.url>
+ 	<neon-repo.url>http://download.eclipse.org/releases/neon</neon-repo.url>
   </properties>
 
   <repositories>
     <repository>
-      <id>mars</id>
-      <url>${mars-repo.url}</url>
+      <id>neon</id>
+      <url>${neon-repo.url}</url>
       <layout>p2</layout>
     </repository>
 
@@ -23,6 +23,15 @@
 
   <build>
     <plugins>
+    <!--  
+    
+    TODO: develop and use a maven plugin for generating ecore classes
+    from a genmodel. Currently, generated classes are put to version control...
+    
+    See emf tools api: http://download.eclipse.org/modeling/emf/emf/javadoc/2.6.0/org/eclipse/emf/codegen/ecore/generator/Generator.html
+    
+    
+    -->
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-maven-plugin</artifactId>
@@ -30,6 +39,11 @@
         <extensions>true</extensions>
       </plugin>
 
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-versions-plugin</artifactId>
+          <version>${tycho.version}</version>
+        </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
@@ -46,17 +60,7 @@
             <environment>
               <os>linux</os>
               <ws>gtk</ws>
-              <arch>x86</arch>
-            </environment>
-            <environment>
-              <os>linux</os>
-              <ws>gtk</ws>
               <arch>x86_64</arch>
-            </environment>
-            <environment>
-              <os>win32</os>
-              <ws>win32</ws>
-              <arch>x86</arch>
             </environment>
             <environment>
               <os>win32</os>

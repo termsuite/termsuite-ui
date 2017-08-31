@@ -4,21 +4,21 @@ import javax.inject.Inject;
 
 import org.eclipse.e4.core.services.events.IEventBroker;
 
-import eu.project.ttc.models.Term;
-import eu.project.ttc.models.TermOccurrence;
+import fr.univnantes.termsuite.framework.service.TermService;
+import fr.univnantes.termsuite.model.TermOccurrence;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
 
 public class TermSuiteSelectionServiceImpl implements TermSuiteSelectionService {
 
 	@Inject
-	IEventBroker eventBroker;
+	private IEventBroker eventBroker;
 	
-	private Term activeTerm = null;
+	private TermService activeTerm = null;
 	private TermOccurrence activeTermOccurrence = null;
 	
 	@Override
-	public void setActiveTerm(Term term) {
+	public void setActiveTerm(TermService term) {
 		this.activeTerm = term;
 		eventBroker.post(TermSuiteEvents.ACTIVE_TERM, term);
 
@@ -36,7 +36,7 @@ public class TermSuiteSelectionServiceImpl implements TermSuiteSelectionService 
 	}
 
 	@Override
-	public Term getActiveTerm() {
+	public TermService getActiveTerm() {
 		return this.activeTerm;
 	}
 

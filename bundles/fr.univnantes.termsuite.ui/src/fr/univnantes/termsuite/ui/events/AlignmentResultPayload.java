@@ -2,17 +2,17 @@ package fr.univnantes.termsuite.ui.events;
 
 import java.util.List;
 
-import eu.project.ttc.engines.BilingualAligner.TranslationCandidate;
-import eu.project.ttc.models.Term;
+import fr.univnantes.termsuite.alignment.TranslationCandidate;
+import fr.univnantes.termsuite.framework.service.TermService;
 
 public class AlignmentResultPayload {
-	private Term term;
+	private TermService term;
 	private List<TranslationCandidate> translationCandidates;
 	
-	public Term getTerm() {
+	public TermService getTerm() {
 		return term;
 	}
-	public void setTerm(Term term) {
+	public void setTerm(TermService term) {
 		this.term = term;
 	}
 	public List<TranslationCandidate> getTranslationCandidates() {

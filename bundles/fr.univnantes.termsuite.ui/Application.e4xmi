@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_jupbsEwBEeWIWrXS0l4jxg" elementId="fr.univnantes.termsuite.ui.application">
+<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmlns:ui="http://www.eclipse.org/ui/2010/UIModel/application/ui" xmi:id="_jupbsEwBEeWIWrXS0l4jxg" elementId="fr.univnantes.termsuite.ui.application">
   <children xsi:type="basic:TrimmedWindow" xmi:id="_n3DbgEwBEeWIWrXS0l4jxg" elementId="fr.univnantes.termsuite.ui.trimmedwindow.termsuite" selectedElement="_VeZMsEwCEeWIWrXS0l4jxg" label="Term Suite" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/termsuite.png">
     <tags>shellMaximized</tags>
     <children xsi:type="advanced:PerspectiveStack" xmi:id="_VeZMsEwCEeWIWrXS0l4jxg" elementId="fr.univnantes.termsuite.ui.perspectivestack.0" selectedElement="_VzqSEEwCEeWIWrXS0l4jxg">
@@ -13,7 +13,14 @@
                 <children xsi:type="menu:HandledMenuItem" xmi:id="_0kr18MmbEeWMTIcqIQJn_g" elementId="fr.univnantes.termsuite.ui.handledmenuitem.newpipeline" label="New pipeline..." tooltip="Creates a new pipeline" command="_paaRwFE9EeWJlbJYl3DYnQ"/>
                 <children xsi:type="menu:HandledMenuItem" xmi:id="_t0OOwMmbEeWMTIcqIQJn_g" elementId="fr.univnantes.termsuite.ui.handledmenuitem.importcorpus" label="Import corpus..." tooltip="Imports a new corpus to TermSuite" command="_hzlTgE19EeWpcYFej9JPeQ"/>
                 <children xsi:type="menu:MenuSeparator" xmi:id="__ZomQMmbEeWMTIcqIQJn_g" elementId="fr.univnantes.termsuite.ui.menuseparator.6"/>
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_oHCGIFZUEeejQOQ2nExhjw" elementId="fr.univnantes.termsuite.ui.handledmenuitem.rename" label="Rename..." tooltip="Rename the selected resource" command="_VYHv8FZUEeejQOQ2nExhjw">
+                  <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_svNLIFZUEeejQOQ2nExhjw" coreExpressionId="fr.univnantes.termsuite.ui.renameableresource"/>
+                </children>
                 <children xsi:type="menu:HandledMenuItem" xmi:id="_KpHNgEy4EeWINr2AFtxMwQ" elementId="fr.univnantes.termsuite.ui.handledmenuitem.remove" label="Remove" command="_RUf-4EyhEeWINr2AFtxMwQ"/>
+                <children xsi:type="menu:MenuSeparator" xmi:id="_k2_RsFZUEeejQOQ2nExhjw" elementId="fr.univnantes.termsuite.ui.menuseparator.2"/>
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_xNHI0FWvEeefSMCel-Yjlw" elementId="fr.univnantes.termsuite.ui.handledmenuitem.runpipeline" label="Run pipeline" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/run_exc.png" command="_zpB2oMUUEeWcSafn8uq1Yw">
+                  <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_ei2MoFWwEeefSMCel-Yjlw" coreExpressionId="fr.univnantes.termsuite.ui.pipelineselected"/>
+                </children>
               </menus>
               <menus xmi:id="_pWilwFE6EeWJlbJYl3DYnQ" elementId="fr.univnantes.termsuite.ui.menu.1">
                 <tags>ViewMenu</tags>
@@ -33,12 +40,19 @@
               <children xsi:type="basic:PartStack" xmi:id="_IoU5MEwCEeWIWrXS0l4jxg" elementId="fr.univnantes.termsuite.ui.partstack.main" containerData="5000">
                 <tags>NoAutoCollapse</tags>
               </children>
-              <children xsi:type="basic:PartStack" xmi:id="_-aNsQLrXEeWR6Y3HPI61kQ" elementId="fr.univnantes.termsuite.ui.partstack.outlinestack" containerData="2000">
-                <children xsi:type="basic:Part" xmi:id="_fspIULquEeWR6Y3HPI61kQ" elementId="fr.univnantes.termsuite.ui.part.TermOutline" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.TermOutlinePart" label="Term" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/term-blue.png" tooltip="Term Outline"/>
-                <children xsi:type="basic:Part" xmi:id="_6EY80PZyEeWhccLUnPjIRA" elementId="fr.univnantes.termsuite.ui.part.alignment" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.AlignmentResultsPart" label="Alignment Results" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/synced.gif" tooltip="Alignment Results"/>
+              <children xsi:type="basic:PartSashContainer" xmi:id="_jJ6hIE6CEea04Oy4UTiG0w" elementId="fr.univnantes.termsuite.ui.partsashcontainer.2" containerData="2000">
+                <children xsi:type="basic:PartStack" xmi:id="_kJ_eEE6CEea04Oy4UTiG0w" elementId="fr.univnantes.termsuite.ui.partstack.0">
+                  <children xsi:type="basic:Part" xmi:id="_fspIULquEeWR6Y3HPI61kQ" elementId="fr.univnantes.termsuite.ui.part.TermOutline" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.TermOutlinePart" label="Term" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/term-blue.png" tooltip="Term Outline"/>
+                </children>
+                <children xsi:type="basic:PartStack" xmi:id="_kso4IE6CEea04Oy4UTiG0w" elementId="fr.univnantes.termsuite.ui.partstack.1">
+                  <children xsi:type="basic:Part" xmi:id="_VgiIgFgqEeeKTPPWqFeA1g" elementId="fr.univnantes.termsuite.ui.part.TerminologyStats" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.TerminologyGlobalStatsPart" label="Terminology" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/javaassist_co.png" tooltip="Statistics about active terminology"/>
+                  <children xsi:type="basic:Part" xmi:id="_NqOssFpxEeemQZ2MBb8WLQ" elementId="fr.univnantes.termsuite.ui.part.TermPatternsPart" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.TermPatternsPart" label="Term patterns" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/breakpoint_view.png" tooltip="Syntactic patterns"/>
+                  <children xsi:type="basic:Part" xmi:id="_jOzocFpxEeemQZ2MBb8WLQ" elementId="fr.univnantes.termsuite.ui.part.VariationRules" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.VariationRulesPart" label="Variations" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/hierarchicalLayout.png" tooltip="Variations rules found"/>
+                </children>
               </children>
             </children>
             <children xsi:type="basic:PartStack" xmi:id="_F2_XIKAOEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.partstack.bottom" containerData="2000">
+              <children xsi:type="basic:Part" xmi:id="_Ceqk8J9UEeWNAK8NjrsZxA" elementId="org.eclipse.e4.ui.progress.ProgressView" contributionURI="bundleclass://org.eclipse.e4.ui.progress/org.eclipse.e4.ui.progress.ProgressView" label="Progress" iconURI="platform:/plugin/org.eclipse.e4.ui.progress/icons/full/progress/pview.png"/>
               <children xsi:type="basic:Part" xmi:id="_COgdQLrYEeWR6Y3HPI61kQ" elementId="fr.univnantes.termsuite.ui.part.occurrences" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.OccurrencePart" label="Occurrences" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/gotoobj_tsk.png" tooltip="Occurrences of the selected term or document">
                 <handlers xmi:id="_NcaEoORPEeWfCbb369iF9g" elementId="fr.univnantes.termsuite.ui.handler.NextOccurrenceHandler" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.occurrences.NextOccurrenceHandler" command="_lkpP8ORPEeWfCbb369iF9g"/>
                 <handlers xmi:id="_TPdL4ORQEeWfCbb369iF9g" elementId="fr.univnantes.termsuite.ui.handler.PreviousOccurrenceHandler" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.occurrences.PreviousOccurrenceHandler" command="_ptTHYORPEeWfCbb369iF9g"/>
@@ -49,7 +63,7 @@
                   <children xsi:type="menu:HandledToolItem" xmi:id="_2VKxYORQEeWfCbb369iF9g" elementId="fr.univnantes.termsuite.ui.handledtoolitem.NextOccurrence" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/next_nav.gif" command="_lkpP8ORPEeWfCbb369iF9g"/>
                 </toolbar>
               </children>
-              <children xsi:type="basic:Part" xmi:id="_Ceqk8J9UEeWNAK8NjrsZxA" elementId="org.eclipse.e4.ui.progress.ProgressView" contributionURI="bundleclass://org.eclipse.e4.ui.progress/org.eclipse.e4.ui.progress.ProgressView" label="Progress" iconURI="platform:/plugin/org.eclipse.e4.ui.progress/icons/full/progress/pview.png"/>
+              <children xsi:type="basic:Part" xmi:id="_6EY80PZyEeWhccLUnPjIRA" elementId="fr.univnantes.termsuite.ui.part.alignment" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.AlignmentResultsPart" label="Alignment Results" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/synced.gif" tooltip="Alignment Results"/>
             </children>
           </children>
         </children>
@@ -73,6 +87,8 @@
         <children xsi:type="menu:MenuSeparator" xmi:id="_nCV9kMUBEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.menuseparator.3"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_XxuvsMUAEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.handledmenuitem.importcorpus" label="Import corpus..." command="_hzlTgE19EeWpcYFej9JPeQ"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_8GMx4MUBEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.handledmenuitem.addatagger" label="Configure external POS tagger..." tooltip="Configures a new POS tagger and lemmatizer" mnemonics="" command="_XCv48MakEeWpYeBiwS_H7Q"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_vdkBYFddEeeqk5_QeLB1Ow" elementId="fr.univnantes.termsuite.ui.handledmenuitem.ClearPreprocessingCache" label="Clear cache" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/clear_co.png" mnemonics="" command="_Xqm0cFdbEeeqk5_QeLB1Ow"/>
+        <children xsi:type="menu:MenuSeparator" xmi:id="_uPlyYFddEeeqk5_QeLB1Ow" elementId="fr.univnantes.termsuite.ui.menuseparator.7"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_4Vs7wMUBEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.menuseparator.4"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_nl4rYEyjEeWINr2AFtxMwQ" elementId="fr.univnantes.termsuite.ui.handledmenuitem.exit" label="Exit" command="_NzgkYEyhEeWINr2AFtxMwQ"/>
       </children>
@@ -84,7 +100,6 @@
       </children>
       <children xsi:type="menu:Menu" xmi:id="_U-iEwMT_EeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.menu.run" label="Tools">
         <children xsi:type="menu:HandledMenuItem" xmi:id="_-guWsMXJEeWpIJ-KlFcYkg" elementId="fr.univnantes.termsuite.ui.handledmenuitem.RunPipeline" label="Run Pipeline..." tooltip="Run the active pipeline" command="_zpB2oMUUEeWcSafn8uq1Yw"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_4sz_kMm0EeWMTIcqIQJn_g" elementId="fr.univnantes.termsuite.ui.handledmenuitem.checkforupdates" label="Check for updates" command="_qzb08Mm0EeWMTIcqIQJn_g"/>
       </children>
       <children xsi:type="menu:Menu" xmi:id="_XHkN0MT_EeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.menu.help" label="Help">
         <children xsi:type="menu:HandledMenuItem" xmi:id="_alwL8MT_EeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.handledmenuitem.about" label="About TermSuite" command="_cgtKcMwKEeWh7K416TAaxg"/>
@@ -99,6 +114,8 @@
     <trimBars xmi:id="_kpsHwJ_sEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.trimbar.bottom" side="Bottom">
       <children xsi:type="menu:ToolBar" xmi:id="_qbZnsJ_sEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.toolbar.3">
         <children xsi:type="menu:ToolControl" xmi:id="_sE3f4J_sEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.toolcontrol.progressmonitor" contributionURI="bundleclass://org.eclipse.e4.ui.progress/org.eclipse.e4.ui.progress.internal.ProgressRegion"/>
+        <children xsi:type="menu:ToolBarSeparator" xmi:id="_7o1kEFdgEeeqk5_QeLB1Ow" elementId="fr.univnantes.termsuite.ui.toolbarseparator.2"/>
+        <children xsi:type="menu:ToolControl" xmi:id="_8cfOkFdgEeeqk5_QeLB1Ow" elementId="fr.univnantes.termsuite.ui.toolcontrol.workspacesize" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.control.WorskpaceSizeControl"/>
       </children>
     </trimBars>
   </children>
@@ -107,14 +124,20 @@
   <handlers xmi:id="_fx9aAE19EeWpcYFej9JPeQ" elementId="fr.univnantes.termsuite.ui.handler.ImportCorpus" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.ImportCorpusHandler" command="_hzlTgE19EeWpcYFej9JPeQ"/>
   <handlers xmi:id="_OzodME_ZEeWST6jINIj7qQ" elementId="fr.univnantes.termsuite.ui.handler.OpenObject" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.OpenObjectHandler" command="_BSxgQE_ZEeWST6jINIj7qQ"/>
   <handlers xmi:id="_wJyT0FE9EeWJlbJYl3DYnQ" elementId="fr.univnantes.termsuite.ui.handler.NewPipeline" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.NewPipelineHandler" command="_paaRwFE9EeWJlbJYl3DYnQ"/>
-  <handlers xmi:id="_RsR0YFJBEeWNjZ8iJmBR2A" elementId="fr.univnantes.termsuite.ui.handler.RunPipelineOnSelectedCorpus" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.RunPipelineOnSelectedCorpusHandler" command="_U1zxIFJBEeWNjZ8iJmBR2A"/>
   <handlers xmi:id="_tsikIJ_zEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.handler.Save" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.SaveHandler" command="_GQqeAEyhEeWINr2AFtxMwQ"/>
   <handlers xmi:id="_Vo7PIMULEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.handler.SaveAll" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.SaveAllHandler" command="_RIfJ0MULEeWcSafn8uq1Yw"/>
   <handlers xmi:id="_wlcJ0MUUEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.handler.RunPipeline" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.RunPipelineHandler" command="_zpB2oMUUEeWcSafn8uq1Yw"/>
   <handlers xmi:id="_dQ1y4MakEeWpYeBiwS_H7Q" elementId="fr.univnantes.termsuite.ui.handler.preferences" contributionURI="bundleclass://com.opcoach.e4.preferences/com.opcoach.e4.preferences.handlers.E4PreferencesHandler" command="_XCv48MakEeWpYeBiwS_H7Q"/>
-  <handlers xmi:id="_vV23QMm0EeWMTIcqIQJn_g" elementId="fr.univnantes.termsuite.ui.handler.0" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.UpdateHandler" command="_qzb08Mm0EeWMTIcqIQJn_g"/>
   <handlers xmi:id="_hmTyUMwKEeWh7K416TAaxg" elementId="fr.univnantes.termsuite.ui.handler.About" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.AboutHandler" command="_cgtKcMwKEeWh7K416TAaxg"/>
   <handlers xmi:id="_X6dicORQEeWfCbb369iF9g" elementId="fr.univnantes.termsuite.ui.handler.CollapaseAllHandler" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.CollapseAllHandler" command="_BXGjQOIsEeWihJy1yCPB5A"/>
+  <handlers xmi:id="_f9ikwFZ7EeeezpBRMTiXXw" elementId="fr.univnantes.termsuite.ui.handler.Rename" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.RenameHandler" command="_VYHv8FZUEeejQOQ2nExhjw"/>
+  <handlers xmi:id="_knru4FdbEeeqk5_QeLB1Ow" elementId="fr.univnantes.termsuite.ui.handler.ClearPreprocessingCache" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.ClearPreprocessingCacheHandler" command="_Xqm0cFdbEeeqk5_QeLB1Ow"/>
+  <handlers xmi:id="_0TqIMFgOEeeKTPPWqFeA1g" elementId="fr.univnantes.termsuite.ui.handler.SelectTerminologyPropertiesHandler" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.SelectTerminologyPropertiesHandler" command="_iwOtsFgOEeeKTPPWqFeA1g"/>
+  <handlers xmi:id="_4wQ_8FqLEeemQZ2MBb8WLQ" elementId="fr.univnantes.termsuite.ui.handler.ClearFilters" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.ClearFiltersHandler" command="_16d3gFqLEeemQZ2MBb8WLQ"/>
+  <handlers xmi:id="_A-xNAFs9EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.handler.FilterTerminologyHandler" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.FilterTerminologyHandler" command="_wgn_kFs8EeeMfu0KRwv50A"/>
+  <handlers xmi:id="_F_0FAFs9EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.handler.ExportToTSV" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.ExportToTsvHandler" command="_6STVAFs8EeeMfu0KRwv50A"/>
+  <handlers xmi:id="_MS8P8Fs9EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.handler.ExportToTBX" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.ExportToTbxHandler" command="_-AQ0gFs8EeeMfu0KRwv50A"/>
+  <handlers xmi:id="_4nxQMIvsEee7EsZZ3K68ow" elementId="fr.univnantes.termsuite.ui.handler.ExportToJSON" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.handlers.ExportToJsonHandler" command="_1LbsMIvsEee7EsZZ3K68ow"/>
   <bindingTables xmi:id="_ZZiw8FITEeWJrZq1Fp2XFA" elementId="fr.univnantes.termsuite.ui.bindingtable.0" bindingContext="_aq_KsFITEeWJrZq1Fp2XFA">
     <bindings xmi:id="_0uye4J_zEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.keybinding.save" keySequence="M1+S" command="_GQqeAEyhEeWINr2AFtxMwQ">
       <tags>type:user</tags>
@@ -132,23 +155,26 @@
       <children xsi:type="menu:HandledToolItem" xmi:id="_bl9NwOYGEeWuJP7LFnU52Q" elementId="fr.univnantes.termsuite.ui.handledtoolitem.WrapText" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/wordwrap.png" type="Check" command="_N3Eb4OYGEeWuJP7LFnU52Q"/>
     </toolbar>
   </descriptors>
-  <descriptors xmi:id="_g8PoEFE8EeWJlbJYl3DYnQ" elementId="fr.univnantes.termsuite.ui.partdescriptor.PipelineEditor" label="Pipeline Editor" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/debugtt_obj.gif" allowMultiple="true" closeable="true" dirtyable="true" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.PipelinePart">
-    <toolbar xmi:id="_bV1A8MWiEeWpIJ-KlFcYkg" elementId="fr.univnantes.termsuite.ui.toolbar.2">
-      <children xsi:type="menu:HandledToolItem" xmi:id="_JQZiIFIeEeWJrZq1Fp2XFA" elementId="fr.univnantes.termsuite.ui.handledtoolitem.RunPipeline" label="Run pipeline" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/run_exc.png" command="_zpB2oMUUEeWcSafn8uq1Yw">
-        <menu xmi:id="_RiX3MMUQEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.menu.0">
-          <children xsi:type="menu:HandledMenuItem" xmi:id="_UStQ0MUQEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.handledmenuitem.runonselectedcorpus" label="Run on selected corpus" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/run_exc.png" command="_U1zxIFJBEeWNjZ8iJmBR2A"/>
-        </menu>
-      </children>
-    </toolbar>
-  </descriptors>
+  <descriptors xmi:id="_g8PoEFE8EeWJlbJYl3DYnQ" elementId="fr.univnantes.termsuite.ui.partdescriptor.PipelineEditor" label="Pipeline Editor" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/debugtt_obj.gif" allowMultiple="true" closeable="true" dirtyable="true" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.PipelinePart"/>
   <descriptors xmi:id="_fu8PwKASEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.partdescriptor.terminology" label="Terminology" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/hierarchicalLayout.png" allowMultiple="true" closeable="true" dirtyable="true" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.parts.TerminologyPart">
     <menus xsi:type="menu:PopupMenu" xmi:id="_RibDAO9sEeW_3q2PUR_c0Q" elementId="fr.univnantes.termsuite.ui.popupmenu.terminology" label="Terminology contextual menu">
       <children xsi:type="menu:Menu" xmi:id="_YviJ8O9sEeW_3q2PUR_c0Q" elementId="fr.univnantes.termsuite.ui.menu.terminology.align" label="Align">
         <children xsi:type="menu:DynamicMenuContribution" xmi:id="_CsVtoO9uEeW_3q2PUR_c0Q" elementId="fr.univnantes.termsuite.ui.menu.terminology.align.dynamicmenucontribution" label="Align" contributionURI="bundleclass://fr.univnantes.termsuite.ui/fr.univnantes.termsuite.ui.menu.AlignMenuContribution"/>
       </children>
     </menus>
+    <menus xmi:id="_dIvgwFgOEeeKTPPWqFeA1g" elementId="fr.univnantes.termsuite.ui.menu.TerminologyViewMenu" label="Terminology view menu" iconURI="">
+      <tags>ViewMenu</tags>
+      <children xsi:type="menu:HandledMenuItem" xmi:id="_haGBMFgOEeeKTPPWqFeA1g" elementId="fr.univnantes.termsuite.ui.handledmenuitem.SelectTerminologyProperties" label="Select columns..." tooltip="" command="_iwOtsFgOEeeKTPPWqFeA1g"/>
+      <children xsi:type="menu:MenuSeparator" xmi:id="_phKTEFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.menuseparator.9"/>
+      <children xsi:type="menu:HandledMenuItem" xmi:id="_qguSoFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.handledmenuitem.filterterminology" label="Filter terminology..." command="_wgn_kFs8EeeMfu0KRwv50A"/>
+      <children xsi:type="menu:MenuSeparator" xmi:id="_jpHhoFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.menuseparator.8"/>
+      <children xsi:type="menu:HandledMenuItem" xmi:id="_kKYboFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.handledmenuitem.exporttotsv" label="Export to TSV..." command="_6STVAFs8EeeMfu0KRwv50A"/>
+      <children xsi:type="menu:HandledMenuItem" xmi:id="_m7JTEFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.handledmenuitem.exporttotbx" label="Export to TBX..." command="_-AQ0gFs8EeeMfu0KRwv50A"/>
+      <children xsi:type="menu:HandledMenuItem" xmi:id="_ybNAQIvsEee7EsZZ3K68ow" elementId="fr.univnantes.termsuite.ui.handledmenuitem.exporttotbx" label="Export to JSON..." command="_1LbsMIvsEee7EsZZ3K68ow"/>
+    </menus>
     <toolbar xmi:id="_mMEEMKASEeWgBuIHQDokrw" elementId="fr.univnantes.termsuite.ui.toolbar.4">
       <children xsi:type="menu:HandledToolItem" xmi:id="_-DsRcOX_EeWuJP7LFnU52Q" elementId="fr.univnantes.termsuite.ui.handledtoolitem.TerminoCollapseAll" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/collapseall.png" command="_BXGjQOIsEeWihJy1yCPB5A"/>
+      <children xsi:type="menu:HandledToolItem" xmi:id="_tCJzAFqLEeemQZ2MBb8WLQ" elementId="fr.univnantes.termsuite.ui.handledtoolitem.ClearFilters" label="Clear filters" iconURI="platform:/plugin/fr.univnantes.termsuite.ui/icons/clear_co.png" tooltip="Clear active filters" command="_16d3gFqLEeemQZ2MBb8WLQ"/>
     </toolbar>
   </descriptors>
   <commands xmi:id="_GQqeAEyhEeWINr2AFtxMwQ" elementId="fr.univnantes.termsuite.ui.commands.save" commandName="Save"/>
@@ -159,19 +185,31 @@
   <commands xmi:id="_hzlTgE19EeWpcYFej9JPeQ" elementId="fr.univnantes.termsuite.ui.command.import" commandName="Import Corpus"/>
   <commands xmi:id="_BSxgQE_ZEeWST6jINIj7qQ" elementId="fr.univnantes.termsuite.ui.command.OpenObject" commandName="Open Object" description="Open object in an editor">
     <parameters xmi:id="_jzXIgLoeEeWOe4SAf8ad9Q" elementId="fr.univnantes.termsuite.ui.commandparameter.InputResourceId" name="InputResourceID"/>
-    <parameters xmi:id="_4OLPUBdyEeayibHHymxkiw" elementId="fr.univnantes.termsuite.ui.commandparameter.InputObjectPath" name="InputObjectPath"/>
+    <parameters xmi:id="_4OLPUBdyEeayibHHymxkiw" elementId="fr.univnantes.termsuite.ui.commandparameter.LinguisticResource" name="LinguisticResource"/>
   </commands>
   <commands xmi:id="_paaRwFE9EeWJlbJYl3DYnQ" elementId="fr.univnantes.termsuite.ui.command.newpipeline" commandName="New Pipeline" description="Creates a new pipeline"/>
   <commands xmi:id="_U1zxIFJBEeWNjZ8iJmBR2A" elementId="fr.univnantes.termsuite.ui.command.runpipelineselectedcorpus" commandName="Run pipeline on selected corpus" description="Run the current pipeline on selected corpus"/>
   <commands xmi:id="_RIfJ0MULEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.command.saveall" commandName="Save all" description="Save all opened editors"/>
-  <commands xmi:id="_zpB2oMUUEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.command.RunPipeline" commandName="Run Pipeline"/>
+  <commands xmi:id="_zpB2oMUUEeWcSafn8uq1Yw" elementId="fr.univnantes.termsuite.ui.command.RunPipeline" commandName="Run Pipeline">
+    <parameters xmi:id="_54UncFWZEeefSMCel-Yjlw" elementId="fr.univnantes.termsuite.ui.command.RunPipeline.commandparameter.pipelinename" name="Pipeline Name" optional="false"/>
+    <parameters xmi:id="_f9OaMGGIEeecM40uMxkL9w" elementId="fr.univnantes.termsuite.ui.command.RunPipeline.commandparameter.reusecache" name="Reuse cached preprocessings"/>
+  </commands>
   <commands xmi:id="_XCv48MakEeWpYeBiwS_H7Q" elementId="fr.univnantes.termsuite.ui.command.preferences" commandName="Preferences" description="Show the preferences dialog"/>
-  <commands xmi:id="_qzb08Mm0EeWMTIcqIQJn_g" elementId="fr.univnantes.termsuite.ui.command.update" commandName="Update" description="Checks for updates and installs them"/>
   <commands xmi:id="_cgtKcMwKEeWh7K416TAaxg" elementId="fr.univnantes.termsuite.ui.command.About" commandName="About" description="Shows information about TermSuite"/>
   <commands xmi:id="_BXGjQOIsEeWihJy1yCPB5A" elementId="fr.univnantes.termsuite.ui.command.collapseall" commandName="Collapse all"/>
   <commands xmi:id="_lkpP8ORPEeWfCbb369iF9g" elementId="fr.univnantes.termsuite.ui.command.NextOccurrence" commandName="Next occurrence" description="Browse to next occurrence"/>
   <commands xmi:id="_ptTHYORPEeWfCbb369iF9g" elementId="fr.univnantes.termsuite.ui.command.PreviousOccurrence" commandName="Previous occurrence" description="Browse to previous occurrence"/>
   <commands xmi:id="_N3Eb4OYGEeWuJP7LFnU52Q" elementId="fr.univnantes.termsuite.ui.command.WrapText" commandName="Wrap text"/>
+  <commands xmi:id="_VYHv8FZUEeejQOQ2nExhjw" elementId="fr.univnantes.termsuite.ui.command.rename" commandName="Rename" description="Rename selected resource">
+    <parameters xmi:id="_ZwUfQFZUEeejQOQ2nExhjw" elementId="fr.univnantes.termsuite.ui.command.Rename.commandparameter.resource" name="Resource" optional="false"/>
+  </commands>
+  <commands xmi:id="_Xqm0cFdbEeeqk5_QeLB1Ow" elementId="fr.univnantes.termsuite.ui.command.ClearPreprocessingCache" commandName="Clear preprocessing cache" description="Clear *.json files of preprocessed corpora from nlp-cache"/>
+  <commands xmi:id="_iwOtsFgOEeeKTPPWqFeA1g" elementId="fr.univnantes.termsuite.ui.command.SelectTerminologyProperties" commandName="SelectTerminologyProperties" description="Select the properties to display in terminology viewer"/>
+  <commands xmi:id="_16d3gFqLEeemQZ2MBb8WLQ" elementId="fr.univnantes.termsuite.ui.command.ClearFilters" commandName="Clear filters" description="Clear active filters"/>
+  <commands xmi:id="_wgn_kFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.command.filterterminology" commandName="Filter Terminology"/>
+  <commands xmi:id="_6STVAFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.command.exporttotsv" commandName="Export To TSV" description="Export terminology to TSV"/>
+  <commands xmi:id="_-AQ0gFs8EeeMfu0KRwv50A" elementId="fr.univnantes.termsuite.ui.command.exporttotbx" commandName="Export to TBX" description="Export terminology to TBX"/>
+  <commands xmi:id="_1LbsMIvsEee7EsZZ3K68ow" elementId="fr.univnantes.termsuite.ui.command.exporttojson" commandName="Export to JSON" description="Export terminology to JSON"/>
   <addons xmi:id="_jupbsUwBEeWIWrXS0l4jxg" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_jupbskwBEeWIWrXS0l4jxg" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_jupbs0wBEeWIWrXS0l4jxg" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

@@ -45,15 +45,17 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import eu.project.ttc.models.Term;
-import eu.project.ttc.models.TermOccurrence;
-import eu.project.ttc.models.TermVariation;
+import fr.univnantes.termsuite.framework.service.RelationService;
+import fr.univnantes.termsuite.framework.service.TermService;
+import fr.univnantes.termsuite.model.TermOccurrence;
 import fr.univnantes.termsuite.ui.TermOccurrenceContainer;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.handlers.OpenObjectHandler;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EDocument;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.ETerminologyService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
 import fr.univnantes.termsuite.ui.util.CommandUtil;
@@ -171,11 +173,11 @@ public class OccurrencePart implements TreePart {
 		if(viewer != null && object != null) {
 			if(object instanceof TermOccurrenceContainer) {
 				occurrences = ((TermOccurrenceContainer<?>)object).getOccurrences();
-			} else if (object instanceof Term) {
-				occurrences = ((Term)object).getOccurrences();
-			} else if (object instanceof TermVariation) {
-				TermVariation sv = (TermVariation)object;
-				occurrences = sv.getVariant().getOccurrences();
+			} else if (object instanceof TermService) {
+				occurrences = ((TermService)object).getOccurrences();
+			} else if (object instanceof RelationService) {
+				RelationService sv = (RelationService)object;
+				occurrences = sv.getTo().getOccurrences();
 			} else
 				return;
 			documentContainers = TermOccurrenceUtil.toDocumentContainers(occurrences, corpusService);
@@ -208,11 +210,14 @@ public class OccurrencePart implements TreePart {
 
 	@PostConstruct
 	public void createControls(ILoggerProvider loggerProvider, IEclipseContext context, final Composite parent, MPart part) {
-		
 		this.logger = loggerProvider.getClassLogger(this.getClass());
 		
+//		emptyOccStoreLabel = new Label(parent, SWT.NONE);
+//		GridDataFactory.fillDefaults().grab(true, true).exclude(true).applyTo(emptyOccStoreLabel);
+//		emptyOccStoreLabel.setVisible(false);
 		
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+//		GridDataFactory.fillDefaults().grab(true, true).exclude(true).applyTo(viewer.getControl());
 		context.set(TreeViewer.class, viewer);
 		
 		viewer.getTree().setLinesVisible(true);
@@ -363,6 +368,20 @@ public class OccurrencePart implements TreePart {
 	}
 
 
+	@Inject
+	void activePartChanged(@Named(IServiceConstants.ACTIVE_PART) MPart part, ETerminologyService eTerminologyService) {
+		if(part != null && part.getObject() instanceof TerminologyPart && part.getContext().get(ETerminology.class) != null) {
+			ETerminology eTerminology = part.getContext().get(ETerminology.class);
+			if(eTerminologyService.readTerminology(eTerminology).getOccurrenceStore().size() == 0) {
+//				emptyOccStoreLabel.setText("Occurrence store for terminology " + TerminologyPart.toPartLabel(eTerminology) + " is empty.");
+//				emptyOccStoreLabel.setVisible(true);
+//				viewer.getControl().setVisible(false);
+			} else {
+//				emptyOccStoreLabel.setVisible(false);
+//				viewer.getControl().setVisible(true);
+			}
+		}
+	}
 
 	@Override
 	public TreeViewer getTreeViewer() {

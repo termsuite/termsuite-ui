@@ -2,17 +2,24 @@ package fr.univnantes.termsuite.ui;
 
 import java.nio.file.Paths;
 
+import javax.inject.Inject;
+
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.core.di.extensions.Preference;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.services.log.ILoggerProvider;
 import org.eclipse.e4.core.services.log.Logger;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.prefs.BackingStoreException;
+import org.osgi.service.prefs.Preferences;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
 
@@ -25,22 +32,20 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import fr.univnantes.termsuite.ui.services.AlignmentService;
 import fr.univnantes.termsuite.ui.services.CorpusService;
+import fr.univnantes.termsuite.ui.services.ETerminologyService;
 import fr.univnantes.termsuite.ui.services.LinguisticResourcesService;
-import fr.univnantes.termsuite.ui.services.PipelineService;
+import fr.univnantes.termsuite.ui.services.NLPService;
 import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.services.TaggerService;
-import fr.univnantes.termsuite.ui.services.TermIndexService;
 import fr.univnantes.termsuite.ui.services.TermSuiteSelectionService;
-import fr.univnantes.termsuite.ui.services.TerminoService;
 import fr.univnantes.termsuite.ui.services.impl.AlignmentServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.CorpusServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.LinguisticResourcesServiceImpl;
-import fr.univnantes.termsuite.ui.services.impl.PipelineServiceImpl;
+import fr.univnantes.termsuite.ui.services.impl.NLPServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.ResourceServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.TaggerServiceImpl;
-import fr.univnantes.termsuite.ui.services.impl.TermIndexServiceImpl;
 import fr.univnantes.termsuite.ui.services.impl.TermSuiteSelectionServiceImpl;
-import fr.univnantes.termsuite.ui.services.impl.TerminoServiceImpl;
+import fr.univnantes.termsuite.ui.services.impl.TerminologyServiceImpl;
 import fr.univnantes.termsuite.ui.util.WorkspaceUtil;
 
 @SuppressWarnings("restriction")
@@ -50,16 +55,40 @@ public class LifeCycleManager {
 	
 	@PostContextCreate
 	void postContextCreate(IApplicationContext context,  IEclipseContext cont,
-			 @Preference(nodePath=TermSuiteUI.PLUGIN_ID) IEclipsePreferences preferences,
 			 ILoggerProvider loggerProvider
-			) {
+			) throws BackingStoreException {
+		
 		this.logger = loggerProvider.getClassLogger(this.getClass());
 		configureLogging();  
 		logStartup();		
+		checkPreferences();
 		logContextualInfo();
 		logBundles();
 		addServicesToContext(cont);
 		WorkspaceUtil.deleteTermSuiteTempFiles();
+	}
+
+	private void checkPreferences() throws BackingStoreException {
+		String outputDir = WorkspaceUtil.getLocation(TermSuiteUIPreferences.OUTPUT_DIRECTORY_DEFAULT);
+		setDefaultPreference(
+				TermSuiteUIPreferences.OUTPUT_DIRECTORY, 
+				outputDir); 
+		Paths.get(outputDir).toFile().mkdirs();
+	}
+
+	private void setDefaultPreference(String prefKey, String outputDirectoryDefault) throws BackingStoreException {
+		Preferences preferences = InstanceScope.INSTANCE.getNode(TermSuiteUI.PLUGIN_ID);
+		if(preferences.get(prefKey, "").equals("")) {
+			logger.info("Setting preference {0} to: {1}", prefKey, outputDirectoryDefault);
+			preferences.put(prefKey, outputDirectoryDefault);
+			preferences.flush();
+		}
+	}
+
+	@Inject @Optional
+	private void init(@UIEventTopic(TermSuiteEvents.JOB_STARTED) String jobName, 
+			EPartService partService) {
+		partService.showPart(TermSuiteUI.PROGRESS_VIEW_ID, PartState.ACTIVATE);
 	}
 
 
@@ -123,11 +152,10 @@ public class LifeCycleManager {
 
 	private void addServicesToContext(IEclipseContext cont) {
 		cont.set(LinguisticResourcesService.class, ContextInjectionFactory.make(LinguisticResourcesServiceImpl.class, cont));
-		cont.set(TermIndexService.class, ContextInjectionFactory.make(TermIndexServiceImpl.class, cont));
-		cont.set(CorpusService.class, ContextInjectionFactory.make(CorpusServiceImpl.class, cont));
-		cont.set(TerminoService.class, ContextInjectionFactory.make(TerminoServiceImpl.class, cont));
-		cont.set(PipelineService.class, ContextInjectionFactory.make(PipelineServiceImpl.class, cont));
 		cont.set(ResourceService.class, ContextInjectionFactory.make(ResourceServiceImpl.class, cont));
+		cont.set(NLPService.class, ContextInjectionFactory.make(NLPServiceImpl.class, cont));
+		cont.set(ETerminologyService.class, ContextInjectionFactory.make(TerminologyServiceImpl.class, cont));
+		cont.set(CorpusService.class, ContextInjectionFactory.make(CorpusServiceImpl.class, cont));
 		cont.set(TaggerService.class, ContextInjectionFactory.make(TaggerServiceImpl.class, cont));
 		cont.set(TermSuiteSelectionService.class, ContextInjectionFactory.make(TermSuiteSelectionServiceImpl.class, cont));
 		cont.set(AlignmentService.class, ContextInjectionFactory.make(AlignmentServiceImpl.class, cont));
@@ -145,7 +173,8 @@ public class LifeCycleManager {
 		JoranConfigurator configurator = new JoranConfigurator();  
 		configurator.setContext(loggerContext);  
 		try {  
-		  configurator.doConfigure(getClass().getResourceAsStream("/logback.xml"));  
+			configurator.doConfigure(getClass().getResourceAsStream("/logback.xml")); 
+			logger.info("Logging has been {0} configured", "correctly");
 		} catch (JoranException e) {
 			logger.error(e);
 		}
@@ -161,8 +190,11 @@ public class LifeCycleManager {
 	};
 	
 	private void logContextualInfo() {
+		Preferences preferences = InstanceScope.INSTANCE.getNode(TermSuiteUI.PLUGIN_ID);
+
 		logger.info("Current directory: " + Paths.get(".").toAbsolutePath().normalize().toString());
 		logger.info("Workspace location: " + Platform.getInstanceLocation().getURL().toString());
+		logger.info("Output directory is " + preferences.get(TermSuiteUIPreferences.OUTPUT_DIRECTORY, ""));
 		logger.info("Install location: " + Platform.getInstallLocation().getURL().toString());
 		for(String p:LOGGED_PROPS)
 			logger.info(p + ": " + System.getProperty(p));

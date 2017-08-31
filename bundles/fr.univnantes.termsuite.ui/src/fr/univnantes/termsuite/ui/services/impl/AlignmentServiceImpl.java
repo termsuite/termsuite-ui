@@ -1,11 +1,12 @@
 package fr.univnantes.termsuite.ui.services.impl;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,7 +18,6 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.core.services.log.ILoggerProvider;
-import org.eclipse.e4.core.services.log.Logger;
 //import org.eclipse.e4.core.services.log.Logger;
 import org.osgi.service.prefs.Preferences;
 
@@ -26,11 +26,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
-import eu.project.ttc.engines.BilingualAligner;
-import eu.project.ttc.engines.BilingualAligner.TranslationCandidate;
-import eu.project.ttc.metrics.Cosine;
-import eu.project.ttc.models.Term;
-import eu.project.ttc.tools.TermSuiteAlignerBuilder;
+import fr.univnantes.termsuite.alignment.BilingualAlignmentService;
+import fr.univnantes.termsuite.alignment.TranslationCandidate;
+import fr.univnantes.termsuite.api.TermSuite;
+import fr.univnantes.termsuite.framework.service.TermService;
+import fr.univnantes.termsuite.metrics.Cosine;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
 import fr.univnantes.termsuite.ui.exceptions.DictionaryException;
@@ -39,8 +39,8 @@ import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiFactory;
 import fr.univnantes.termsuite.ui.services.AlignmentService;
-import fr.univnantes.termsuite.ui.services.CorpusService;
-import fr.univnantes.termsuite.ui.services.TermIndexService;
+import fr.univnantes.termsuite.ui.services.ETerminologyService;
+import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.util.LangUtil;
 
 @SuppressWarnings("restriction")
@@ -57,27 +57,37 @@ public class AlignmentServiceImpl implements AlignmentService {
 
 	@Inject
 	@Optional
-	public void reactOnInputDirectoryChange( @Preference(value = TermSuiteUIPreferences.DICTIONARY_DIRECTORY) String dictionaryDirectory) {
-		getLogger().debug("Modification detected in preferences: " + TermSuiteUIPreferences.DICTIONARY_DIRECTORY + "=" + dictionaryDirectory);
+	public void reactOnInputDirectoryChange( @Preference(value = TermSuiteUIPreferences.BILINGUAL_DICTIONARY_DIRECTORY) String dictionaryDirectory) {
+		loadDictionaries();
 	}
 	
 
 	@PostConstruct
 	private void loadDictionaries() {
-		dictionaries = Lists.newArrayList();
 		targetDictionaries = HashMultimap.create();
 		sourceDictionaries = HashMultimap.create();
 		
 		Preferences preferences = InstanceScope.INSTANCE
 				  .getNode(TermSuiteUI.PLUGIN_ID);
 
-		String dictionaryDirectory = preferences.get(TermSuiteUIPreferences.DICTIONARY_DIRECTORY, null);
-
+		String dictionaryDirectory = preferences.get(TermSuiteUIPreferences.BILINGUAL_DICTIONARY_DIRECTORY, null);
 		
-		if(dictionaryDirectory != null) {
-			getLogger().info("Bilingual dictionary path: " + dictionaryDirectory);
+		dictionaries = dictionaryDirectory == null ? 
+				Lists.newArrayList() : 
+					findDictionaries(Paths.get(dictionaryDirectory));
+			
+		for(EBilingualDictionary dico:dictionaries) {
+			sourceDictionaries.put(dico.getSourceLang(), dico);
+			targetDictionaries.put(dico.getTargetLang(), dico);
+		}
+	}
 
-			File dir = new File(dictionaryDirectory);
+
+	public static List<EBilingualDictionary> findDictionaries(Path dictionaryDirectory) {
+		List<EBilingualDictionary> list = Lists.newArrayList();
+		if(dictionaryDirectory != null) {
+
+			File dir = dictionaryDirectory.toFile();
 			Pattern pattern = Pattern.compile("(?<source>\\w+)-(?<target>\\w+)\\.txt");
 			if(dir.isDirectory()) {
 				for(File f:dir.listFiles()) {
@@ -92,23 +102,14 @@ public class AlignmentServiceImpl implements AlignmentService {
 						
 						dico.setPath(f.getAbsolutePath());
 						
-						getLogger().debug("Detected dictionary: " + dico.getSourceLang().getName() + "-" + dico.getTargetLang().getName() + " at " + dico.getPath());
-						dictionaries.add(dico);
+						list.add(dico);
 					}
 				}
 			}
 		}
-			
-		for(EBilingualDictionary dico:dictionaries) {
-			sourceDictionaries.put(dico.getSourceLang(), dico);
-			targetDictionaries.put(dico.getTargetLang(), dico);
-		}
+		return list;
 	}
 
-
-	private Logger getLogger() {
-		return loggerProvider.getClassLogger(this.getClass());
-	}
 
 	@Override
 	public boolean canAlignWith(ELang sourceLang, ELang targetLang) {
@@ -125,7 +126,7 @@ public class AlignmentServiceImpl implements AlignmentService {
 	public Collection<ETerminology> canAlignWith(ETerminology terminology) {
 		if(terminology.isHasContexts()) {
 			Set<ETerminology> alignableTermino = Sets.newHashSet();
-			for(ETerminology targetTermino:context.get(CorpusService.class).getTerminologies())  {
+			for(ETerminology targetTermino:context.get(ResourceService.class).getTerminologies())  {
 				if(!targetTermino.getCorpus().getCorpus().equals(terminology.getCorpus().getCorpus())) {
 					// 1- can only align on the same comparable corpus
 					continue;
@@ -173,7 +174,8 @@ public class AlignmentServiceImpl implements AlignmentService {
 
 
 	@Override
-	public EBilingualDictionary getDictionary(ELang source, ELang target) {
+	public EBilingualDictionary getSynonymDictionary(ELang source, ELang target) {
+
 		if(sourceDictionaries.get(source) != null) {
 			for(EBilingualDictionary dico:sourceDictionaries.get(source))
 				if(dico.getTargetLang().equals(target))
@@ -184,9 +186,9 @@ public class AlignmentServiceImpl implements AlignmentService {
 
 
 	@Override
-	public List<TranslationCandidate> align(Term term, ETerminology sourceTerminology, ETerminology targetTerminology) {
+	public List<TranslationCandidate> align(TermService term, ETerminology sourceTerminology, ETerminology targetTerminology) {
 		
-		EBilingualDictionary dico = getDictionary(
+		EBilingualDictionary dico = getSynonymDictionary(
 				sourceTerminology.getCorpus().getLanguage(), 
 				targetTerminology.getCorpus().getLanguage());
 		
@@ -198,18 +200,16 @@ public class AlignmentServiceImpl implements AlignmentService {
 					targetTerminology.getCorpus().getLanguage().getName()));
 			
 		} else {
-			BilingualAligner aligner;
-			try {
-				aligner = TermSuiteAlignerBuilder.start()
-						.setSourceTerminology(context.get(TermIndexService.class).getTermIndex(sourceTerminology))
-						.setTargetTerminology(context.get(TermIndexService.class).getTermIndex(targetTerminology))
-						.setDicoPath(dico.getPath())
-						.setDistance(new Cosine())
-						.create();
-			} catch (ExecutionException e) {
-				throw new RuntimeException(e);
-			}
-		return aligner.alignDistributional(term, 100, 2);
+			BilingualAlignmentService aligner;
+			ETerminologyService terminoService = context.get(ETerminologyService.class);
+			aligner = TermSuite.bilingualAligner()
+					.setSourceTerminology(terminoService.readTerminology(sourceTerminology))
+					.setTargetTerminology(terminoService.readTerminology(targetTerminology))
+					.setDicoPath(Paths.get(dico.getPath()))
+					.setDistance(Cosine.class)
+					.create();
+			
+			return aligner.align(term.getTerm(), 20, 2);
 		}
 	}
 

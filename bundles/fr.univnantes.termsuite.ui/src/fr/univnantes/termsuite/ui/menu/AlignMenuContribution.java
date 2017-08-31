@@ -7,6 +7,7 @@ import java.util.List;
 import javax.inject.Named;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.AboutToShow;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.menu.MDirectMenuItem;
@@ -14,7 +15,7 @@ import org.eclipse.e4.ui.model.application.ui.menu.MMenuElement;
 import org.eclipse.e4.ui.model.application.ui.menu.MMenuFactory;
 import org.eclipse.e4.ui.services.IServiceConstants;
 
-import eu.project.ttc.models.Term;
+import fr.univnantes.termsuite.framework.service.TermService;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ELang;
 import fr.univnantes.termsuite.ui.model.termsuiteui.ETerminology;
@@ -24,15 +25,15 @@ import fr.univnantes.termsuite.ui.services.ResourceService;
 
 public class AlignMenuContribution {
 
-	@AboutToShow
+	@AboutToShow @Optional
 	public void aboutToShow(
-			List<MMenuElement> items, 
-			@Named(IServiceConstants.ACTIVE_SELECTION) Term term,
-			@Named(IServiceConstants.ACTIVE_PART) MPart part,
-			@Named(TermSuiteUI.INPUT_OBJECT) ETerminology sourceTerminology,
-			IEclipseContext context,
-			ResourceService resourceService,
-			AlignmentService alignmentService
+			@Optional List<MMenuElement> items, 
+			@Optional @Named(IServiceConstants.ACTIVE_SELECTION) TermService term,
+			@Optional @Named(IServiceConstants.ACTIVE_PART) MPart part,
+			@Optional @Named(TermSuiteUI.INPUT_OBJECT) ETerminology sourceTerminology,
+			@Optional IEclipseContext context,
+			@Optional ResourceService resourceService,
+			@Optional AlignmentService alignmentService
 		) {
 		if(term != null && sourceTerminology != null) {
 			Collection<ETerminology> targetTerminologies = alignmentService.canAlignWith(sourceTerminology);

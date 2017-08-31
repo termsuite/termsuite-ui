@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.google.common.base.Joiner;
 
-import eu.project.ttc.engines.BilingualAligner.TranslationCandidate;
-import eu.project.ttc.models.Term;
+import fr.univnantes.termsuite.alignment.TranslationCandidate;
+import fr.univnantes.termsuite.framework.service.TermService;
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
 import fr.univnantes.termsuite.ui.events.AlignmentResultPayload;
@@ -39,7 +39,7 @@ public class AlignHandler {
 	@Execute
 	public void execute(
 			final @Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
-			final @Named(IServiceConstants.ACTIVE_SELECTION) Term term,
+			final @Named(IServiceConstants.ACTIVE_SELECTION) TermService term,
 			final @Named(TermSuiteUI.SOURCE_TERMINOLOGY) ETerminology sourceTerminology,
 			final UISynchronize sync,
 			final IEventBroker eventBroker,

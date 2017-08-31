@@ -1,22 +1,58 @@
-# Install fr.univnantes.termsuite.ui
+ [ ![Download](https://api.bintray.com/packages/termsuite/termsuite-ui/pkg/images/download.svg) ](https://bintray.com/termsuite/termsuite-ui/pkg/_latestVersion/)
+
+
+# Developer instructions for `termsuite-ui`
+
+
+## Requirements
+
+ - Java 8+
+ - Eclipse IDE (Release Neon, i.e. version `4.6`)
+ - Maven 3.3+
+ - Git
+
+## Setup
 
  1. git clone https://github.com/termsuite/termuite-ui.git
- 2. Install EMF via the Eclipse Update manager from Help → Install New Software.... Select Modeling and install EMF - Eclipse Modeling Framework SDK and the Diagram Editor for Ecore (SDK).
+ 2. From Eclipse IDE, install EMF via the Eclipse Update manager from Help → Install New Software.... Select Modeling and install EMF - Eclipse Modeling Framework SDK and the Diagram Editor for Ecore (SDK).
  3. Restart Eclipse
- 4. Open fr.univnantes.termsuite.ui/model/termsuite-ui.genmodel
- 5. Right-click on node `Termsuite-ui` > Generate Model Code 
+ 4. cp termsuite-core.jar to fr.univnantes.termsuite.ui/lib/, and make sure that the termsuite-core.jar is added in the OSGi classpath of the plugin `fr.univnantes.termsuite.ui` (tab "Runtime", Section Classpath, in Eclipse editor for file /fr.univnantes.termsuite.ui/plugin.xml)
+ 5. cp termsuite-resources.jar file to fr.univnantes.termsuite.resources directory
+ 6. Open fr.univnantes.termsuite.ui/model/termsuite-ui.genmodel
+ 7. Right-click on node `Termsuite-ui` > Generate Model Code
+ 8. Go to root directory of the project (termsuite-ui/) and run `mvn clean verify` (Maven build)
 
-# Setup development environment for fr.univnantes.termsuite.resources
+## Changing the version number
 
-1. Add the real termsuite-resources.jar file to fr.univnantes.termsuite.resources directory (even using OS symbolic name)
-2. Import fr.univnantes.termsuite.resources OSGi bundle as an eclipse projet
+As `termsuite-ui` is built with [tycho](https://eclipse.org/tycho/sitedocs/index.html) Maven plugin, version numbers in `pom.xml` files need to be in sync with bundles' `META-INF/MANIFEST.MF` and features' `feature.xml` files. It implies that updating the version number of an Eclipse plug-in or feature requires making two file changes in sync, which is error-prone.
+
+To avoid this problem of redundant maintenance, `termsuite-ui` uses the [tycho-version-plugin](https://eclipse.org/tycho/sitedocs/tycho-release/tycho-versions-plugin/plugin-info.html) Maven plugin.
+
+The process of updating a plug-in or feature version number must be the following:
+
+1. Change the version number in `MANIFEST.MF` (or `feature.xml`) file,
+2. Run the following Maven command:
+
+```
+mvn org.eclipse.tycho:tycho-versions-plugin:update-pom
+```
+
+ > **Note:** `tycho` does not require the same version numbers for `.product` configuration and their associated `pom.xml` files, neither for `.target` configurations and their their associated `pom.xml` files.
+
+## Updating dev environment with your lastest changes in `termsuite-core`
+
+Within `termsuite-core/` run:
+
+`$gradle clean build updatesite`
+
+Then in Eclipse IDE, do:
+
+1. Open `fr.univnantes.termsuite.targetdefinition.target`
+2. Select the `${project_loc}/../../../termsuite-core/build/updatesite` location
+3. Click on `Reload`
+4. Window > Preferences > Target Platform
+5. Select you target platform
+6. Click on `Reload` and `Apply`
 
 
-fr.univnantes.termsuite.core is the eclipse plugin that exports 
-termsuite-core-x.x.jar classes. 
 
-# Setup development environment for fr.univnantes.termsuite.core
-
- 2. copy termsuite-core-2.1(-SNAPSHOT).jar to the root of fr.univnantes.termsuite.core,
- 3. copy termsuite-resources.jar to the root of fr.univnantes.termsuite.core.
- 

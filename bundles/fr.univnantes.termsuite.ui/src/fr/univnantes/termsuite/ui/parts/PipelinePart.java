@@ -1,19 +1,23 @@
+
 package fr.univnantes.termsuite.ui.parts;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
 import org.eclipse.core.databinding.observable.value.WritableValue;
-import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -23,82 +27,86 @@ import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.MDirtyable;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
-import org.eclipse.e4.ui.workbench.modeling.EPartService;
-import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
-import org.eclipse.e4.ui.workbench.modeling.ISelectionListener;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.databinding.EMFProperties;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.events.ExpansionAdapter;
-import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ColumnLayout;
-import org.eclipse.ui.forms.widgets.Form;
-import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
-import eu.project.ttc.engines.cleaner.TermProperty;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
+
 import fr.univnantes.termsuite.ui.TermSuiteEvents;
 import fr.univnantes.termsuite.ui.TermSuiteUI;
-import fr.univnantes.termsuite.ui.model.termsuiteui.EFilteringMode;
-import fr.univnantes.termsuite.ui.model.termsuiteui.EPeriodicCleaningMode;
+import fr.univnantes.termsuite.ui.TermSuiteUIPreferences;
+import fr.univnantes.termsuite.ui.model.termsuiteui.EAssocMeasure;
+import fr.univnantes.termsuite.ui.model.termsuiteui.EOccurrenceMode;
 import fr.univnantes.termsuite.ui.model.termsuiteui.EPipeline;
-import fr.univnantes.termsuite.ui.model.termsuiteui.ESingleLanguageCorpus;
+import fr.univnantes.termsuite.ui.model.termsuiteui.ESimilarityMeasure;
 import fr.univnantes.termsuite.ui.model.termsuiteui.TermsuiteuiPackage;
-import fr.univnantes.termsuite.ui.services.CorpusService;
-import fr.univnantes.termsuite.ui.services.PipelineService;
+import fr.univnantes.termsuite.ui.services.NLPService;
+import fr.univnantes.termsuite.ui.services.ResourceService;
 import fr.univnantes.termsuite.ui.services.TaggerService;
-import fr.univnantes.termsuite.ui.util.jface.DoubleValidator;
 import fr.univnantes.termsuite.ui.util.jface.IntegerValidator;
-import fr.univnantes.termsuite.ui.util.jface.NonEmptyStringValidator;
-import fr.univnantes.termsuite.ui.util.jface.StringToDoubleConverter;
 import fr.univnantes.termsuite.ui.util.jface.StringToIntegerConverter;
-import fr.univnantes.termsuite.ui.util.jface.StringToTermPropertyConverter;
+
 @SuppressWarnings("restriction") 
 public class PipelinePart {
 
 	public static final String ID = "fr.univnantes.termsuite.ui.partdescriptor.PipelineEditor";
+	
+	private static final String EDITOR_TITLE = "Terminology Extraction Pipeline";
+
 	@Inject
 	MDirtyable dirty;
-
-//	EPipeline pipeline;
-
-	Shell parentShell;
 	
-	private WritableValue pipelineValue = new WritableValue();
+	/*
+	 * An observable value for the current pipeline
+	 */
+	private WritableValue<EPipeline> pipelineValue = new WritableValue<>();
+	
+	/*
+	 * An observable value containing the validation status message
+	 */
+	private WritableValue<String> pipelineStatusValue = new WritableValue<>();
+	
+	/*
+	 * An observable value telling if the pipeline is valid
+	 */
+	private WritableValue<Boolean> pipelineValidValue = new WritableValue<>();
+
 	private DataBindingContext dbc = new DataBindingContext();
 
 	// Widgets
 
-	EPartService partService;
 	IEclipseContext context;
-	
-	@Inject
-	TaggerService taggerService;
-	
+	ScrolledForm form;
+
 	@Inject @Optional
-	private void init(@UIEventTopic(TermSuiteEvents.EDITOR_INITIATED) Object part) {
+	private void init(@UIEventTopic(TermSuiteEvents.EDITOR_INITIATED) Object part, MPart mPart) {
 		if(this == part) {
 			EPipeline pipeline = (EPipeline) context.get(TermSuiteUI.INPUT_OBJECT);
 			this.pipelineValue.setValue(pipeline);
@@ -106,221 +114,405 @@ public class PipelinePart {
 			pipeline.eAdapters().add(new EContentAdapter() {
 				public void notifyChanged(Notification notification) {
 					super.notifyChanged(notification);
-					dirty.setDirty(true);
+					if(notification.getFeature().equals(TermsuiteuiPackage.eINSTANCE.getEPipeline_Name())) {
+						mPart.setLabel(notification.getNewStringValue());
+					} else {
+						// set dirty, unless this is a pipeline rename
+						dirty.setDirty(true);
+						validatePipeline();
+					}
 				}
 			});
+			validatePipeline();
 		}
 	}
 
+	
 	@PostConstruct
-	public void createControls(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell, Composite parent,
-			final ECommandService commandService, 
-			CorpusService corpusService,
-			final EHandlerService handlerService,
-			EPartService partService, final ESelectionService selectionService,
+	public void createControls(Composite parent,
 			IEclipseContext context) {
 		
+		this.pipelineValidValue.setValue(false);
 		this.context = context;
-		this.parentShell = shell;
-		this.partService = partService;
 		
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-	    ScrolledForm form = toolkit.createScrolledForm(parent);
-//	    form.getToolBarManager();
-		form.setText("Terminology Extraction Pipeline");
+	    form = toolkit.createScrolledForm(parent);
+		form.setText(EDITOR_TITLE);
 		Composite body = form.getBody();
 		body.setLayout(new ColumnLayout());
-		toolkit.decorateFormHeading(form.getForm());
-		toolkit.paintBordersFor(body);
-		
-		// create Main Section
-		createMainSection(toolkit, form);
-		
-//		// Configure Tagger
-		createTaggerSection(toolkit, form);
 
-		// Configure Morphosyntactic Analysis
-		createRegexSpotterSection(toolkit, form);
 
-		createMorphoSyntacticSection(toolkit, form);
-
-		// Configure Syntactic Gathering
-		createSyntacticSection(toolkit, form);
-		
-		// Configure Graphical Variant Gathering
-		createGraphicalSection(toolkit, form);
-		
-		// Configure Contextualizer
-		createContextualizerSection(toolkit, form);
-		
-		// Configure filtering and sorting
-		createFilterSection(toolkit, form);
-
-		// Configure Export
-		createExportSection(toolkit, form);
-		// json with occurrences
-
-		// Configure Dealing with big corpus
-		createDealingWithBigCorpusSection(toolkit, form);
-		// a- set a max term index size constraint
-
-		configureActions(corpusService, selectionService);
-//		bindForm();	
+		/*
+		 * Create the content
+		 */
+		createPipelineContent(toolkit, form);
 	}
 
-
-	private void configureActions(
-//			final ECommandService commandService, 
-			final CorpusService corpusService, 
-//			final EHandlerService handlerService,
-			final ESelectionService selectionService) {
-		formText.setEnabled(selectionService.getSelection(NavigatorPart.ID) instanceof ESingleLanguageCorpus);
-		formText.addHyperlinkListener(new HyperlinkAdapter() {
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				if(e.getHref().equals("runOnSelected")) {
-					ESingleLanguageCorpus corpus = (ESingleLanguageCorpus)selectionService.getSelection(NavigatorPart.ID);
-					corpusService.runPipelineOnCorpus((EPipeline)pipelineValue.getValue(), corpus);
-//					PipelinePart.this.context.set(
-//							ESingleLanguageCorpus.class, 
-//							corpus);
-//					ParameterizedCommand command = commandService.createCommand(
-//							"fr.univnantes.termsuite.ui.command.runpipeline", null);
-//					if (handlerService.canExecute(command))
-//						handlerService.executeHandler(command);
-				}
-			}
-		});
-		selectionService.addSelectionListener(navigatorSelectionListener);
-	}
-	
-	private ISelectionListener navigatorSelectionListener = new ISelectionListener() {
-		@Override
-		public void selectionChanged(MPart part, Object selection) {
-			if (part.getElementId().equals(NavigatorPart.ID))
-				formText.setEnabled(selection instanceof ESingleLanguageCorpus);
+	private void validatePipeline() {
+		EPipeline pipeline = pipelineValue.getValue();
+		if(pipelineValue.getValue() == null) {
+			this.pipelineValidValue.setValue(false);
+			this.pipelineStatusValue.setValue("No pipeline value");
+			form.setMessage("No pipeline value", IMessageProvider.ERROR);
+		} else {
+			String msg = context.get(NLPService.class).validatePipeline(pipeline);
+			this.pipelineStatusValue.setValue(msg);
+			this.pipelineValidValue.setValue(msg == null);
+			if(this.pipelineStatusValue.getValue() == null)
+				form.setMessage("Ok", IMessageProvider.NONE);
+			else
+				form.setMessage(this.pipelineStatusValue.getValue(), IMessageProvider.ERROR);
 		}
-	};
-	
-	@PreDestroy
-	public void preDestroy(ESelectionService selectionService) {
-		selectionService.removeSelectionListener(navigatorSelectionListener);
-	}
-	
-	private FormText formText;
-	private void createMainSection(FormToolkit toolkit, final ScrolledForm form) {
-		Form mainSection = toolkit.createForm(form.getBody());
-		toolkit.paintBordersFor(mainSection);
-		
-		Composite body = mainSection.getBody();
-		setTableWrapLayout(body, 2);
-
-		
-		Text t = createTextField(toolkit, body, 
-				"Enter the terminology name:", 
-				TermsuiteuiPackage.Literals.EPIPELINE__TARGET_TERMINOLOGY_NAME, 
-				new NonEmptyStringValidator(), 
-				null);
-		t.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.MIDDLE));
-
-		StringBuffer buf = new StringBuffer();
-		buf.append("<form><p><img href=\"run\"/> <a href=\"runOnSelected\" nowrap=\"true\">Run</a> this pipeline on selected corpus.</p></form>");
-		formText = toolkit.createFormText(body, true);
-		formText.setText(buf.toString(), true, false);
-		applyTableWrapLayout(formText, 1, 2);
-		formText.setImage("run", TermSuiteUI.getImg(TermSuiteUI.RUN).createImage());
 	}
 
-	private void createTaggerSection(FormToolkit toolkit, final ScrolledForm form) {
-		Section sectionTagger = createExpandableSection(toolkit, form);
-		sectionTagger.setText("Tagger and Lemmatizer");
-		sectionTagger.setDescription("The tagger/lemmatizer is a 3rd-party program setting syntactic labels and lemmas to each word annotation.");
-		Composite sectionClient = toolkit.createComposite(sectionTagger);
-		setTableWrapLayout(sectionClient, 2);
-		Label l = new Label(sectionClient, SWT.NONE);
-		l.setText("Tagger: ");
-		applyTableWrapLayout(l);
+	
+	@SuppressWarnings("unchecked")
+	private void createPipelineContent(FormToolkit toolkit, final ScrolledForm form) {
 		
-		ComboViewer taggerComboViewer = new ComboViewer(sectionClient, SWT.DROP_DOWN);
-		applyTableWrapLayout(taggerComboViewer.getControl());
-		taggerComboViewer.setContentProvider(ArrayContentProvider.getInstance());
-		taggerComboViewer.setLabelProvider(new LabelProvider());
-		taggerComboViewer.setInput(taggerService.getTaggerConfigNames());
+		/*
+		 * POS tagger
+		 */
+		Composite taggerClient = createSection(
+				toolkit, 
+				form, 
+				"POS tagger", 
+				"The tagger/lemmatizer is a 3rd-party program setting syntactic labels and lemmas to each word annotation.");		
+		setTableWrapLayout(taggerClient, 3);
+		
 
-		sectionTagger.setClient(sectionClient);		
-		
-		dbc.bindValue(
+		// The pos tagger
+		ComboViewer taggerComboViewer = createComboEntry(
+				taggerClient, 
+				"Tagger: ", 
+				context.get(TaggerService.class).getTaggerConfigNames().toArray());
+		Binding binding = dbc.bindValue(
 				ViewerProperties.singleSelection().observe(taggerComboViewer), 
 				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__TAGGER_CONFIG_NAME).observeDetail(this.pipelineValue));
 
-	}
-
-	private void createRegexSpotterSection(FormToolkit toolkit, final ScrolledForm form) {
-		Section sectionRegexSpotter = createExpandableSection(toolkit, form);
-		sectionRegexSpotter.setText("Term spotter");
-		sectionRegexSpotter.setDescription("The term spotter applies a list of syntactic patterns to detect single-word and multi-word term occurrences in corpus files.");
-		Composite sectionClient = toolkit.createComposite(sectionRegexSpotter);
-		sectionClient.setLayout(new GridLayout());
-		Button buttonSpotWithOccurrences = toolkit.createButton(sectionClient, "Keep all term occurrences in memory while spotting", SWT.CHECK);
-		sectionRegexSpotter.setClient(sectionClient);
+		Link refresh = new Link(taggerClient, SWT.BORDER);
+		refresh.setText("<a>refresh</a>");
 		
-		dbc.bindValue(WidgetProperties.selection().observe(buttonSpotWithOccurrences), EMFProperties
-				.value(TermsuiteuiPackage.Literals.EPIPELINE__SPOT_WITH_OCCURRENCES).observeDetail(this.pipelineValue));
-	}
+		Link installTagger = new Link(taggerClient, SWT.BORDER);
+		installTagger.setText("You must <a>install an  external tagger</a>");
+		installTagger.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Command command = context.get(ECommandService.class).getCommand("fr.univnantes.termsuite.ui.command.preferences");
+			    ParameterizedCommand pCmd = new ParameterizedCommand(command, null);
+			    if (context.get(EHandlerService.class).canExecute(pCmd)) 
+					context.get(EHandlerService.class).executeHandler(pCmd);
+			}
+		});
+		installTagger.setForeground(TermSuiteUI.COLOR_RED);
+		installTagger.setVisible(context.get(TaggerService.class).getTaggerConfigNames().isEmpty());
+		applyTableWrapLayout(installTagger, 1, 3);
+
+		refresh.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Collection<String> taggerConfigNames = context.get(TaggerService.class).getTaggerConfigNames();
+				taggerComboViewer.setInput(taggerConfigNames.toArray());
+				binding.updateModelToTarget();
+				installTagger.setVisible(taggerConfigNames.isEmpty());
+			}
+		});
 
 
-	private void createMorphoSyntacticSection(FormToolkit toolkit, final ScrolledForm form) {
-		Section sectionMorphoSyntactic = createExpandableSection(toolkit, form);
-		sectionMorphoSyntactic.setText("Morphosyntactic analysis");
-		sectionMorphoSyntactic.setDescription("Finds native, neoclassical, and prefix compounds in words. Uses algorithm Compost.");
-		Composite sectionClient = toolkit.createComposite(sectionMorphoSyntactic);
-		sectionClient.setLayout(new GridLayout());
-		Button buttonEnable =  toolkit.createButton(sectionClient, "Enable morphosyntactic analysis", SWT.CHECK);
-		sectionMorphoSyntactic.setClient(sectionClient);
 		
-		dbc.bindValue(WidgetProperties.selection().observe(buttonEnable), EMFProperties
-				.value(TermsuiteuiPackage.Literals.EPIPELINE__MORPHOSYNTACTIC_ANALYSIS_ENABLED).observeDetail(this.pipelineValue));
-	}
-	
-	
-	private void createSyntacticSection(FormToolkit toolkit, final ScrolledForm form) {
-		Section sectionSyntactic = createExpandableSection(toolkit, form);
-		sectionSyntactic.setText("Syntactic variant gathering");
-		sectionSyntactic.setDescription("Gathers terms according to their syntactic patterns and lemmas.");
-		Composite sectionClient = toolkit.createComposite(sectionSyntactic);
-		sectionClient.setLayout(new GridLayout());
-		Button buttonEnable = toolkit.createButton(sectionClient, "Enable syntactic variant gathering", SWT.CHECK);
-		sectionSyntactic.setClient(sectionClient);
+		InstanceScope.INSTANCE
+			.getNode(TermSuiteUIPreferences.NODE_GENERAL)
+			.addPreferenceChangeListener(this::taggerConfigUpdated);
+
+		/*
+		 * Memory management
+		 */
+		Composite memoryClient = createSection(
+				toolkit, 
+				form, 
+				"Memory management", 
+				"The maximum number of terms in memory during document preprocessing. If the number of terms exceeds the limit, the innner spotted terminology will filter terms by frequency.");		
+		setTableWrapLayout(memoryClient, 2);
+
 		
-		dbc.bindValue(WidgetProperties.selection().observe(buttonEnable), EMFProperties
-				.value(TermsuiteuiPackage.Literals.EPIPELINE__SYNTACTIC_VARIATION_ENABLED).observeDetail(this.pipelineValue));
-	}
-
-
-	private void createGraphicalSection(FormToolkit toolkit, final ScrolledForm form) {
-		Section sectionGraphical = createExpandableSection(toolkit, form);
-		sectionGraphical.setText("Graphical variant gathering");
-		sectionGraphical.setDescription("Applies a string metric to measure the distance between two terms. Fixes misspelling, pos tagging errors and some inflexional variants.");
-		Composite sectionClient = toolkit.createComposite(sectionGraphical);
-		sectionGraphical.setClient(sectionClient);
-		setTableWrapLayout(sectionClient, 2);
-
-		Button buttonEnable = toolkit.createButton(sectionClient, "Enable graphical variant gathering", SWT.CHECK);
-		applyTableWrapLayout(buttonEnable, 1, 2);
-		
-		dbc.bindValue(WidgetProperties.selection().observe(buttonEnable), EMFProperties
-				.value(TermsuiteuiPackage.Literals.EPIPELINE__GRAPHICAL_VARIATION_ANALYSIS_ENABLED).observeDetail(this.pipelineValue));
-				
-		Text textTh = createTextField(toolkit, sectionClient, 
-				"Similarity threshold: ",
-				TermsuiteuiPackage.Literals.EPIPELINE__GRAPHICAL_SIMILARITY_THRESHHOLD, 
-				new DoubleValidator(0, 1), 
-				new StringToDoubleConverter()
+		// Text: Maximum number of terms in memory
+		Text memoryText = createTextEntry(
+				toolkit, 
+				memoryClient, 
+				"Maximum number of terms in memory: ");
+		Binding memoryBinding = dbc.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(memoryText), 
+				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__MAX_NUM_TERMS_MEMORY).observeDetail(this.pipelineValue),
+				integerUpdateStrategy(100, Integer.MAX_VALUE),
+				integerUpdateStrategy(100, Integer.MAX_VALUE)
 				);
-				
-		bindAttributeToEnables(TermsuiteuiPackage.Literals.EPIPELINE__GRAPHICAL_VARIATION_ANALYSIS_ENABLED, textTh);
+		ControlDecorationSupport.create(memoryBinding, SWT.TOP | SWT.RIGHT);
+
+		
+		/*
+		 * Occurrences of terms
+		 */
+		Composite occurrenceClient = createSection(
+				toolkit, 
+				form, 
+				"Occurrences of terms", 
+				"By default, the occurrences of all terms are indexed and kept in memory. The number of occurrences in memory can be an issue when the corpus is too large. In this case, you can either to deactivate the occurrence indexing, but no contextualizing nor distributional alignment would be possible, or to use a persistent store on the filesystem instead (impacts preprocessor and contextualizer performances)");		
+		setTableWrapLayout(occurrenceClient, 1);
+
+		
+		// Radio: the occurrence mode
+		SelectObservableValue<EOccurrenceMode> buttonMode = createRadioEntry(
+				toolkit, 
+				occurrenceClient,
+				"Keep occurrences in memory", EOccurrenceMode.KEEP_IN_MEMORY,
+				"Keep occurrences in a persistent store on the filesystem", EOccurrenceMode.KEEP_IN_FILESYSTEM,
+				"Skip occurrence indexing", EOccurrenceMode.DO_NOT_KEEP
+				);
+
+		dbc.bindValue(buttonMode, EMFProperties
+				.value(TermsuiteuiPackage.Literals.EPIPELINE__OCCURRENCE_MODE).observeDetail(this.pipelineValue));
+
+		
+		/*
+		 * Semantic variant detection
+		 */
+		Composite semanticClient = createSection(
+				toolkit, 
+				form, 
+				"Semantic variant detection", 
+				"TermSuite is able to detect semantic variants of a term (synonyms, antonyms, and hyperonyms). The algorithm is based on a inner synonym dictionary and a distributional alignment, i.e. on the similarity of terms' context vectors. Activating distributional alignment detects more candidates but also impact the precision and detection time. Note that you can improve drastically the performances by using your own synonym dictionary instead of the embedded one.");		
+		setTableWrapLayout(semanticClient, 2);
+
+		// Checkbox: enabled semantic variant detection
+		Button enableSemanticButton = createCheckbox(
+				toolkit, 
+				semanticClient, 
+				"Enable semantic variant detection");
+		applyTableWrapLayout(enableSemanticButton, 1, 2);
+		dbc.bindValue(
+				WidgetProperties.selection().observe(enableSemanticButton),
+				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__SEM_ENABLED).observeDetail(this.pipelineValue)
+				);
+
+		// Checkbox: the dico only method
+		Button semDicoOnlyButton = createCheckbox(
+				toolkit, 
+				semanticClient, 
+				"Dictionary only (deactivate distributional alignement)");
+		applyTableWrapLayout(semDicoOnlyButton, 1, 2);
+		dbc.bindValue(
+				WidgetProperties.selection().observe(semDicoOnlyButton),
+				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__SEM_DICO_ONLY).observeDetail(this.pipelineValue)
+				);
+
+		// Combo: the similarity measure
+		ComboViewer semanticSimMeasureViewer = createComboEntry(
+				semanticClient, 
+				"Semantic similary measure", 
+				ESimilarityMeasure.values());
+		dbc.bindValue(
+				ViewerProperties.singleSelection().observe(semanticSimMeasureViewer), 
+				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__SEM_MEASURE).observeDetail(this.pipelineValue));
+
+		// Text: max number of candidates
+		Text maxCandidatesText = createTextEntry(
+				toolkit, 
+				semanticClient, 
+				"Max number of candidates per term: ");
+		Binding maxBind = dbc.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(maxCandidatesText), 
+				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__SEM_NUM_CANDIDATES).observeDetail(this.pipelineValue),
+				integerUpdateStrategy(1, 100),
+				integerUpdateStrategy(1, 100)
+				);
+		ControlDecorationSupport.create(maxBind, SWT.TOP | SWT.RIGHT);
+
+		
+		bindEnable(enableSemanticButton, 
+				maxCandidatesText, 
+				semanticSimMeasureViewer.getCombo(),
+				semDicoOnlyButton);
+
+		/*
+		 * Contextualizer
+		 */
+		Composite contextualizerClient = createSection(
+				toolkit, 
+				form, 
+				"Contextualizer", 
+				"Configure whether and how TermSuite should produce context vectors for all single-word terms. Context vectors are mandatory for distributional alignment, i.e. for semantic variant detection (except when \"dictionary only\" option is selected) and for bilingual alignment.");
+		setTableWrapLayout(contextualizerClient, 2);
+
+		Button enableContexualizerButton = createCheckbox(
+				toolkit, 
+				contextualizerClient, 
+				"Enable contextualizer");
+		applyTableWrapLayout(enableContexualizerButton, 1, 2);
+		dbc.bindValue(
+				WidgetProperties.selection().observe(enableContexualizerButton),
+				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__CONTEXTUALIZER_ENABLED).observeDetail(this.pipelineValue)
+				);
+
+		ComboViewer assocMeasureViewer = createComboEntry(
+				contextualizerClient, 
+				"Association measure", 
+				EAssocMeasure.values());
+		
+		dbc.bindValue(
+				ViewerProperties.singleSelection().observe(assocMeasureViewer), 
+				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__CONTEXT_ASSOC_MEASURE).observeDetail(this.pipelineValue));
+
+		Text scopeText = createTextEntry(
+				toolkit, 
+				contextualizerClient, 
+				"Scope: ");
+	
+		Binding scopeBind = dbc.bindValue(
+				WidgetProperties.text(SWT.Modify).observe(scopeText), 
+				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__CONTEXT_SCOPE).observeDetail(this.pipelineValue),
+				integerUpdateStrategy(1, 10),
+				integerUpdateStrategy(1, 10)
+				);
+		ControlDecorationSupport.create(scopeBind, SWT.TOP | SWT.RIGHT);
+
+		bindEnable(enableContexualizerButton, 
+				scopeText, 
+				assocMeasureViewer.getCombo());
+		
+		
+		
+		/*
+		 * Run
+		 */
+		Composite runClient = createSection(
+				toolkit, 
+				form, 
+				"Run pipeline", 
+				null);
+		setTableWrapLayout(runClient, 1);
+
+
+		// The ok status message
+		Label okStatus = toolkit.createLabel(runClient, "The pipeline is valid", SWT.NONE);
+		okStatus.setForeground(TermSuiteUI.COLOR_GREEN);
+		dbc.bindValue(
+				WidgetProperties.visible().observe(okStatus),
+				pipelineValidValue
+			);
+
+		
+		// The preprocessing cache
+		Button reuseCache = toolkit.createButton(runClient, "Reuse NLP preprocessings (spotted terms) if they are in cache ", SWT.CHECK);
+
+		
+		// The run link
+	    Composite composite = new Composite(runClient, SWT.NONE);
+	    composite.setLayout(new RowLayout(SWT.HORIZONTAL));
+	    Label imageLabel = new Label(composite, SWT.NONE);
+	    imageLabel.setImage(TermSuiteUI.getImg("icons/run_exc.png").createImage());
+	    Link runLink = new Link(composite, SWT.BORDER);
+		runLink.setText("<a>Run</a> this pipeline...");
+		dbc.bindValue(
+				pipelineValidValue, 
+				WidgetProperties.enabled().observe(runLink));
+		runLink.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Map<String, Object> parameters = ImmutableMap.of(
+						TermSuiteUI.COMMAND_RUN_PIPELINE_PARAMETER_PIPELINE_ID, 
+						pipelineValue.getValue().getName(),
+						TermSuiteUI.COMMAND_RUN_PIPELINE_PARAMETER_USE_CACHE,
+						Boolean.toString(reuseCache.getSelection())
+						);
+				ParameterizedCommand command = context.get(ECommandService.class).createCommand(
+						TermSuiteUI.COMMAND_RUN_PIPELINE_ID, 
+						parameters);
+				context.get(EHandlerService.class).executeHandler(command);
+			}
+		});
+		
 	}
 
+	private void taggerConfigUpdated(PreferenceChangeEvent e) {
+		if(e.getKey().equals(TermSuiteUIPreferences.TAGGERS)) {
+			Collection<String> configNames = context.get(TaggerService.class).getTaggerConfigNames();
+			EPipeline pipeline = this.pipelineValue.getValue();
+			if(!configNames.isEmpty()
+					&& pipeline.getTaggerConfigName() == null) {
+				pipeline.setTaggerConfigName(configNames.iterator().next());
+				
+			}
+		}
+	}
+
+	private UpdateValueStrategy integerUpdateStrategy(int min, int max) {
+		return new UpdateValueStrategy()
+				.setConverter(new StringToIntegerConverter())
+				.setAfterGetValidator(new IntegerValidator(min, max));
+	}
+
+	private void bindEnable(Button enableButton, Control... controls) {
+		for(Control c:controls)
+			dbc.bindValue(
+				WidgetProperties.selection().observe(enableButton), 
+				WidgetProperties.enabled().observe(c));
+	}
+
+	private Button createCheckbox(FormToolkit toolkit, Composite parent, String text) {
+		return toolkit.createButton(parent, text, SWT.CHECK);
+	}
+
+	private SelectObservableValue<EOccurrenceMode> createRadioEntry(FormToolkit toolkit, Composite parent, Object... labelsAndValues) {
+		Preconditions.checkArgument(labelsAndValues.length %2 == 0);
+		SelectObservableValue<EOccurrenceMode> buttonMode = new SelectObservableValue<EOccurrenceMode>();
+
+		Button[] buttons = new Button[labelsAndValues.length/2];
+		for(int i=0; i< labelsAndValues.length/2; i++) {
+			Button button = new Button(parent, SWT.RADIO);
+			button.setText((String)labelsAndValues[2*i]);
+			EOccurrenceMode occMode = (EOccurrenceMode)labelsAndValues[2*i+1];
+			buttonMode.addOption(occMode, WidgetProperties.selection().observe(button));
+			applyTableWrapLayout(button);
+			buttons[i]=button;
+		}
+		return buttonMode;
+	}
+
+	private Text createTextEntry(FormToolkit toolkit, Composite parent, String label) {
+		createLabel(parent, label);
+		Text text = toolkit.createText(parent, "");
+		text.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.MIDDLE));
+		return text;
+	}
+
+	private Composite createSection(FormToolkit toolkit, final ScrolledForm form, String sectionTitle,
+			String sectionDescription) {
+		Section section = toolkit.createSection(form.getBody(),
+				 sectionDescription == null ? Section.TITLE_BAR : Section.TITLE_BAR | Section.DESCRIPTION);
+		section.setText(sectionTitle);
+		if(sectionDescription != null)
+			section.setDescription(sectionDescription);
+		section.setExpanded(true);
+		Composite sectionClient = toolkit.createComposite(section);
+		section.setClient(sectionClient);
+		return sectionClient;
+	}
+
+	private ComboViewer createComboEntry(Composite parent, String label, Object... values) {
+		createLabel(parent, label);
+		
+		ComboViewer taggerComboViewer = new ComboViewer(parent, SWT.DROP_DOWN);
+		applyTableWrapLayout(taggerComboViewer.getControl());
+		taggerComboViewer.setContentProvider(ArrayContentProvider.getInstance());
+		taggerComboViewer.setLabelProvider(new LabelProvider());
+		taggerComboViewer.setInput(values);
+		return taggerComboViewer;
+	}
+
+	private void createLabel(Composite parent, String label) {
+		Label l = new Label(parent, SWT.NONE);
+		l.setText(label);
+		applyTableWrapLayout(l);
+	}
 
 	private void setTableWrapLayout(Composite control, int numColumns) {
 		TableWrapLayout layout = new TableWrapLayout();
@@ -335,445 +527,20 @@ public class PipelinePart {
 	private void applyTableWrapLayout(Control control, int rowSpan, int colSpan) {
 		control.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.MIDDLE, rowSpan, colSpan));
 	}
-
-
-	private void createContextualizerSection(FormToolkit toolkit, final ScrolledForm form) {
-		Section sectionContextualizer = createExpandableSection(toolkit, form);
-		sectionContextualizer.setText("Contextualizer");
-		sectionContextualizer.setDescription("Creates for each term a context vector of the co-occurring terms.");
-		Composite sectionClient = toolkit.createComposite(sectionContextualizer);
-		setTableWrapLayout(sectionClient, 2);
-		
-		Button buttonEnableContextualizer = toolkit.createButton(sectionClient, "Enable contextualizer", SWT.CHECK);
-		applyTableWrapLayout(buttonEnableContextualizer, 1, 2);
-		
-		Text textScope = createTextField(toolkit, sectionClient, 
-				"Window size: ",
-				TermsuiteuiPackage.Literals.EPIPELINE__CONTEXT_SCOPE, 
-				new IntegerValidator(), 
-				new StringToIntegerConverter()
-				);
-
-		Button buttonContextForSWTOnly = toolkit.createButton(sectionClient, "Build context vectors for SWT only", SWT.CHECK);
-		applyTableWrapLayout(buttonContextForSWTOnly, 1, 2);
-		
-		Button buttonAllowMWTInContexts = toolkit.createButton(sectionClient, "Allow MWT in context vectors", SWT.CHECK);
-		applyTableWrapLayout(buttonAllowMWTInContexts, 1, 2);
-
 	
-		// bindings
-		dbc.bindValue(WidgetProperties.selection().observe(buttonEnableContextualizer), EMFProperties
-				.value(TermsuiteuiPackage.Literals.EPIPELINE__CONTEXTUALIZER_ENABLED).observeDetail(this.pipelineValue));
-
-		bindAttributeToEnables(TermsuiteuiPackage.Literals.EPIPELINE__CONTEXTUALIZER_ENABLED,
-				buttonContextForSWTOnly,
-				buttonAllowMWTInContexts,
-				textScope);
-				
-		/* Context */
-		dbc.bindValue(WidgetProperties.selection().observe(buttonContextForSWTOnly), EMFProperties
-				.value(TermsuiteuiPackage.Literals.EPIPELINE__CONTEXTUALIZE_ON_SWT_ONLY).observeDetail(this.pipelineValue));
-		dbc.bindValue(WidgetProperties.selection().observe(buttonAllowMWTInContexts), EMFProperties
-				.value(TermsuiteuiPackage.Literals.EPIPELINE__CONTEXT_ALLOW_MWT_AS_COOC).observeDetail(this.pipelineValue));
-
-		
-		sectionContextualizer.setClient(sectionClient);
-	}
-
-//	private void createDirSelectionBbox(FormToolkit toolkit, final Composite parent, 
-//			String label, 
-//			IObservableValue model, 
-//			IValidator validator,
-//			Converter converter) {
-//		toolkit.createLabel(parent, label)
-//			.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.MIDDLE));
-//
-//		final Text textFile = toolkit.createText(parent, "");
-//		textFile.setLayoutData(new TableWrapData(TableWrapData.FILL, TableWrapData.MIDDLE));
-//		
-//		Binding bindValue = dbc.bindValue(
-//				WidgetProperties.text(SWT.Modify).observe(textFile),
-//				model,
-//				new UpdateValueStrategy()
-//				.setAfterGetValidator(validator)
-//				.setConverter(converter),
-//				new UpdateValueStrategy().setConverter(converter));
-//		ControlDecorationSupport.create(bindValue, SWT.TOP | SWT.RIGHT);
-//
-//		
-//		toolkit.createLabel(parent, ""); // empty cell
-//	
-//		Button button = toolkit.createButton(parent, "Browse...", SWT.PUSH);
-//	    button.addSelectionListener(new SelectionAdapter() {
-//	        @Override
-//	        public void widgetSelected(SelectionEvent e) {
-//	            DirectoryDialog fileDialog = new DirectoryDialog(parent.getShell());
-//	            // Set the text
-//	            fileDialog.setText("Select directory");
-//	            // Set filter on .txt files
-//	            String selection = fileDialog.open();
-//				if(selection != null)
-//					textFile.setText(selection);
-//	        }
-//	      });
-//	}
-
-
-//	private void createFileSelectionBbox(FormToolkit toolkit, final Composite parent, 
-//			String label, 
-//			final String fileFilter, 
-//			EAttribute pipelineProp, 
-//			IValidator validator,
-//			Converter converter) {
-//		toolkit.createLabel(parent, label)
-//			.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.MIDDLE));
-//		Composite fileZone = toolkit.createComposite(parent);
-//		fileZone.setLayout(new TableWrapLayout());
-//		
-//		final Text textFile = toolkit.createText(fileZone, "");
-//		textFile.setLayoutData(new TableWrapData(TableWrapData.FILL, TableWrapData.MIDDLE));
-//		
-//		Binding bindValue = dbc.bindValue(
-//				WidgetProperties.text(SWT.Modify).observe(textFile),
-//				EMFProperties.value(pipelineProp).observeDetail(this.pipelineValue),
-//				new UpdateValueStrategy()
-//				.setAfterGetValidator(validator)
-//				.setConverter(converter),
-//				new UpdateValueStrategy().setConverter(converter));
-//		ControlDecorationSupport.create(bindValue, SWT.TOP | SWT.RIGHT);
-//
-//		
-//		Button button = toolkit.createButton(fileZone, "Browse...", SWT.PUSH);
-//	    button.addSelectionListener(new SelectionAdapter() {
-//	        @Override
-//	        public void widgetSelected(SelectionEvent e) {
-//	            DirectoryDialog fileDialog = new DirectoryDialog(parent.getShell());
-//	            // Set the text
-//	            fileDialog.setText("Select directory");
-//	            // Set filter on .txt files
-//	            String selection = fileDialog.open();
-//				if(selection != null)
-//					textFile.setText(selection);
-//	        }
-//	      });
-//	}
-
-	private Text createTextField(FormToolkit toolkit, Composite parent, String label, EAttribute pipelineProp, IValidator validator,
-			Converter converter) {
-		toolkit.createLabel(parent, label)
-			.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.MIDDLE));
-		Text textScope = toolkit.createText(parent, "");
-		textScope.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.MIDDLE));
-		Binding bindValue = dbc.bindValue(
-				WidgetProperties.text(SWT.Modify).observe(textScope),
-				EMFProperties.value(pipelineProp).observeDetail(this.pipelineValue),
-				new UpdateValueStrategy()
-				.setAfterGetValidator(validator)
-				.setConverter(converter),
-				new UpdateValueStrategy().setConverter(converter));
-		
-		// add some decorations
-		ControlDecorationSupport.create(bindValue, SWT.TOP | SWT.RIGHT);
-		return textScope;
-	}
-
-
-	private void bindAttributeToEnables(EAttribute attribute, Object... targets) {
-		for(Object o:targets)
-			dbc.bindValue(
-					EMFProperties.value(attribute).observeDetail(pipelineValue),
-					WidgetProperties.enabled().observe(o));
-			
-	}
-	
-	
-	private void createFilterSection(FormToolkit toolkit, final ScrolledForm form) {
-		Section sectionFilter = createExpandableSection(toolkit, form);
-		sectionFilter.setText("Filter");
-		sectionFilter.setDescription("Applies a filter on the terminology at the end of the pipeline.");
-		Composite sectionClient = toolkit.createComposite(sectionFilter);
-		setTableWrapLayout(sectionClient, 2);
-		sectionFilter.setClient(sectionClient);
-		
-		Button buttonEnableFiltering = toolkit.createButton(sectionClient, "Enable filtering", SWT.CHECK);
-		applyTableWrapLayout(buttonEnableFiltering, 1, 2);
-		dbc.bindValue(WidgetProperties.selection().observe(buttonEnableFiltering), EMFProperties
-				.value(TermsuiteuiPackage.Literals.EPIPELINE__FILTERING_ENABLED).observeDetail(this.pipelineValue));
-		
-		/* Filtering property selection */		
-		Label labelProp = toolkit.createLabel(sectionClient, "Filtering property: ");
-		applyTableWrapLayout(labelProp, 1, 1);
-		
-		ComboViewer propertyComboViewer = createSingleTermPropertySelector(
-			sectionClient, 
-			TermsuiteuiPackage.Literals.EPIPELINE__FILTERING_PROPERTY);
-		applyTableWrapLayout(propertyComboViewer.getControl());
-							
-		/* Filtering mode */		
-		Label labelMode = toolkit.createLabel(sectionClient, "Filtering mode: ");
-		applyTableWrapLayout(labelMode, 1, 2);
-		
-		SelectObservableValue buttonMode = new SelectObservableValue();
-		Button buttonModeTh = new Button(sectionClient, SWT.RADIO);
-		applyTableWrapLayout(buttonModeTh);
-		buttonModeTh.setText("By threshold: ");
-		buttonMode.addOption(EFilteringMode.THRESHOLD, WidgetProperties.selection().observe(buttonModeTh));
-		Text textTh = createTextFieldWithoutLabel(toolkit, sectionClient, 
-			new StringToDoubleConverter(), 
-			new DoubleValidator(0, Double.MAX_VALUE), 
-			TermsuiteuiPackage.Literals.EPIPELINE__FILTERING_THRESHOLD);
-		Button buttonModeTopN = new Button(sectionClient, SWT.RADIO);
-		applyTableWrapLayout(buttonModeTopN);
-		buttonModeTopN.setText("By keeping first n terms:");
-		buttonMode.addOption(EFilteringMode.TOP_N, WidgetProperties.selection().observe(buttonModeTopN));
-		Text textTopN = createTextFieldWithoutLabel(toolkit, sectionClient, 
-			new StringToIntegerConverter(), 
-			new IntegerValidator(1, Integer.MAX_VALUE), 
-			TermsuiteuiPackage.Literals.EPIPELINE__FILTERING_TOP_N);
-		dbc.bindValue(buttonMode, EMFProperties
-				.value(TermsuiteuiPackage.Literals.EPIPELINE__FILTERING_MODE).observeDetail(this.pipelineValue));
-		dbc.bindValue(
-			WidgetProperties.text(SWT.Modify).observe(textTh),
-			EMFProperties
-				.value(TermsuiteuiPackage.Literals.EPIPELINE__FILTERING_THRESHOLD).observeDetail(this.pipelineValue));
-		dbc.bindValue(
-			WidgetProperties.text(SWT.Modify).observe(textTopN),
-			EMFProperties
-				.value(TermsuiteuiPackage.Literals.EPIPELINE__FILTERING_TOP_N).observeDetail(this.pipelineValue));
-				
-		bindAttributeToEnables(
-			TermsuiteuiPackage.Literals.EPIPELINE__FILTERING_ENABLED,
-			textTh, textTopN, buttonModeTopN, buttonModeTh, propertyComboViewer.getCombo());
-	}
-
-
-	private ComboViewer createSingleTermPropertySelector(Composite sectionClient, EAttribute pipelineProp) {
-		ComboViewer propertyComboViewer = new ComboViewer(sectionClient, SWT.DROP_DOWN);
-		propertyComboViewer.setContentProvider(ArrayContentProvider.getInstance());
-		propertyComboViewer.setLabelProvider(new LabelProvider() {
-		  public String getText(Object element) {
-		    TermProperty p = (TermProperty) element;
-		    return p.getPropertyName();
-		  };
-		});
-		propertyComboViewer.setInput(new TermProperty[] {
-			TermProperty.FREQUENCY,
-			TermProperty.FREQUENCY_NORM,
-			TermProperty.DOCUMENT_FREQUENCY,
-			TermProperty.GENERAL_FREQUENCY_NORM,
-			TermProperty.WR,
-			TermProperty.WR_LOG
-		});
-		dbc.bindValue(
-			ViewerProperties.singleSelection().observe(propertyComboViewer), 
-			EMFProperties.value(pipelineProp).observeDetail(this.pipelineValue),
-			new UpdateValueStrategy().setConverter(new StringToTermPropertyConverter()),
-			new UpdateValueStrategy().setConverter(new StringToTermPropertyConverter())
-		);
-		return propertyComboViewer;
-	}
-
-
-	private Text createTextFieldWithoutLabel(FormToolkit toolkit, Composite sectionClient,
-			Converter converter, IValidator validator, EAttribute pipelineProp) {
-		Text text = toolkit.createText(sectionClient, "");
-		applyTableWrapLayout(text);
-		Binding bindValue = dbc.bindValue(
-				WidgetProperties.text(SWT.Modify).observe(text),
-				EMFProperties.value(pipelineProp).observeDetail(this.pipelineValue),
-				new UpdateValueStrategy()
-				.setAfterGetValidator(validator)
-				.setConverter(converter),
-				new UpdateValueStrategy().setConverter(converter));
-		
-		// add some decorations
-		ControlDecorationSupport.create(bindValue, SWT.TOP | SWT.RIGHT);
-		return text;
-	}
-	
-	private void createExportSection(FormToolkit toolkit, final ScrolledForm form) {
-		Section sectionExportTerminology = createExpandableSection(toolkit, form);
-		sectionExportTerminology.setText("Output / Export");
-		sectionExportTerminology.setDescription("TermSuite can output word annotations and terminologies in multiple formats.");
-		final Composite sectionClient = toolkit.createComposite(sectionExportTerminology);
-		setTableWrapLayout(sectionClient, 2);
-
-//		StringBuffer buf = new StringBuffer();
-//		buf.append("<form><p>Output directory (<a href=\"change\">Change</a>):</p></form>");
-//		FormText formText = toolkit.createFormText(sectionClient, true);
-//		formText.setText(buf.toString(), true, false);
-//		formText.addHyperlinkListener(new HyperlinkAdapter(){
-//			@Override
-//			public void linkActivated(HyperlinkEvent e) {
-//				if(e.getHref().equals("change")) {
-//					MessageDialog.openInformation(sectionClient.getShell(), "Not yet implemented", "This functionality is not yet implemented");
-//				}
-//			}
-//		});
-//		toolkit.createLabel(sectionClient, outputDirectory);
-		
-		
-		Label label1 = toolkit.createLabel(sectionClient, "Export terminology to:");
-		label1.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.MIDDLE, 1, 2));
-
-//		createExportTerminoLine(toolkit, sectionClient, 
-//				TermsuiteuiPackage.Literals.EPIPELINE__EXPORT_TERMINO_TO_JSON_ENABLED, 
-//				"json");
-
-		createExportTerminoLine(toolkit, sectionClient, 
-				TermsuiteuiPackage.Literals.EPIPELINE__EXPORT_TERMINO_TO_TSV_ENABLED, 
-				"tsv");
-
-		createExportTerminoLine(toolkit, sectionClient,
-				TermsuiteuiPackage.Literals.EPIPELINE__EXPORT_TERMINO_TO_TBX_ENABLED, 
-				"tbx");
-
-		Label label2 = toolkit.createLabel(sectionClient, "Export UIMA annotations (words and term occurrences) to:");
-		label2.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.MIDDLE, 1, 2));
-
-		createExportCasLine(toolkit, sectionClient, 
-				TermsuiteuiPackage.Literals.EPIPELINE__EXPORT_CAS_TO_XMI_ENABLED,
-				"xmi/");
-
-		createExportCasLine(toolkit, sectionClient, 
-				TermsuiteuiPackage.Literals.EPIPELINE__EXPORT_CAS_TO_JSON_ENABLED,
-				"json/");
-
-		createExportCasLine(toolkit, sectionClient, 
-				TermsuiteuiPackage.Literals.EPIPELINE__EXPORT_CAS_TO_TSV_ENABLED,
-				"tsv/");
-
-		sectionExportTerminology.setClient(sectionClient);
-	}
-
-
-	private void createExportCasLine(FormToolkit toolkit, Composite parent, EAttribute enableProp, final String dir) {
-		Button buttonExport = toolkit.createButton(parent, dir, SWT.CHECK);
-		buttonExport.setLayoutData(new TableWrapData(TableWrapData.FILL, TableWrapData.MIDDLE, 1, 2));
-
-		dbc.bindValue(
-				WidgetProperties.selection().observe(buttonExport), 
-				EMFProperties.value(enableProp).observeDetail(this.pipelineValue));
-	}
-
-	
-	private void createExportTerminoLine(FormToolkit toolkit, Composite parent, EAttribute enableProp, final String extension) {
-		Button buttonExport = toolkit.createButton(parent, "", SWT.CHECK);
-		buttonExport.setLayoutData(new TableWrapData(TableWrapData.FILL, TableWrapData.MIDDLE, 1, 2));
-
-		dbc.bindValue(
-				WidgetProperties.selection().observe(buttonExport), 
-				EMFProperties.value(enableProp).observeDetail(this.pipelineValue));
-		dbc.bindValue(
-				EMFProperties.value(TermsuiteuiPackage.Literals.EPIPELINE__TARGET_TERMINOLOGY_NAME).observeDetail(this.pipelineValue),
-				WidgetProperties.text().observe(buttonExport), 
-				new UpdateValueStrategy().setConverter(new Converter(null, null) {
-					@Override
-					public Object convert(Object fromObject) {
-						return String.valueOf(fromObject) + "." + extension;
-					}
-				}),
-				new UpdateValueStrategy());
-		dbc.updateModels();
-		dbc.updateTargets();
-	}
-
-	private void createDealingWithBigCorpusSection(FormToolkit toolkit, final ScrolledForm form) {
-		Section sectionHandlingBigCorpora = createExpandableSection(toolkit, form);
-		sectionHandlingBigCorpora.setText("Handling big corpora");
-		sectionHandlingBigCorpora.setDescription("Sometimes the input corpus contains too many words for of usual pipeline. In such case, an in-process terminology cleaning procedure needs to be configured.");
-		Composite sectionClient = toolkit.createComposite(sectionHandlingBigCorpora);
-		sectionHandlingBigCorpora.setClient(sectionClient);
-		setTableWrapLayout(sectionClient, 2);
-
-		/* Button "enable" */
-		Button buttonEnableBigCorpora = toolkit.createButton(sectionClient, "Allow to filter the terminology during the extraction process", SWT.CHECK);
-		dbc.bindValue(WidgetProperties.selection().observe(buttonEnableBigCorpora), EMFProperties
-				.value(TermsuiteuiPackage.Literals.EPIPELINE__BIG_CORPORA_HANDLING_ENABLED).observeDetail(this.pipelineValue));
-		applyTableWrapLayout(buttonEnableBigCorpora, 1, 2);
-
-		/* Filtering property selection */		
-		Label labelProp = toolkit.createLabel(sectionClient, "Filtering property: ");
-		applyTableWrapLayout(labelProp);
-		
-		ComboViewer propertyComboViewer = createSingleTermPropertySelector(
-				sectionClient, 
-				TermsuiteuiPackage.Literals.EPIPELINE__BIG_CORPORA_FILTERING_PROPERTY);
-		applyTableWrapLayout(propertyComboViewer.getControl());
-
-		/* The "mode" option button */
-		SelectObservableValue buttonBigCorporaMode = new SelectObservableValue();
-		dbc.bindValue(buttonBigCorporaMode, EMFProperties
-				.value(TermsuiteuiPackage.Literals.EPIPELINE__BIG_CORPORA_CLEANING_MODE).observeDetail(this.pipelineValue));
-
-		/*
-		 * Mode option 1: Periodic cleaning
-		 */
-		Button buttonPeriodicCleaning = new Button(sectionClient, SWT.RADIO);
-		buttonPeriodicCleaning.setText("Set a periodic filtering (every n documents)");
-		buttonBigCorporaMode.addOption(EPeriodicCleaningMode.DOCUMENT_PERIOD, WidgetProperties.selection().observe(buttonPeriodicCleaning));
-		applyTableWrapLayout(buttonPeriodicCleaning, 1, 2);
-
-		/* Property threshold */
-		Text textPropertyThreshold = createTextField(toolkit, sectionClient, "Threshold:", 
-				TermsuiteuiPackage.Literals.EPIPELINE__BIG_CORPORA_FILTERING_PROPERTY_THRESHOLD, 
-				new DoubleValidator(0, Double.MAX_VALUE), 
-				new StringToDoubleConverter());
-
-		/* Document period */
-		Text textDocumentPeriod = createTextField(toolkit, sectionClient, "Document period:", 
-				TermsuiteuiPackage.Literals.EPIPELINE__BIG_CORPORA_DOCUMENT_PERIOD, 
-				new IntegerValidator(1, Integer.MAX_VALUE), 
-				new StringToIntegerConverter());
-
-		/*
-		 * Mode option 2: Capped termino
-		 */
-		Button buttonCappedTermino = new Button(sectionClient, SWT.RADIO);
-		applyTableWrapLayout(buttonCappedTermino, 1, 2);
-		buttonCappedTermino.setText("Cap the terminology with a max number of terms");
-		buttonBigCorporaMode.addOption(EPeriodicCleaningMode.MAX_NUMBER_OF_TERMS, WidgetProperties.selection().observe(buttonCappedTermino));
-				
-				
-		/* Document period */
-		Text textMaxNumberOfTerms = createTextField(toolkit, sectionClient, "Max number of terms:", 
-				TermsuiteuiPackage.Literals.EPIPELINE__BIG_CORPORA_MAX_NUMBER_OF_TERMS, 
-				new IntegerValidator(1, Integer.MAX_VALUE), 
-				new StringToIntegerConverter());
-		
-		/* Binding enables to "Enable" button */
-		bindAttributeToEnables(TermsuiteuiPackage.Literals.EPIPELINE__BIG_CORPORA_HANDLING_ENABLED,
-				buttonPeriodicCleaning, textDocumentPeriod, textPropertyThreshold, propertyComboViewer.getControl(), 
-				buttonCappedTermino, textMaxNumberOfTerms
-			);
-	}
-
-	private Section createExpandableSection(FormToolkit toolkit, final ScrolledForm form) {
-		Section s;
-		s = toolkit.createSection(form.getBody(),
-				Section.DESCRIPTION | Section.TITLE_BAR | Section.TWISTIE);
-		s.addExpansionListener(new ExpansionAdapter() {
-			public void expansionStateChanged(ExpansionEvent e) {
-				form.reflow(true);
-			}
-		});
-		return s;
-	}
-
 	@Persist
-	public void save(MDirtyable dirty, PipelineService pipelineService,
+	public void save(MDirtyable dirty, ResourceService resourceService,
 			@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
 			EPipeline pipeline) {
 		// save changes via ITodoService for example
 		try {
-			pipelineService.savePipeline(pipeline);
-
+			resourceService.savePipeline(pipeline);
+			
 			// save was successful
 			dirty.setDirty(false);
 		} catch (IOException e) {
 			MessageDialog.openError(shell, "Save error", e.getMessage());
 		}
 	}
-
 
 }

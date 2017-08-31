@@ -10,7 +10,7 @@
 *.class
 
 # Package files
-*.jar
+#*.jar
 *.war
 *.ear
 
@@ -32,7 +32,7 @@ nb-configuration.xml
 *.iws
 
 # ecore generated model
-bundles/fr.univnantes.termsuite.ui/src/fr/univnantes/termsuite/ui/model/
+#bundles/fr.univnantes.termsuite.ui/src/fr/univnantes/termsuite/ui/model/
 
 
 # Remove bin dirs
@@ -44,8 +44,10 @@ releng/fr.univnantes.termsuite.ui.product/bin
 bundles/org.eclipse.e4.ui.progress/bin
 
 # Remove jar
-bundles/fr.termsuite.univnantes.core/lib/*.jar
+bundles/fr.univnantes.termsuite.ui/lib/termsuite-core*.jar
 
 bintray.api
 bintray.properties
 *.swp
+/log
+/pref1.txt

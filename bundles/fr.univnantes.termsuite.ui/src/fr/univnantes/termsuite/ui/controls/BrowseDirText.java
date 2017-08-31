@@ -62,7 +62,7 @@ public class BrowseDirText extends Composite {
 
 		@Override
 		protected void doSetValue(Object source, Object value) {
-			((Text)source).setText((String)value);
+			((Text)source).setText(value == null ? "" : (String)value);
 		}
 		
 		@Override

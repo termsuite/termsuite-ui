@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="TermSuite" uid="fr.univnantes.termsuite" id="fr.univnantes.termsuite.ui.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="2.1.2.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="TermSuite" uid="fr.univnantes.termsuite" id="fr.univnantes.termsuite.ui.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="3.0.10.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="img/logo-termsuite.png"/>
@@ -44,7 +44,6 @@ http://termsuite.github.io/
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
    </vm>
@@ -235,19 +234,10 @@ http://termsuite.github.io/
    </plugins>
 
    <features>
-      <feature id="fr.univnantes.termsuite.feature" version="2.1.2.qualifier"/>
-      <feature id="org.eclipse.e4.rcp"/>
+      <feature id="fr.univnantes.termsuite.feature"/>
       <feature id="org.eclipse.emf.ecore"/>
       <feature id="org.eclipse.emf.common"/>
-      <feature id="org.eclipse.equinox.p2.core.feature" version="1.3.100.v20150527-1706"/>
-      <feature id="org.eclipse.ecf.filetransfer.httpclient4.feature"/>
-      <feature id="org.eclipse.ecf.filetransfer.feature"/>
-      <feature id="org.eclipse.ecf.core.ssl.feature"/>
-      <feature id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature"/>
-      <feature id="org.eclipse.ecf.filetransfer.ssl.feature"/>
-      <feature id="org.eclipse.ecf.core.feature"/>
-      <feature id="com.opcoach.e4.preferences.feature" version="1.0.0.qualifier"/>
-      <feature id="org.eclipse.equinox.p2.extras.feature" version="1.2.101.v20160129-0947"/>
+      <feature id="org.eclipse.e4.rcp" version="1.5.0.v20160606-1342"/>
    </features>
 
    <configurations>

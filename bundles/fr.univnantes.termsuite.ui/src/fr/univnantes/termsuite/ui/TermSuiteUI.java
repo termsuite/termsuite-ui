@@ -11,6 +11,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.Bundle;
 
 import com.google.common.collect.Maps;
@@ -34,7 +36,9 @@ public class TermSuiteUI {
 
 	public static final String INPUT_OBJECT = "InputObject";
 
-	public static final String RUN = "icons/run_exc.png";
+	public static final String IMG_HELP = "icons/help.png";
+	public static final String IMG_RUN = "icons/run_exc.png";
+	public static final String IMG_CLEAR_CO = "icons/clear_co.png";
 
 	public static final Styler STYLE_BOLD = StylerBuilder.start().fontStyle(SWT.BOLD).create();
 	public static final Styler STYLE_GRAYED = StylerBuilder.start().color(120, 120, 120).fontStyle(SWT.ITALIC).create();
@@ -55,6 +59,9 @@ public class TermSuiteUI {
 	public static final String SOURCE_TERMINOLOGY = "SourceTerminology";
 	public static final String TARGET_TERMINOLOGY = "TargetTerminology";
 	public static final String EDITABLE = "editable";
+	public static final Color COLOR_RED = Display.getDefault().getSystemColor(SWT.COLOR_RED);
+	public static final Color COLOR_GREEN = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GREEN);
+	public static final Color COLOR_BLACK = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
 
 	public static ImageDescriptor getImg(String path) {
         Bundle bundle = Platform.getBundle(PLUGIN_ID);
@@ -65,4 +72,11 @@ public class TermSuiteUI {
         return desc;
 	}
 	
+	/*
+	 * Command ID
+	 */
+	public static final String COMMAND_RUN_PIPELINE_ID = "fr.univnantes.termsuite.ui.command.RunPipeline";
+	public static final String COMMAND_RUN_PIPELINE_PARAMETER_PIPELINE_ID = "fr.univnantes.termsuite.ui.command.RunPipeline.commandparameter.pipelinename";
+	public static final String COMMAND_RUN_PIPELINE_PARAMETER_USE_CACHE = "fr.univnantes.termsuite.ui.command.RunPipeline.commandparameter.reusecache";
+	public static final String COMMAND_CLEAR_CACHE_ID = "fr.univnantes.termsuite.ui.command.ClearPreprocessingCache";
 }
