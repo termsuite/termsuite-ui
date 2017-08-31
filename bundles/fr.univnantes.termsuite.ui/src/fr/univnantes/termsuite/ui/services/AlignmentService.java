@@ -65,7 +65,7 @@ public interface AlignmentService {
 	
 	/**
 	 * Reads the input directory for bilingual dictionaries from 
-	 * the {@link TermSuiteUIPreferences#DICTIONARY_DIRECTORY} preference
+	 * the {@link TermSuiteUIPreferences#BILINGUAL_DICTIONARY_DIRECTORY} preference
 	 * value and reload all dictionaries from that directory.
 	 * 
 	 */
@@ -80,7 +80,7 @@ public interface AlignmentService {
 	 * @return
 	 * 		The dico if exists, <code>null</code> otherwise
 	 */
-	public EBilingualDictionary getDictionary(ELang source, ELang target);
+	public EBilingualDictionary getSynonymDictionary(ELang source, ELang target);
 
 	
 	/**

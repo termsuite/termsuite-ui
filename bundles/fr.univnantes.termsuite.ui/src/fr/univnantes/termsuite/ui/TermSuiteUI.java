@@ -36,6 +36,7 @@ public class TermSuiteUI {
 
 	public static final String INPUT_OBJECT = "InputObject";
 
+	public static final String IMG_HELP = "icons/help.png";
 	public static final String IMG_RUN = "icons/run_exc.png";
 	public static final String IMG_CLEAR_CO = "icons/clear_co.png";
 
@@ -60,6 +61,7 @@ public class TermSuiteUI {
 	public static final String EDITABLE = "editable";
 	public static final Color COLOR_RED = Display.getDefault().getSystemColor(SWT.COLOR_RED);
 	public static final Color COLOR_GREEN = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GREEN);
+	public static final Color COLOR_BLACK = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
 
 	public static ImageDescriptor getImg(String path) {
         Bundle bundle = Platform.getBundle(PLUGIN_ID);
